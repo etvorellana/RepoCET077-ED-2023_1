@@ -2,3 +2,4 @@
 *.o
 bin/*
 src/Lista_01/output/*
+src/LiLAS/output/*
