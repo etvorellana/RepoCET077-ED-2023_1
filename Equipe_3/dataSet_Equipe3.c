@@ -18,6 +18,8 @@ typedef struct ProjetoDataSet
     char *pais;
 }t_comerce;
 
+//PROTOTIPO
+int procurar_id_estoque(t_comerce *eletronico, int n_registros, char *id_estoque_procurado);
 
 int main()
 {
@@ -35,8 +37,7 @@ int main()
         exit(1);
     }
 
-
-    fp = fopen("data.csv", "r");
+    fp = fopen("dataSetEquipe3.csv", "r");
 
     if(fp == NULL)
     {
@@ -81,11 +82,17 @@ int main()
             i++;
         }
     }
-
         fclose(fp);
 
+            // busca por um idEstoque específico
+            char idBuscado[10];
+
+            printf("digite o id de estoque do produto: ");
+            scanf("%s", idBuscado);
+            int index = procurar_id_estoque(eletronico, i, idBuscado); //Parametros: dados da lista, qtde de registro, idDesejado
+
         //exibindo os dados lidos
-        for (int j = 0; j < i; j++)
+        /*for (int j = 0; j < i; j++)
         {
             printf("Num Fatura: %d\n", eletronico[j].nFatura);
             printf("Id Estoque: %s\n", eletronico[j].idEstoque);
@@ -95,7 +102,7 @@ int main()
             printf("Preco Unitario: %.2f\n", eletronico[j].precoUni);
             printf("Id Cliente: %d\n", eletronico[j].idCliente);
             printf("Pais: %s\n", eletronico[j].pais);
-        }
+        }*/
 
         //liberandi a memoria alocada
         for (int j = 0; j < i; j++)
@@ -109,4 +116,36 @@ int main()
         free(eletronico);
 
     return 0;
+}
+
+
+//função para encontrar Produto Estoque no arquivo
+int procurar_id_estoque(t_comerce *eletronico, int n_registros, char *id_estoque_procurado)
+{
+    int encontrou = 0;
+
+    for (int j = 0; j < n_registros; j++)
+    {
+        if (strcmp(eletronico[j].idEstoque, id_estoque_procurado) == 0)
+        {
+            encontrou = 1;
+            printf("Registro encontrado:\n");
+            printf("Num Fatura: %d\n", eletronico[j].nFatura);
+            printf("Id Estoque: %s\n", eletronico[j].idEstoque);
+            printf("Descricao: %s\n", eletronico[j].descricao);
+            printf("Quantidade: %d\n", eletronico[j].qtde);
+            printf("Data: %s\n", eletronico[j].data);
+            printf("Preco Unitario: %.2f\n", eletronico[j].precoUni);
+            printf("Id Cliente: %d\n", eletronico[j].idCliente);
+            printf("Pais: %s\n", eletronico[j].pais);
+        }
+    }
+
+    if (!encontrou)
+    {
+        printf("Nenhum registro encontrado com o idEstoque %s\n", id_estoque_procurado);
+        return 0;
+    }
+
+    return 1;
 }
