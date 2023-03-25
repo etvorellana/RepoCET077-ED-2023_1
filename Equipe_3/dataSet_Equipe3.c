@@ -20,6 +20,7 @@ typedef struct ProjetoDataSet
 
 //PROTOTIPO
 int procurar_id_estoque(t_comerce *eletronico, int n_registros, char *id_estoque_procurado);
+int buscaElemento(t_comerce *eletronico, int tam, char *idBusca);
 
 int main()
 {
@@ -85,11 +86,19 @@ int main()
         fclose(fp);
 
             // busca por um idEstoque específico
-            char idBuscado[10];
+            char idBuscado[10]; // exemplo de idEstoque buscado
 
             printf("digite o id de estoque do produto: ");
             scanf("%s", idBuscado);
-            int index = procurar_id_estoque(eletronico, i, idBuscado); //Parametros: dados da lista, qtde de registro, idDesejado
+            int index = procurar_id_estoque(eletronico, i, idBuscado); //Parametro: lista do arquivo, qtde de registros, idDesejado
+
+            int posicao = buscaElemento(eletronico, i, idBuscado); // buscar o elemento com idEstoque
+            if(posicao >= 0)
+            {
+                printf("Elemento encontrado na posicao %d do arquivo.\n", posicao);
+            } else {
+                printf("Elemento nao encontrado no arquivo.\n");
+            }
 
         //exibindo os dados lidos
         /*for (int j = 0; j < i; j++)
@@ -148,4 +157,17 @@ int procurar_id_estoque(t_comerce *eletronico, int n_registros, char *id_estoque
     }
 
     return 1;
+}
+
+//Função Buscar Posição do Elemento no Arquivo
+int buscaElemento(t_comerce *eletronico, int tam, char *idBusca)
+{
+    for(int i = 0; i < tam; i++)
+    {
+        if (strcmp(eletronico[i].idEstoque, idBusca) == 0)
+        {
+            return i;
+        }
+    }
+    return -1;
 }
