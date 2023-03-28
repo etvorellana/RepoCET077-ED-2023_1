@@ -183,9 +183,9 @@ Jogos *carregaDados(char *fileName, int *tam) {
             acervo[i].discount = atof(campo); // converte em float
 
             // STEAM DECK
-            //campo = strtok(NULL, sep);
-            //acervo[i].steamDeck = (char *) malloc(strlen(campo) + 1);
-            //strcpy(acervo[i].steamDeck, campo);
+            campo = strtok(NULL, sep);
+            acervo[i].steamDeck = (char *) malloc(strlen(campo) + 1);
+            strcpy(acervo[i].steamDeck, campo);
 
             i++;
         }
@@ -194,7 +194,7 @@ Jogos *carregaDados(char *fileName, int *tam) {
     return acervo;
 }
 
-void imprimeOsDados(Jogos *lista, int i) { // Esta função imprime os atributos da estrutura de acordo com o índice fornecido.
+void imprimeOsDados(Jogos *lista, int i) {
 
     printf("\nApp Id: %d\n", lista[i].appId);
     printf("Title: %s\n", lista[i].title);
@@ -241,7 +241,7 @@ void limpaAcervo(Jogos *acervo, int tam) {
         free(acervo[j].mac);
         free(acervo[j].linux);
         free(acervo[j].rating);
-        //free(acervo[j].steamDeck);
+        free(acervo[j].steamDeck);
     }
     
     free(acervo);
@@ -268,23 +268,23 @@ int incRegistro(Jogos origem, Jogos* destino, int* tam) { //Função que realiza
         
         destino[*tam].appId = origem.appId;
 
-        //strcpy(destino[*tam].title, origem.title); Identificamos que destino.title pode nao ser string
-        destino[*tam].title = origem.title;
+        destino[*tam].title  = (char*)malloc(strlen(origem.title));
+        strcpy(destino[*tam].title, origem.title); 
         
-        //strcpy(destino[*tam].dataRelease, origem.dataRelease);
-        destino[*tam].dataRelease =  origem.dataRelease;
+        destino[*tam].dataRelease  = (char*)malloc(strlen(origem.dataRelease));
+        strcpy(destino[*tam].dataRelease, origem.dataRelease);
         
-        //strcpy(destino[*tam].win, origem.win);
-        destino[*tam].win = origem.win;
+        destino[*tam].win  = (char*)malloc(strlen(origem.win));
+        strcpy(destino[*tam].win, origem.win);
 
-        //strcpy(destino[*tam].mac, origem.mac);
-        destino[*tam].mac = origem.mac;
+        destino[*tam].mac  = (char*)malloc(strlen(origem.mac));
+        strcpy(destino[*tam].mac, origem.mac);
 
-        //strcpy(destino[*tam].linux, origem.linux);
-        destino[*tam].linux = origem.linux;
+        destino[*tam].linux  = (char*)malloc(strlen(origem.linux));
+        strcpy(destino[*tam].linux, origem.linux);
 
-        //strcpy(destino[*tam].rating, origem.rating);
-        destino[*tam].rating = origem.rating;
+        destino[*tam].rating  = (char*)malloc(strlen(origem.rating));
+        strcpy(destino[*tam].rating, origem.rating);
 
         destino[*tam].positiveRatio = origem.positiveRatio;
         destino[*tam].userReviews = origem.userReviews;
@@ -292,8 +292,8 @@ int incRegistro(Jogos origem, Jogos* destino, int* tam) { //Função que realiza
         destino[*tam].priceOriginal = origem.priceOriginal;
         destino[*tam].discount = origem.discount;
 
-        //strcpy(destino[*tam].steamDeck, origem.steamDeck);
-        destino[*tam].steamDeck = origem.steamDeck;
+        destino[*tam].steamDeck = (char*)malloc(strlen(origem.steamDeck));
+        strcpy(destino[*tam].steamDeck, origem.steamDeck);
 
         (*tam)++;
     
@@ -313,15 +313,9 @@ int remRegistro( int idDoApp, Jogos* lista, int* tam ) {
 
         posicao = buscaPorId( idDoApp, lista, *tam );
         
-        free(lista[posicao].title);
-        free(lista[posicao].dataRelease);
-        free(lista[posicao].win);
-        free(lista[posicao].mac);
-        free(lista[posicao].linux);
-        free(lista[posicao].rating);
-        free(lista[posicao].steamDeck);
-
-        *tam -=1;
+        lista[posicao] = lista[*tam - 1];
+        
+        *tam = *tam - 1;
 
         return 1;
     }
