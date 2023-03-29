@@ -1,49 +1,52 @@
 
-#include <stdio.h>  // <- printf(), fopen(), fclose(), ...
-#include <stdlib.h> // <- exit()
-#include <string.h> // <- strcpy()
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "bidefun.h"
 
 int main(void) {
 
-  TSongs *acervo, *subacervo;
-  int id = 1, tam;
-  char *nome;
+  TSongs *acervo;
+  int id = 1, tam = 0;
   int total, t = 100;
 
-  acervo = carregaDados("Data/songs.csv", &tam);
-  subacervo = sub_lista(acervo, t, &total);
-  int i = 1;
-  while (i < t) {
-    printf("Dado %d \n", i + 1);
-    printf("Position: %d\n", subacervo[i].Position);
-    printf("Artista: %s\n", subacervo[i].ArtistName);
-    printf("Musica: %s\n", subacervo[i].SongName);
-    printf("Dias no top 10: %d\n", subacervo[i].Days);
-    printf("Vezes no top 10: %2.f\n", subacervo[i].Top10Times);
-    printf("Maior Posicao: %d\n", subacervo[i].PeakPosition);
-    printf("Maior Posicao x vezes: %s\n", subacervo[i].PeakPositionXtimes);
-    printf("Pico de reproducao: %d\n", subacervo[i].PeakStreams);
-    printf("Total de Reproducoes: %d\n\n\n", subacervo[i].TotalStreams);
-    i++;
-  }
-  
-  //BUSCA POR POSICAO NO ACERVO
-   // while (id > 0 && id <= tam){
-   //   printf("Entre com índice de um item do acervo (%d < BookID < %d): ", 0,
-   //   tam); scanf("%d\n", &id);
-   //   id--;
-   //   setbuf(stdin, NULL); printf("Position: %d\n",
-   //   acervo[id].Position); printf("Artista: %s\n", acervo[id].ArtistName);
-   //   printf("Musica: %s\n", acervo[id].SongName);
-   //   printf("Dias no top 10: %d\n", acervo[id].Days);
-   //   printf("Vezes no top 10: %2.f\n", acervo[id].Top10Times);
-   //   printf("Maior Posicao: %d\n", acervo[id].PeakPosition);
-   //   printf("Maior Posicao x vezes: %s\n", acervo[id].PeakPositionXtimes);
-   //   printf("Pico de reproducao: %d\n", acervo[id].PeakStreams);
-   //   printf("Total de Reproducoes: %d\n\n\n", acervo[id].TotalStreams);
-   //   }
+  acervo = carregaDados("Data/newSongs.csv", &tam);
 
+  // Atividada para o dia 27/03
+  // INCLUSAO
+  int newtam = tam / 3, tamaux = 0; // defino o tamanho para 1/3 do acervo
+  TSongs *newacervo = (TSongs *)malloc(newtam * sizeof(TSongs)); // nova lista
+  int acertos = 0, tentativas = 0;
+
+  while (tamaux < newtam) {
+    int NA = rand() % 20000;
+    //printf("%d\n\n", tamaux);
+    if (NA >= 0 && NA < tam) {
+      tentativas++;
+      //printf("Tentativa: %d\n\n", tentativas);
+      if (IncRegistro(acervo[NA], newacervo, &tamaux)) {
+        //printf("Sucesso: %d\n\n", acertos);
+        acertos++;
+      }
+    }
+  }
+  printf("Na inclusão\nForam %d Tentativas!\nForam %d Acertos!\n", tentativas, acertos);
+
+// ainda nao foi implementado o sistema de remoçao
+  acertos = 0, tentativas = 0;
+  while (0){
+    int NA = rand() % 20000;
+    if (NA >= 0 && NA < tam) {
+      tentativas++;
+      //printf("Tentativa: %d\n\n", tentativas);
+      if (RemRegistro(acervo[NA], newacervo, &tamaux)) {
+        //printf("Sucesso: %d\n\n", acertos);
+        acertos++;
+      }
+    }
+  }
+  printf("Na exclusão\nForam %d Tentativas!\nForam %d Acertos!", tentativas, acertos);
   limpaAcervo(acervo, tam);
+  limpaAcervo(newacervo, newtam);
 }
