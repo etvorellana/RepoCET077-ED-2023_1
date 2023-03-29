@@ -20,9 +20,10 @@ typedef struct {
 
 Jogos* carregaDados( char *fileName, int *tam );
 Jogos* criaAcervo( int capacidade );
-void limpaAcervo( Jogos *acervo, int tam );
+void limpaAcervo( Jogos *acervo, int tamanhoAcervo );
+void limpaRegistro( Jogos *jogos);
 void imprimeOsDados( Jogos *lista, int i );
 int buscaPorId( int idDoApp, Jogos* lista, int tam );
 int incRegistro( Jogos origem, Jogos* destino, int* tam );
 int remRegistro( int idDoApp, Jogos* lista, int* tam );
-int verificaExistencia( Jogos* subColecao, int idDoApp, int tam );
+int verificaExistencia( Jogos* subColecao, int idDoApp, int tamanhoColecao );
