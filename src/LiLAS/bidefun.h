@@ -1,4 +1,6 @@
 #define CSVSIZE 12000
+#define TRUE 1
+#define FALSE 0
 
 // Armazenando as informações de um libro de acordo com os campos de CSV
 typedef struct
@@ -101,3 +103,4 @@ int remRegistro(char* isbn, TBook* lista, int* tam);
     da lista estar ordenada pelo campo chave 
 */
 
+TBook* criaAcervo(int capacidade);

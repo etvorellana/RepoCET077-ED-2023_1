@@ -131,6 +131,18 @@ void limpaAcervo(TBook *acervo, int tam)
     free(acervo);
 }
 
+void limpaRegistro(TBook book)
+{
+        free(book.title);
+        free(book.authors);
+        free(book.isbn);
+        free(book.isbn13);
+        free(book.lang);
+        free(book.pubDate);
+        free(book.publisher);
+    }
+    free(acervo);
+}
 
 int buscaPorISBN_(char *isbn, TBook* lista, int tam)
 {
@@ -159,7 +171,7 @@ int buscaPorISBN__(char *isbn, TBook* lista, int tam)
     return i;
 }
 
-int buscaPorISBN(char *isbn, TBook* lista, int tam)
+int buscaPorISBN___(char *isbn, TBook* lista, int tam)
 {
     int res = strcmp(lista[0].isbn, isbn);
     if(res)
@@ -169,7 +181,7 @@ int buscaPorISBN(char *isbn, TBook* lista, int tam)
 
 }
 
-int buscaPorISBN___(char *isbn, TBook* lista, int tam)
+int buscaPorISBN(char *isbn, TBook* lista, int tam)
 {
     int i = 0;
     while(strcmp(isbn, lista[i].isbn) != 0)
@@ -179,3 +191,195 @@ int buscaPorISBN___(char *isbn, TBook* lista, int tam)
     return i;
 }
 
+TBook* criaAcervo(int cap)
+{
+    TBook* acervo;
+    acervo = (TBook*) malloc((cap + 1)*sizeof(TBook));
+    return acervo;
+}
+
+void criaAcervo_(int cap, TBook** acervo)
+{
+    *acervo = (TBook*) malloc((cap + 1)*sizeof(TBook));
+}
+
+int incRegistro(TBook book, TBook* lista, int* tam)
+{
+    lista[*tam].isbn = book.isbn;
+    int pos = buscaPorISBN(book.isbn, lista, *tam);
+    if(pos == *tam)
+    {
+        //int bookID
+        lista[pos].bookID = book.bookID;
+        
+        //char *title
+        lista[pos].title = (char*) malloc(strlen(book.title)); // aloca uma array 
+        strcpy(lista[pos].title, book.title); // copia o conteúdo da string
+        
+        //char *authors
+        lista[pos].authors = (char*) malloc(strlen(book.title));
+        strcpy(lista[pos].authors, book.authors);
+
+        //float avgRating
+        lista[pos].avgRating = book.avgRating; // converte em float
+
+        //char *isbn
+        lista[pos].isbn = (char*) malloc(strlen(book.isbn));
+        strcpy(lista[pos].isbn, book.isbn);
+
+        //char *isbn13
+        lista[pos].isbn13 = (char*) malloc(strlen(book.isbn13));
+        strcpy(lista[pos].isbn13, book.isbn13);
+
+        //char *lang
+        lista[pos].lang = (char*) malloc(strlen(book.lang));
+        strcpy(lista[pos].lang, book.lang);
+
+        //int numPages
+        lista[pos].numPages = book.numPages;
+
+        //int ratCounts
+        lista[pos].ratCounts = book.ratCounts;
+
+        //int txtRevCounts
+        lista[pos].txtRevCounts = book.txtRevCounts;
+
+        //char pubDate[11]
+        lista[pos].pubDate = (char*) malloc(strlen(book.pubDate));
+        strcpy(lista[pos].pubDate, book.pubDate);
+
+        //char publisher[100];    // publisher - Scholastic Inc. 
+        lista[pos].publisher = (char*) malloc(strlen(book.publisher));
+        strcpy(lista[pos].publisher, book.publisher);
+        
+        *tam += 1;
+        return TRUE;
+    }else{
+        return FALSE;
+    }
+}
+
+int remRegistro(char* isbn, TBook* lista, int* tam)
+{
+    lista[*tam].isbn = isbn;
+    int pos = buscaPorISBN(isbn, lista, *tam);
+    if(pos != *tam)
+    {
+        limpaRegistro(lista[pos]);
+        if(*tam > 1)
+            lista[pos] = lista[*tam - 1];
+        *tam -= 1;
+        return TRUE;
+    }else{
+        return FALSE;
+    }
+
+}
+
+
+int buscaOrdPorISBN(char *isbn, TBook* lista, int tam)
+{
+    int i = 0;
+    //while(strcmp(isbn, lista[i].isbn) != 0)
+    while(strcmp(isbn, lista[i].isbn) < 0)
+    {
+        i++;
+    }
+    if (strcmp(isbn, lista[i].isbn) == 0)
+        return i;
+    else
+        return -i;
+}
+
+int buscaBinPorISBN(char *isbn, TBook* lista, int tam)
+{
+    if (tam == 0)
+        return -1;
+    int pos = tam / 2;
+    if (strcmp(isbn, lista[pos].isbn) < 0)
+        return buscaBinPorISBN(isbn, lista, pos);
+    else if(strcmp(isbn, lista[pos].isbn) == 0)
+        return pos;
+    else
+        return pos + buscaBinPorISBN(isbn, &lista[pos+1], tam - pos - 1) + 1;
+}
+
+int buscaBinPorISBN_(char *isbn, TBook* lista, int tam)
+{
+    
+}
+
+int incRegistroOrd(TBook book, TBook* lista, int* tam)
+{
+    //lista[*tam].isbn = book.isbn;
+    int pos = buscaBinPorISBN(book.isbn, lista, *tam);
+    if (strcmp(list[pos].isbn, bokk.isbn) != 0);
+    {
+        for (int i = *tam; i > pos; i--)
+            lista[i-1] = lista[i];
+        //int bookID
+        lista[pos].bookID = book.bookID;
+        
+        //char *title
+        lista[pos].title = (char*) malloc(strlen(book.title)); // aloca uma array 
+        strcpy(lista[pos].title, book.title); // copia o conteúdo da string
+        
+        //char *authors
+        lista[pos].authors = (char*) malloc(strlen(book.title));
+        strcpy(lista[pos].authors, book.authors);
+
+        //float avgRating
+        lista[pos].avgRating = book.avgRating; // converte em float
+
+        //char *isbn
+        lista[pos].isbn = (char*) malloc(strlen(book.isbn));
+        strcpy(lista[pos].isbn, book.isbn);
+
+        //char *isbn13
+        lista[pos].isbn13 = (char*) malloc(strlen(book.isbn13));
+        strcpy(lista[pos].isbn13, book.isbn13);
+
+        //char *lang
+        lista[pos].lang = (char*) malloc(strlen(book.lang));
+        strcpy(lista[pos].lang, book.lang);
+
+        //int numPages
+        lista[pos].numPages = book.numPages;
+
+        //int ratCounts
+        lista[pos].ratCounts = book.ratCounts;
+
+        //int txtRevCounts
+        lista[pos].txtRevCounts = book.txtRevCounts;
+
+        //char pubDate[11]
+        lista[pos].pubDate = (char*) malloc(strlen(book.pubDate));
+        strcpy(lista[pos].pubDate, book.pubDate);
+
+        //char publisher[100];    // publisher - Scholastic Inc. 
+        lista[pos].publisher = (char*) malloc(strlen(book.publisher));
+        strcpy(lista[pos].publisher, book.publisher);
+        
+        *tam += 1;
+        return TRUE;
+    }else{
+        return FALSE;
+    }
+}
+
+int remRegistroOrd(char* isbn, TBook* lista, int* tam)
+{
+    lista[*tam].isbn = isbn;
+    int pos = buscaPorISBN(isbn, lista, *tam);
+    if(pos != *tam)
+    {
+        limpaRegistro(lista[pos]);
+        if(*tam > 1)
+            lista[pos] = lista[*tam - 1];
+        *tam -= 1;
+        return TRUE;
+    }else{
+        return FALSE;
+    }
+
+}
