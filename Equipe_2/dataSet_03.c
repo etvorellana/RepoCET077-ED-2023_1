@@ -13,11 +13,11 @@ int main() {
     //Declaração das Variáveis
     int tamanhoAcervo = CSVSIZE;
     int tamanhoColecao = 0;
-    int capacidadeColecao = (CSVSIZE / 3);
+    int capacidadeColecao = (CSVSIZE / 6);
     int tentativa, conseguiuAdicionar, conseguiuRemover, conseguiuBuscar;  
     
     //Carrega os dados do acervo
-    acervo = carregaDados("../../../Data/dataSetEquipe2.csv", &tamanhoAcervo);
+    acervo = carregaDados("../../Data/dataSetEquipe2.csv", &tamanhoAcervo);
     
     //Aloca espaço para a subColecao
     subColecao = criaAcervo( capacidadeColecao + 1 );
@@ -64,8 +64,8 @@ int main() {
     printf("Foram realizadas %d tentativas de remoção\n", tentativa);
     printf("Foram removidos %d registros na coleção\n\n", conseguiuRemover);
 
-    limpaAcervo(subColecao, tamanhoColecao);
-    limpaAcervo(acervo, tamanhoAcervo);
+    //limpaAcervo(subColecao, tamanhoColecao);
+    //limpaAcervo(acervo, tamanhoAcervo);
 
     return 0;
 }
@@ -86,34 +86,33 @@ Jogos *carregaDados(char *fileName, int *tam) {
     sep[0] = ',';
     char str[900];
     Jogos *acervo;
-    FILE *fp = fopen("../../Data/dataSetEquipe2.csv", "r");
+    FILE *fp;
+    fp = fopen(fileName, "r");
     acervo = criaAcervo(*tam);
 
-    if (fp == NULL) // Conseguiu abrir?
+    if (fp == NULL)
     {
         printf("Arquivo não pode ser aberto\n");
         exit(1);
     }
 
-    // pegando o cabeçalho
     char *ok;
     ok = fgets(str, 900, fp); // pega a string do arquivo
 
-    if (!ok)
-    {
-        printf("Erro lendo o cabeçalho do CSV!!!", str);
+    if (!ok) {
+        printf("Erro lendo o cabeçalho do CSV!!!");
         exit(1);
     }
 
     i = 0;
 
-    while (!feof(fp) && i < CSVSIZE) // enquanto nâo chegar no final do arquivo ou no tamanho do array
+    while (!feof(fp) && i < *tam) // enquanto nâo chegar no final do arquivo ou no tamanho do array
     {
         ok = fgets(str, 900, fp); // pega a string do arquivo
 
         if (ok)
         {
-            tam++;
+            *tam = *tam + 1;
             char *campo;
 
             // APP ID
@@ -232,33 +231,33 @@ int buscaPorId(int idDoApp, Jogos *lista, int tam) {
     }
 }
 
-void limpaAcervo(Jogos *acervo, int tam) {
+void limpaAcervo(Jogos *acervo, int tamanhoAcervo) {
 
-    for (int j = 0; j < tam; j++) {
-        free(acervo[j].title);
-        free(acervo[j].dataRelease);
-        free(acervo[j].win);
-        free(acervo[j].mac);
-        free(acervo[j].linux);
-        free(acervo[j].rating);
-        free(acervo[j].steamDeck);
+    for (int i = 0; i < tamanhoAcervo; i++) {
+        free(acervo[i].title);
+        free(acervo[i].dataRelease);
+        free(acervo[i].win);
+        free(acervo[i].mac);
+        free(acervo[i].linux);
+        free(acervo[i].rating);
+        free(acervo[i].steamDeck);
     }
     
     free(acervo);
 }
 
-int verificaExistencia( Jogos* subColecao, int idDoApp, int tam ) { //Verifica existência de um elemento, retorna 1 se houver, senão 0.
+int verificaExistencia( Jogos* subColecao, int idDoApp, int tamanhoColecao ) { //Verifica existência de um elemento, retorna 1 se houver, senão 0.
 
-    int cont = 0;
+    int contador = 0;
 
-    while (cont <= tam) {
+    while (contador <= tamanhoColecao) {
 
-        if (subColecao[cont].appId == idDoApp) return 1;
+        if (subColecao[contador].appId == idDoApp) return 1;
 
-        cont++;
+        contador++;
     }
 
-    if (cont >= tam) return 0;
+    if (contador >= tamanhoColecao) return 0;
 
 }
 
@@ -268,22 +267,22 @@ int incRegistro(Jogos origem, Jogos* destino, int* tam) { //Função que realiza
         
         destino[*tam].appId = origem.appId;
 
-        destino[*tam].title  = (char*)malloc(strlen(origem.title));
+        destino[*tam].title  = (char*)malloc((strlen(origem.title) + 1) * sizeof(char));
         strcpy(destino[*tam].title, origem.title); 
         
-        destino[*tam].dataRelease  = (char*)malloc(strlen(origem.dataRelease));
+        destino[*tam].dataRelease  = (char*)malloc(strlen(origem.dataRelease) * sizeof(char));
         strcpy(destino[*tam].dataRelease, origem.dataRelease);
         
-        destino[*tam].win  = (char*)malloc(strlen(origem.win));
+        destino[*tam].win  = (char*)malloc(strlen(origem.win) * sizeof(char));
         strcpy(destino[*tam].win, origem.win);
 
-        destino[*tam].mac  = (char*)malloc(strlen(origem.mac));
+        destino[*tam].mac  = (char*)malloc(strlen(origem.mac) * sizeof(char));
         strcpy(destino[*tam].mac, origem.mac);
 
-        destino[*tam].linux  = (char*)malloc(strlen(origem.linux));
+        destino[*tam].linux  = (char*)malloc(strlen(origem.linux) * sizeof(char));
         strcpy(destino[*tam].linux, origem.linux);
 
-        destino[*tam].rating  = (char*)malloc(strlen(origem.rating));
+        destino[*tam].rating  = (char*)malloc(strlen(origem.rating) * sizeof(char));
         strcpy(destino[*tam].rating, origem.rating);
 
         destino[*tam].positiveRatio = origem.positiveRatio;
@@ -292,10 +291,10 @@ int incRegistro(Jogos origem, Jogos* destino, int* tam) { //Função que realiza
         destino[*tam].priceOriginal = origem.priceOriginal;
         destino[*tam].discount = origem.discount;
 
-        destino[*tam].steamDeck = (char*)malloc(strlen(origem.steamDeck));
+        destino[*tam].steamDeck = (char*)malloc(strlen(origem.steamDeck) * sizeof(char));
         strcpy(destino[*tam].steamDeck, origem.steamDeck);
 
-        (*tam)++;
+        *tam = *tam + 1;
     
         return 1;
 
@@ -309,6 +308,7 @@ int incRegistro(Jogos origem, Jogos* destino, int* tam) { //Função que realiza
 int remRegistro( int idDoApp, Jogos* lista, int* tam ) {
 
     int posicao;
+
     if( verificaExistencia( lista, idDoApp, *tam ) ) {
 
         posicao = buscaPorId( idDoApp, lista, *tam );
