@@ -183,11 +183,15 @@ int remJogo(Games jogo, Games* jogos02, int* tam){
     if(ok!=-1){
       //printf("\n\nTeste01\n\n");
       limpaJogos02(jogos02, ok);
-      printf("\n\nTeste02\n\n");
-      jogos02[ok] = jogo;
+      //printf("\n\nTeste02\n\n");
+      jogos02[ok] = jogos02[*tam-1];
       --(*tam);
       return 1;
     }
+  }
+  if(*tam == 1){
+    limpaJogos02(jogos02, 0);
+    --(*tam);
   }
   return 0;
 }
