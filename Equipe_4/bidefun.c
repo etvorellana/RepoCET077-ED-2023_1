@@ -215,6 +215,7 @@ int RemRegistro(TSongs song, TSongs *lista, int *tamaux){
         *tamaux = *tamaux - 1;
         break;
       }
+      i++;
     }
     return 1;
   } 
