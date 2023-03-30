@@ -175,18 +175,16 @@ int IncRegistro(TSongs song, TSongs *lista, int *tamaux) {
   if (!(BuscaPorRank(song.Position, lista, *tamaux))) {
     lista[*tamaux].Position = song.Position;
     lista[*tamaux].Key = song.Key;
-    lista[*tamaux].ArtistName =
-        (char *)malloc(strlen(song.ArtistName) *
-                       2); // dava erro no tamanho estranhamente entao ao *2
-                           // garante que vai ter o espaço
+    lista[*tamaux].ArtistName = (char *) malloc(strlen(song.ArtistName) * 2); 
+    // dava erro no tamanho estranhamente entao ao *2
+    // garante que vai ter o espaço
     strcpy(lista[*tamaux].ArtistName, song.ArtistName);
-    lista[*tamaux].SongName = (char *)malloc(strlen(song.SongName) * 2);
+    lista[*tamaux].SongName = (char *) malloc(strlen(song.SongName) * 2);
     strcpy(lista[*tamaux].SongName, song.SongName);
     lista[*tamaux].Days = song.Days;
     lista[*tamaux].Top10Times = song.Top10Times;
     lista[*tamaux].PeakPosition = song.PeakPosition;
-    lista[*tamaux].PeakPositionXtimes =
-        (char *)malloc(strlen(song.PeakPositionXtimes) * 2);
+    lista[*tamaux].PeakPositionXtimes = (char *) malloc(strlen(song.PeakPositionXtimes) * 2);
     strcpy(lista[*tamaux].PeakPositionXtimes, song.PeakPositionXtimes);
     lista[*tamaux].PeakStreams = song.PeakStreams;
     lista[*tamaux].TotalStreams = song.TotalStreams;
@@ -198,8 +196,26 @@ int IncRegistro(TSongs song, TSongs *lista, int *tamaux) {
 
 // nao implementado
 int RemRegistro(TSongs song, TSongs *lista, int *tamaux){
+  // se existir entra no laço
   if(BuscaPorRank(song.Position, lista, *tamaux))
   {
+    int i = 0;
+    // percorro a *lista até encontrar a posição
+    while(1)
+    {
+      if(lista[i].Position == song.Position)
+      {
+        // limpa os campos 
+        free(lista[i].ArtistName);
+        free(lista[i].SongName);
+        free(lista[i].PeakPositionXtimes);
+
+        //atribui a ultima posição a que eu quero excluir 
+        lista[i] = lista[*tamaux];
+        *tamaux = *tamaux - 1;
+        break;
+      }
+    }
     return 1;
   } 
   return 0;
