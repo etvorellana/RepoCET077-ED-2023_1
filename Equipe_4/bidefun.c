@@ -107,84 +107,53 @@ void limpaAcervo(TSongs *acervo, int tam) {
   free(acervo);
 }
 
-/*
-TSongs *sub_lista(TSongs *ponteiro, int tam, int *total) {
-  // tam é o tamanho da sub lista a ser criada
-  //  total é o numero de iteracoes totais
-  int num, cont = 0, i = 1, falha, acerto;
-  TSongs *sub = (TSongs *)malloc(tam * sizeof(TSongs));
-
-  while (i <= tam) {
-    // gerar um numero aleatorio de 0 a 20000
-    num = rand() % 20000;
-
-    if (num > 0 && num < CSVSIZE && ponteiro[num].Position != NULL) {
-      i++;
-      sub[i].Position = ponteiro[num].Position;
-
-      sub[i].ArtistName = (char *)malloc(strlen(ponteiro[num].ArtistName));
-      sub[i].ArtistName = ponteiro[num].ArtistName;
-
-      sub[i].SongName = (char *)malloc(strlen(ponteiro[num].SongName));
-      sub[i].SongName = ponteiro[num].SongName;
-
-      sub[i].Days = ponteiro[num].Days;
-
-      sub[i].Top10Times = ponteiro[num].Top10Times;
-
-      sub[i].PeakPosition = ponteiro[num].PeakPosition;
-
-      sub[i].PeakPositionXtimes =
-          (char *)malloc(strlen(ponteiro[num].PeakPositionXtimes));
-      sub[i].PeakPositionXtimes = ponteiro[num].PeakPositionXtimes;
-
-      sub[i].PeakStreams = ponteiro[num].PeakStreams;
-
-      sub[i].TotalStreams = ponteiro[i].TotalStreams;
-    }
-    cont++;
-  }
-  return sub;
-}
-*/
-
 int BuscaPorRank(int R, TSongs *lista, int tam) {
-  // printf("Entrou na busca\n");
-  // printf("%d\n", tam);
-  if (tam > 0) {
     int i = 0;
-    // printf("\n teste busca");
     while (i != tam) {
-      // printf("\n teste busca 2");
       if (R == lista[i].Position) {
-        // printf("Encontrou\n");
-        return 1;
+        return i;
       }
       i++;
     }
-    // printf("nao encontrou\n");
-    return 0;
-  } else {
-    // printf("1 execução\n");
-    return 0;
-  }
+    return tam;
 }
 
 int IncRegistro(TSongs song, TSongs *lista, int *tamaux) {
-
-  if (!(BuscaPorRank(song.Position, lista, *tamaux))) {
+  if (*tamaux == 0){
     lista[*tamaux].Position = song.Position;
     lista[*tamaux].Key = song.Key;
-    lista[*tamaux].ArtistName = (char *) malloc(strlen(song.ArtistName) * 2); 
-    // dava erro no tamanho estranhamente entao ao *2
-    // garante que vai ter o espaço
+    lista[*tamaux].ArtistName =
+        (char *)malloc(strlen(song.ArtistName) *
+                       2); // dava erro no tamanho estranhamente entao ao *2
+                           // garante que vai ter o espaço
     strcpy(lista[*tamaux].ArtistName, song.ArtistName);
-    lista[*tamaux].SongName = (char *) malloc(strlen(song.SongName) * 2);
+    lista[*tamaux].SongName = (char *)malloc(strlen(song.SongName) * 2);
     strcpy(lista[*tamaux].SongName, song.SongName);
     lista[*tamaux].Days = song.Days;
     lista[*tamaux].Top10Times = song.Top10Times;
     lista[*tamaux].PeakPosition = song.PeakPosition;
-    lista[*tamaux].PeakPositionXtimes = (char *) malloc(strlen(song.PeakPositionXtimes) * 2);
+    lista[*tamaux].PeakPositionXtimes =
+        (char *)malloc(strlen(song.PeakPositionXtimes) * 2);
+    strcpy(lista[*tamaux].PeakPositionXtimes, song.PeakPositionXtimes);
+    lista[*tamaux].PeakStreams = song.PeakStreams;
+    lista[*tamaux].TotalStreams = song.TotalStreams;
+    *tamaux = *tamaux + 1;
+    return 1;
+  }else if (BuscaPorRank(song.Position, lista, *tamaux) != *tamaux) {
+    lista[*tamaux].Position = song.Position;
+    lista[*tamaux].Key = song.Key;
+    lista[*tamaux].ArtistName =
+        (char *)malloc(strlen(song.ArtistName) *
+                       2); // dava erro no tamanho estranhamente entao ao *2
+                           // garante que vai ter o espaço
+    strcpy(lista[*tamaux].ArtistName, song.ArtistName);
+    lista[*tamaux].SongName = (char *)malloc(strlen(song.SongName) * 2);
+    strcpy(lista[*tamaux].SongName, song.SongName);
+    lista[*tamaux].Days = song.Days;
+    lista[*tamaux].Top10Times = song.Top10Times;
+    lista[*tamaux].PeakPosition = song.PeakPosition;
+    lista[*tamaux].PeakPositionXtimes =
+        (char *)malloc(strlen(song.PeakPositionXtimes) * 2);
     strcpy(lista[*tamaux].PeakPositionXtimes, song.PeakPositionXtimes);
     lista[*tamaux].PeakStreams = song.PeakStreams;
     lista[*tamaux].TotalStreams = song.TotalStreams;
@@ -194,30 +163,30 @@ int IncRegistro(TSongs song, TSongs *lista, int *tamaux) {
   return 0;
 }
 
-// nao implementado
 int RemRegistro(TSongs song, TSongs *lista, int *tamaux){
-  // se existir entra no laço
-  if(BuscaPorRank(song.Position, lista, *tamaux))
+  int a = BuscaPorRank(song.Position, lista, *tamaux);
+  if(a != 0)
   {
-    int i = 0;
-    // percorro a *lista até encontrar a posição
-    while(1)
-    {
-      if(lista[i].Position == song.Position)
-      {
+    // //printf("Entrou na remoçao");
+    // int i = 0;
+    // // percorro a *lista até encontrar a posição
+    // while(1)
+    // {
+    //   if(lista[i].Position == song.Position)
+    //   {
         // limpa os campos 
-        free(lista[i].ArtistName);
-        free(lista[i].SongName);
-        free(lista[i].PeakPositionXtimes);
+        free(lista[a].ArtistName);
+        free(lista[a].SongName);
+        free(lista[a].PeakPositionXtimes);
 
         //atribui a ultima posição a que eu quero excluir 
-        lista[i] = lista[*tamaux];
-        *tamaux = *tamaux - 1;
-        break;
-      }
-      i++;
-    }
-    return 1;
-  } 
+      //   lista[i] = lista[*tamaux];
+      //   *tamaux = *tamaux - 1;
+      //   break;
+      // }
+      // i++;
+      *tamaux = *tamaux - 1;
+      return 1;
+  }
   return 0;
 }
