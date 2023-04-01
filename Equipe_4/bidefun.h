@@ -20,3 +20,5 @@ TSongs* sub_lista( TSongs *ponteiro, int tam, int *total);
 int IncRegistro(TSongs song, TSongs *lista, int *tam);
 int BuscaPorRank(int R, TSongs *lista, int tam);
 int RemRegistro(TSongs song, TSongs *lista, int *tamaux);
+int buscaBinPorPOSICAO(int position, TSongs* lista, int inicio, int tam);
+int buscaBinporPOSICAOi(int position, TSongs* lista, int tam);

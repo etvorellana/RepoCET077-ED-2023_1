@@ -190,3 +190,44 @@ int RemRegistro(TSongs song, TSongs *lista, int *tamaux){
   }
   return 0;
 }
+
+
+int buscaBinPorPOSICAO(int position, TSongs* lista, int inicio, int tam)
+{
+  int meio;
+  if(inicio <= tam) // inicio precisa ser menor que o fim 
+  {
+    meio = (inicio + tam) / 2; // meio da lista 
+    if(position == lista[meio].Position) // verifica se o elemento do meio é o procurado
+      return meio;
+    else // caso contrário
+    {
+      if(position < lista[meio].Position) // se elemento for menor que o elemento do meio
+        return buscaBinPorPOSICAO(position, lista, meio + 1, tam);
+      else // ou se for maior
+        return buscaBinPorPOSICAO(position, lista, inicio, meio - 1);
+    }
+  }
+  return -1; // elemento não pertence a lista
+}
+
+int buscaBinporPOSICAOi(int position, TSongs* lista, int tam)
+{
+  int inicio = 0; // inicio do vetor
+  int meio = (inicio + tam) / 2; // meio do vetor
+
+  while(inicio <= tam)
+  {
+    if(position == lista[meio].Position) // verificação se o elemento procurado está no meio
+      return meio;
+    else
+    {
+      if(position < lista[meio].Position) // verifica se o elemento do meio é maior do que o procurado
+        tam = meio - 1;
+      else // ou se é menor
+        inicio = meio + 1;
+    }
+    meio = (inicio + tam) / 2; // calculando o meio do vetor
+  }
+  return -1; // elemento não encontrado 
+}
