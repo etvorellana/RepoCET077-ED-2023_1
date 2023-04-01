@@ -322,3 +322,18 @@ int remRegistro( int idDoApp, Jogos* lista, int* tam ) {
 
     return 0;
 }
+
+int buscaBinPorISBN_(int idProcurado, Jogos* lista, int tam) { 
+                                        
+    if (tam < 0)                      
+        return (-1);                                  
+    int novoTamanho = tam / 2;         
+
+    if ( idProcurado < lista[novoTamanho].appId )
+        return buscaBinPorISBN_(idProcurado, lista, novoTamanho);
+
+    else if( idProcurado == lista[novoTamanho].appId )
+        return novoTamanho;
+    else
+        return novoTamanho + buscaBinPorISBN_(idProcurado, &lista[novoTamanho+1], tam - novoTamanho) + 1;
+}

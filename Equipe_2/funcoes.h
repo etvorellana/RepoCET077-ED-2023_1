@@ -27,3 +27,4 @@ int buscaPorId( int idDoApp, Jogos* lista, int tam );
 int incRegistro( Jogos origem, Jogos* destino, int* tam );
 int remRegistro( int idDoApp, Jogos* lista, int* tam );
 int verificaExistencia( Jogos* subColecao, int idDoApp, int tamanhoColecao );
+int buscaBinPorISBN_(int idProcurado, Jogos* lista, int tam);
