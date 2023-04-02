@@ -7,6 +7,7 @@
 #include "struct.h"
 Games* IniciaLista(int capacidade);
 int buscaPorId(int ID, Games* lista, int *tam);
+int buscaBinPorId(int ID, Games *lista, int ini, int fim);
 
 Games* carregaDados(char *fileName, int *tam)
 {
@@ -67,6 +68,12 @@ fscanf(fp,",%f,%f,%f,%f,%f,",&jogos[i].NA_Sales,&jogos[i].EU_Sales,&jogos[i].JP_
     return jogos;
 }
 
+Games* IniciaLista(int capacidade){
+  Games* jogos;
+  jogos = (Games*) malloc((capacidade+1)*sizeof(Games));
+  return jogos;
+}
+
 void limpaJogos(Games *jogos, int tam){
   for(int j = 0; j < tam; j++){
     free(jogos[j].Name);
@@ -84,8 +91,9 @@ void limpaJogos02(Games *jogos, int Pos){
     free(jogos[Pos].Publisher);
 }
 
+//FUNÇÕES PARA LISTAS DESORDENADAS
+
 int buscaPorId(int ID, Games* lista, int *tam){
-  
   for(int i = 0; i < *tam; i++){
     if(ID == lista[i].ID)
       return i;
@@ -93,33 +101,6 @@ int buscaPorId(int ID, Games* lista, int *tam){
   return -1;
 }
 
-Games* IniciaLista(int capacidade){
-  Games* jogos;
-  jogos = (Games*) malloc((capacidade+1)*sizeof(Games));
-  return jogos;
-}
-
-
-/* 
-    Tarefa para a aula de 27/03/2023
-    Esta função faz uma inclusão na lista, de tamanho tam,
-    de um novo registro. 
-    Antes de chamar esta função o usuário deve verificar se:
-    * A lista tem capacidade para um novo registro, ou seja, se
-    o tamanho é menor que a capacidade;
-    Entrada 
-    * book: Registro que se deseja incluir
-    * lista: ponteiro para o array da lista
-    * tam: ponteiro para quantidade de registros na lista
-    Retorna
-    * Verdadeiro (1) se conseguir incluir o novo registro na lista.
-    Novos elementos sempre serão incluídos no final da lista (na 
-    posição de índice tam) e após a inclusão o tamanho da lista deve
-    ser incrementado;  
-    * Falso (0) se não for possível incluir o registro na lista. Um 
-    registro não poderá ser incluído na lista se já existir nela 
-    outro registro com o mesmo campo chave (isbn) 
-*/
 int incJogo(Games jogos, Games* jogos02, int* tam){
   int ok = buscaPorId(jogos.ID,jogos02, tam);
   if(ok==-1){
@@ -157,33 +138,11 @@ int incJogo(Games jogos, Games* jogos02, int* tam){
   }
 }
 
-/* 
-    Tarefa para a aula de 27/03/2023
-    Esta função faz uma remoção na lista, de tamanho tam,
-    do registro com campo chave isbn. 
-    Antes de chamar esta função o usuário deve verificar se:
-    * A lista não está vazia, ou seja, se o tamanho é maior que 
-    zero;
-    Entrada 
-    * isbn: Registro que se deseja remover
-    * lista: ponteiro para o array da lista
-    * tam: ponteiro para quantidade de registros na lista
-    Retorna
-    * Verdadeiro (1) se conseguir remover o registro na lista. A 
-    remoção de um registro do interior da lista não pode deixar espaços 
-    vazios no array e, após a mesma, o tamanho da lista deve ser 
-    decrementado;
-    * Falso (0) se não for possível remover o registro da lista. Um 
-    registro não poderá ser removido da lista se não existir nela 
-    um registro com o campo chave especificado (isbn). 
-*/
 int remJogo(Games jogo, Games* jogos02, int* tam){
   if(*tam>1){
     int ok = buscaPorId(jogo.ID,jogos02, tam);
     if(ok!=-1){
-      //printf("\n\nTeste01\n\n");
       limpaJogos02(jogos02, ok);
-      //printf("\n\nTeste02\n\n");
       jogos02[ok] = jogos02[*tam-1];
       --(*tam);
       return 1;
@@ -194,4 +153,163 @@ int remJogo(Games jogo, Games* jogos02, int* tam){
     --(*tam);
   }
   return 0;
+}
+
+//FUNÇÕE PARA LISTAS ORDENADAS
+
+int buscaBinRecPorId(int ID, Games *lista, int ini, int fim){
+  if(fim>=ini){
+    int meio = (fim+ini)/2;
+    if(ID == lista[meio].ID){
+      return meio;
+    }else if(ID < lista[meio].ID){
+      return buscaBinRecPorId(ID, lista, ini, meio-1);
+    }
+    else{
+      return buscaBinRecPorId(ID, lista, meio+1, fim);
+    }
+  }
+  return -1;
+}
+
+int buscaBinPorId(int ID, Games *lista, int ini, int fim){
+  int meio;
+
+  if(fim>=ini){
+    for(int i=0; i<(fim+ini); i++){
+      int meio = (fim+ini)/2;
+      if(ID == lista[meio].ID){
+        return meio;
+      }else if(ID < lista[meio].ID){
+        fim = meio-1;
+      }
+      else{
+        ini = meio+1;
+      }
+    }
+  }
+  return -1;
+}
+
+int remJogoOrdenado(Games jogo, Games* jogos03, int* tam){
+  if((*tam)>1){
+    int ok = buscaBinRecPorId(jogo.ID,jogos03,0,*tam);
+    if(ok!=-1){
+      
+      for(int i=ok; i<(*tam)-1; i++){
+        limpaJogos02(jogos03, i);
+    
+        jogos03[i].ID = jogos03[i+1].ID;
+        
+        jogos03[i].Name = (char*)malloc((strlen(jogos03[i+1].Name)+1)*sizeof(char));
+        strcpy(jogos03[i].Name,jogos03[i+1].Name);
+            
+        jogos03[i].Platform = (char*)malloc((strlen(jogos03[i+1].Platform)+1)*sizeof(char));
+        strcpy(jogos03[i].Platform,jogos03[i+1].Platform);
+
+        jogos03[i].Year_Of_Release =  jogos03[i+1].Year_Of_Release;
+
+        jogos03[i].Genre = (char*)malloc((strlen(jogos03[i+1].Genre)+1)*sizeof(char));
+        strcpy(jogos03[i].Genre,jogos03[i+1].Genre);
+
+        jogos03[i].Publisher = (char*)malloc((strlen(jogos03[i+1].Publisher)+1)*sizeof(char));
+        strcpy(jogos03[i].Publisher,jogos03[i+1].Publisher);
+
+        jogos03[i].NA_Sales = jogos03[i+1].NA_Sales;
+
+        jogos03[i].EU_Sales = jogos03[i+1].EU_Sales;
+
+        jogos03[i].JP_sales = jogos03[i+1].JP_sales;
+
+        jogos03[i].Other_Sales = jogos03[i+1].Other_Sales;
+
+        jogos03[i].Global_Sales = jogos03[i+1].Global_Sales;
+      
+      }
+      --(*tam);
+      return 1;
+    }
+  }
+  if(*tam == 1){
+    limpaJogos02(jogos03, 0);
+    --(*tam);
+    return 1;
+  }
+  return 0;
+}
+
+int incJogoOrdenado(Games jogo, Games* jogos03, int* tam){
+
+  int ok = buscaBinRecPorId(jogo.ID,jogos03,0,*tam);
+  int i, j;
+  if(ok==-1){
+    // Encontra a posição correta para o novo jogo
+    for (i = 0; i < *tam; i++){
+      if (jogo.ID > jogos03[i].ID){
+        break;
+      }
+     }
+    // Move os elementos maiores para a direita para abrir espaço para o novo jogo
+    for(j = *tam - 1; j >= i; j--){
+
+      jogos03[j+1].ID = jogos03[j].ID;
+        
+      jogos03[j+1].Name = (char*)malloc((strlen(jogos03[j].Name)+1)*sizeof(char));
+      strcpy(jogos03[j+1].Name,jogos03[j].Name);
+            
+      jogos03[j+1].Platform = (char*)malloc((strlen(jogos03[j].Platform)+1)*sizeof(char));
+      strcpy(jogos03[j+1].Platform,jogos03[j].Platform);
+
+      jogos03[j+1].Year_Of_Release =  jogos03[j].Year_Of_Release;
+
+      jogos03[j+1].Genre = (char*)malloc((strlen(jogos03[j].Genre)+1)*sizeof(char));
+      strcpy(jogos03[j+1].Genre,jogos03[j].Genre);
+
+      jogos03[j+1].Publisher = (char*)malloc((strlen(jogos03[j].Publisher)+1)*sizeof(char));
+      strcpy(jogos03[j+1].Publisher,jogos03[j].Publisher);
+
+      jogos03[j+1].NA_Sales = jogos03[j].NA_Sales;
+
+      jogos03[j+1].EU_Sales = jogos03[j].EU_Sales;
+
+      jogos03[j+1].JP_sales = jogos03[j].JP_sales;
+
+      jogos03[j+1].Other_Sales = jogos03[j].Other_Sales;
+
+      jogos03[j+1].Global_Sales = jogos03[j].Global_Sales;
+
+      limpaJogos02(jogos03,j);
+    }
+    // Insere o novo jogo na posição correta
+    jogos03[i].ID = jogo.ID;
+        
+    jogos03[i].Name = (char*)malloc((strlen(jogo.Name)+1)*sizeof(char));
+    strcpy(jogos03[i].Name,jogo.Name);
+            
+    jogos03[i].Platform = (char*)malloc((strlen(jogo.Platform)+1)*sizeof(char));
+    strcpy(jogos03[i].Platform,jogo.Platform);
+
+    jogos03[i].Year_Of_Release =  jogo.Year_Of_Release;
+
+    jogos03[i].Genre = (char*)malloc((strlen(jogo.Genre)+1)*sizeof(char));
+    strcpy(jogos03[i].Genre,jogo.Genre);
+
+    jogos03[i].Publisher = (char*)malloc((strlen(jogo.Publisher)+1)*sizeof(char));
+    strcpy(jogos03[i].Publisher,jogo.Publisher);
+
+    jogos03[i].NA_Sales = jogo.NA_Sales;
+
+    jogos03[i].EU_Sales = jogo.EU_Sales;
+
+    jogos03[i].JP_sales = jogo.JP_sales;
+
+    jogos03[i].Other_Sales = jogo.Other_Sales;
+
+    jogos03[i].Global_Sales = jogo.Global_Sales;
+
+    ++(*tam);
+    return 1;
+  }
+  return 0;
+  
 }
