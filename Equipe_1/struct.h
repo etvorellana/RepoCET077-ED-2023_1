@@ -16,3 +16,11 @@ typedef struct{
 
 Games* IniciaLista(int capacidade);
 int buscaPorId(int ID, Games* lista, int *tam);
+
+typedef struct linear{
+    int tam;
+    int cap;
+    int ordenada;
+    Games *jogos;
+}Tlinear;
+

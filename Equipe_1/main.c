@@ -7,6 +7,7 @@
 int main(void){
   Games *jogos;
   int tam;
+  Tlinear linear[2];
 
   jogos = carregaDados("../../Data/Grupo1DataSet.csv" , &tam);
 
@@ -14,7 +15,10 @@ int main(void){
   Games *jogos02;
   int tam02 = 0; // tamanho de jogos 02
   int capacidade02 = 100; // capacidade de jogos 02
-    
+  linear[0].cap = capacidade02;
+  linear[0].tam = tam02;
+  linear[0].jogos = jogos02;
+  linear[0].ordenada = 0;
   //alocando espaço para o novo array
   jogos02 = IniciaLista(capacidade02);
    
@@ -52,6 +56,7 @@ int main(void){
     if(remJogo(jogos[idx], jogos02, &tam02))
       ok++;
   }
+  linear[0].tam = tam02;
 
   printf("Foram realizadas %d tentativas de remoção\n", try);
   printf("Foram removidos %d registros na lista\n", ok);
@@ -62,7 +67,10 @@ int main(void){
   Games *jogos03;
   int tam03 = 0; // tamanho de jogos 02
   int capacidade03 = 100; // capacidade de jogos 02
-    
+  linear[1].tam = tam03;
+  linear[1].cap = capacidade03;
+  linear[1].jogos = jogos03;
+  linear[1].ordenada = 1;
   //alocando espaço para o novo array
   jogos03 = IniciaLista(capacidade03);
    
@@ -99,6 +107,7 @@ int main(void){
     if(remJogoOrdenado(jogos[idx],jogos03,&tam03))
       ok2++;
   }
+  linear[1].tam = tam03;
 
   printf("Foram realizadas %d tentativas de remoção na lista ordenada\n", try2);
   printf("Foram removidos %d registros na lista ordenada\n", ok2);

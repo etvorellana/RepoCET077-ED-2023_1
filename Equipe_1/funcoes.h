@@ -173,7 +173,6 @@ int buscaBinRecPorId(int ID, Games *lista, int ini, int fim){
 }
 
 int buscaBinPorId(int ID, Games *lista, int ini, int fim){
-  int meio;
 
   if(fim>=ini){
     for(int i=0; i<(fim+ini); i++){
