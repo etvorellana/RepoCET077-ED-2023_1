@@ -231,3 +231,34 @@ int buscaBinporPOSICAOi(int position, TSongs* lista, int tam)
   }
   return -1; // elemento não encontrado 
 }
+
+int RemRegistro_nao_ordenado(TSongs song, TSongs *lista, int *tamaux) {
+  int a = BuscaPorRank(song.Position, lista, *tamaux);
+  if (a != *tamaux) {
+    free(lista[a].ArtistName);
+    free(lista[a].SongName);
+    free(lista[a].PeakPositionXtimes);
+    lista[a] = lista[*tamaux - 1];
+    *tamaux = *tamaux - 1;
+    return 1;
+  }
+  return 0;
+}
+
+int RemRegistro_ordenado(TSongs song, TSongs *lista, int *tamaux) {
+  int a = buscaBinporPOSICAOi(song.Position, lista, *tamaux);
+  if (a != -1) {
+    free(lista[a].ArtistName);
+    free(lista[a].SongName);
+    free(lista[a].PeakPositionXtimes);
+    for (int i = a; i < *tamaux; i++) {
+      lista[i] = lista[i + 1];
+    }
+    free(lista[*tamaux - 1].ArtistName);
+    free(lista[*tamaux - 1].SongName);
+    free(lista[*tamaux - 1].PeakPositionXtimes);
+    *tamaux = *tamaux - 1;
+    return 1;
+  }
+  return 0;
+}
