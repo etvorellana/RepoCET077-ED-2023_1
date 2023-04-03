@@ -251,35 +251,11 @@ int incJogoOrdenado(Games jogo, Games* jogos03, int* tam){
     // Move os elementos maiores para a direita para abrir espaço para o novo jogo
     for(j = *tam - 1; j >= i; j--){
 
-      jogos03[j+1].ID = jogos03[j].ID;
-        
-      jogos03[j+1].Name = (char*)malloc((strlen(jogos03[j].Name)+1)*sizeof(char));
-      strcpy(jogos03[j+1].Name,jogos03[j].Name);
-            
-      jogos03[j+1].Platform = (char*)malloc((strlen(jogos03[j].Platform)+1)*sizeof(char));
-      strcpy(jogos03[j+1].Platform,jogos03[j].Platform);
+      jogos03[j+1] = jogos03[j];
 
-      jogos03[j+1].Year_Of_Release =  jogos03[j].Year_Of_Release;
-
-      jogos03[j+1].Genre = (char*)malloc((strlen(jogos03[j].Genre)+1)*sizeof(char));
-      strcpy(jogos03[j+1].Genre,jogos03[j].Genre);
-
-      jogos03[j+1].Publisher = (char*)malloc((strlen(jogos03[j].Publisher)+1)*sizeof(char));
-      strcpy(jogos03[j+1].Publisher,jogos03[j].Publisher);
-
-      jogos03[j+1].NA_Sales = jogos03[j].NA_Sales;
-
-      jogos03[j+1].EU_Sales = jogos03[j].EU_Sales;
-
-      jogos03[j+1].JP_sales = jogos03[j].JP_sales;
-
-      jogos03[j+1].Other_Sales = jogos03[j].Other_Sales;
-
-      jogos03[j+1].Global_Sales = jogos03[j].Global_Sales;
-
-      limpaJogos02(jogos03,j);
     }
     // Insere o novo jogo na posição correta
+
     jogos03[i].ID = jogo.ID;
         
     jogos03[i].Name = (char*)malloc((strlen(jogo.Name)+1)*sizeof(char));
