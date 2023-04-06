@@ -19,15 +19,62 @@ typedef struct
     char *publisher;        // publisher - Scholastic Inc.  
 } TBook;
 
+// Classe para representar uma lista 
+typedef struct
+{
+    TBook* lista;   //Array para os registros da lista
+    int cap;        //Capacidade da lista
+    int tam;        //Tamanho da lista
+    int eOrd;       //TRUE se for ordenada 
+} TListaLinear;
+
+
+/*
+    Esta função aloca um array de tipo TBook e preenche 
+    com registros extraídos do arquivo CSV. 
+    Para utilizar esta função:
+    * O arquivo CSV tem que existir e estar disponível
+    para leitura no caminho especificado.
+
+    Entrada
+    * fileName: String com o caminho para o arquivo CSV
+    * tam: ponteiro para quantidade de registros na lista
+    Retorna
+    * O ponteiro para o array criado. A capacidade do array 
+    está definida na constante simbólica CSVSIZE. O tamanho
+    da lista, a quantidade de registros nela armazenados, 
+    é atualizada na variável tam
+    * Casso não seja possível abrir o arquivo, retorna NULL
+
+*/
 TBook* carregaDados(char *fileName, int *tam);
+
+/*
+    Esta função libera a memória utilizada pelos 
+    registros da lista e, posteriormente libera a
+    memória utilizada pelo array;
+
+    Entrada
+    * acervo: ponteiro para o array da lista
+    * tam: quantidade de registros na lista    
+*/
 void limpaAcervo(TBook *acervo, int tam);
 
+/*
+    Esta função libera a memória utilizada por um 
+    registro de tipo TBook;
+
+    Entrada
+    * book: registro a ser liberado   
+*/
+void limpaRegistro(TBook book);
 
 /*
     Esta função faz uma busca na lista de tamanho tam
     pelo registro com campo isbn especifico.
     Para utilizar esta função:
     * A lista não precisa estar ordenada;
+    * A lista não pode estar vazia
     * Antes de chamar à função a chave procurada deve ser 
     copiada para o campo isbn da primeira posição não ocupada
     no final da lista (posição de índice tam); 
@@ -103,4 +150,15 @@ int remRegistro(char* isbn, TBook* lista, int* tam);
     da lista estar ordenada pelo campo chave 
 */
 
+
+
+/*
+    Esta função aloca uma array do tamanho definido pela capacidade
+
+    Entrada
+    * capacidade: Tamanho que se deseja alocar para o array
+
+    Retorna
+    * Ponteiro para o endereço de memória alocado para o array
+*/
 TBook* criaAcervo(int capacidade);
