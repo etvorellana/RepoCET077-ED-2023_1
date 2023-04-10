@@ -4,21 +4,16 @@
 #include "funcoes.h"
 
 
+
 int main(void){
   Games *jogos;
   int tam;
-  Tlinear linear[2];
-
   jogos = carregaDados("../../Data/Grupo1DataSet.csv" , &tam);
 
   //Criando nossa nova lista com 100 jogos
   Games *jogos02;
   int tam02 = 0; // tamanho de jogos 02
   int capacidade02 = 100; // capacidade de jogos 02
-  linear[0].cap = capacidade02;
-  linear[0].tam = tam02;
-  linear[0].jogos = jogos02;
-  linear[0].ordenada = 0;
   //alocando espaço para o novo array
   jogos02 = IniciaLista(capacidade02);
    
@@ -27,7 +22,7 @@ int main(void){
     //gera um índice aleatória do jogos
     int idx = rand()%tam;
     try++;
-    if(incJogo(jogos[idx], jogos02, &tam02))
+    if(incJogo(jogos[idx], jogos02, &tam02) == 1)
       ok++;
   }
 
@@ -53,11 +48,10 @@ int main(void){
   while(tam02 > 0){
     int idx = rand()%tam;
     try++;
-    if(remJogo(jogos[idx], jogos02, &tam02))
+    if(remJogo(jogos[idx], jogos02, &tam02) ==1)
       ok++;
   }
-  linear[0].tam = tam02;
-
+  
   printf("Foram realizadas %d tentativas de remoção\n", try);
   printf("Foram removidos %d registros na lista\n", ok);
 
@@ -67,10 +61,6 @@ int main(void){
   Games *jogos03;
   int tam03 = 0; // tamanho de jogos 02
   int capacidade03 = 100; // capacidade de jogos 02
-  linear[1].tam = tam03;
-  linear[1].cap = capacidade03;
-  linear[1].jogos = jogos03;
-  linear[1].ordenada = 1;
   //alocando espaço para o novo array
   jogos03 = IniciaLista(capacidade03);
    
@@ -92,8 +82,9 @@ int main(void){
     //gera um índice aleatória do jogos
     int idx = rand()%tam;
     try2++;
-    if(buscaBinRecPorId(jogos[idx].ID,jogos03,0,tam03) < tam03)
-      ok2++;
+    int pos = buscaBinRecPorId(jogos[idx].ID,jogos03,0,tam03);
+    if(jogos03[pos].ID == jogos[idx].ID)
+        ok2++;
   }
 
   printf("Foram realizadas %d tentativas de busca na lista ordenada\n", try2);
@@ -104,25 +95,36 @@ int main(void){
   while(tam03 > 0){
     int idx = rand()%tam;
     try2++;
-    if(remJogoOrdenado(jogos[idx],jogos03,&tam03))
+    if(remJogoOrdenado(jogos[idx],jogos03,&tam03) == 1)
       ok2++;
   }
-  linear[1].tam = tam03;
+  
 
   printf("Foram realizadas %d tentativas de remoção na lista ordenada\n", try2);
   printf("Foram removidos %d registros na lista ordenada\n", ok2);
 
-  //limpaJogos(jogos02, tam02);
+  Tlista *lis;
+  lis = (Tlista*)malloc(2*sizeof(Tlista));
+
+  lis[0] = criaListaLinear(100,0);
+  lis[1] = criaListaLinear(100,1);
+
+  printf("\n\nInc: %d\n\n",Inc_Geral(jogos[50], &(lis[1])));
+  printf("\n\nid : %d\n\n", jogos[50].ID);
+  printf("\n\n Busca: %d\n\n",Busca_Geral(2006000,lis[1]));
+  printf("\n\n primeiro elemento = %s\n\n",lis[1].Lista[0].Name);
+  printf("\n\nRem: %d\n\n", Rem_Geral(jogos[50], &(lis[1])));
+  printf("\n\n primeiro elemento = %s\n\n",lis[1].Lista[0].Name);
+  
   limpaJogos(jogos, tam);
+  
   
   return 0;
 }
 
 
-// Biblioteca de funções
-Games* IniciaLista(int capacidade);
-int buscaPorId(int ID, Games* lista, int *tam);
-int buscaBinPorId(int ID, Games *lista, int ini, int fim);
+
+
 
 Games* carregaDados(char *fileName, int *tam)
 {
@@ -208,8 +210,8 @@ void limpaJogos02(Games *jogos, int Pos){
 
 //FUNÇÕES PARA LISTAS DESORDENADAS
 
-int buscaPorId(int ID, Games* lista, int *tam){
-  for(int i = 0; i < *tam; i++){
+int buscaPorId(int ID, Games* lista, int tam){
+  for(int i = 0; i < tam; i++){
     if(ID == lista[i].ID)
       return i;
     }
@@ -217,7 +219,7 @@ int buscaPorId(int ID, Games* lista, int *tam){
 }
 
 int incJogo(Games jogos, Games* jogos02, int* tam){
-  int ok = buscaPorId(jogos.ID,jogos02, tam);
+  int ok = buscaPorId(jogos.ID,jogos02, *tam);
   if(ok==-1){
     jogos02[*tam].ID = jogos.ID;
         
@@ -254,11 +256,11 @@ int incJogo(Games jogos, Games* jogos02, int* tam){
 }
 
 int remJogo(Games jogo, Games* jogos02, int* tam){
-  if(*tam>1){
-    int ok = buscaPorId(jogo.ID,jogos02, tam);
+  if((*tam)>1){
+    int ok = buscaPorId(jogo.ID,jogos02, *tam);
     if(ok!=-1){
       limpaJogos02(jogos02, ok);
-      jogos02[ok] = jogos02[*tam-1];
+      jogos02[ok] = jogos02[(*tam-1)];
       --(*tam);
       return 1;
     }
@@ -266,6 +268,7 @@ int remJogo(Games jogo, Games* jogos02, int* tam){
   if(*tam == 1){
     limpaJogos02(jogos02, 0);
     --(*tam);
+    return 1;
   }
   return 0;
 }
@@ -277,8 +280,6 @@ int buscaBinRecPorId(int ID, Games *lista, int ini, int fim){
     int meio = (fim+ini)/2;
     if(ID == lista[meio].ID){
       return meio;
-    }else if(lista[meio-1].ID < ID && lista[meio+1].ID>ID){
-      return meio;
     }else if(ID < lista[meio].ID){
       return buscaBinRecPorId(ID, lista, ini, meio-1);
     }
@@ -286,25 +287,31 @@ int buscaBinRecPorId(int ID, Games *lista, int ini, int fim){
       return buscaBinRecPorId(ID, lista, meio+1, fim);
     }
   }
+  return ini;
 
 }
 
-int buscaBinPorId(int ID, Games *lista, int ini, int fim){
+int buscaBinPorId(int ID, Games *lista, int tamanho){
+    int inicio = 0;
+    int fim  = tamanho-1;
+    int meio;
 
-  if(fim>=ini){
-    for(int i=0; i<(fim+ini); i++){
-      int meio = (fim+ini)/2;
-      if(ID == lista[meio].ID){
-        return meio;
-      }else if(ID < lista[meio].ID){
-        fim = meio-1;
-      }
-      else{
-        ini = meio+1;
-      }
+    while(inicio<fim){
+        meio = (inicio+fim)/2;
+
+        if(lista[meio].ID == ID){
+            return meio;
+        }
+        else if(lista[meio].ID<ID){
+            inicio = meio + 1;
+        }
+        else{
+            fim = meio-1;
+        }
+
     }
-  }
-  return -1;
+    return -inicio;
+  
 }
 
 int remJogoOrdenado(Games jogo, Games* jogos03, int* tam){
@@ -355,47 +362,100 @@ int remJogoOrdenado(Games jogo, Games* jogos03, int* tam){
 }
 
 int incJogoOrdenado(Games jogo, Games* jogos03, int* tam){
-
+  
   int pos = buscaBinRecPorId(jogo.ID,jogos03,0,*tam);
-  int i, j;
+  int j;
   if(jogos03[pos].ID != jogo.ID){
     // Mosve os elementos maiores para a direita para abrir espaço para o novo jogo
-    for(j = *tam - 1; j >= i; j--){
+    for(j = *tam - 1; j >= pos; j--){
 
       jogos03[j+1] = jogos03[j];
 
     }
     // Insere o novo jogo na posição correta
 
-    jogos03[i].ID = jogo.ID;
+    jogos03[pos].ID = jogo.ID;
         
-    jogos03[i].Name = (char*)malloc((strlen(jogo.Name)+1)*sizeof(char));
-    strcpy(jogos03[i].Name,jogo.Name);
+    jogos03[pos].Name = (char*)malloc((strlen(jogo.Name)+1)*sizeof(char));
+    strcpy(jogos03[pos].Name,jogo.Name);
             
-    jogos03[i].Platform = (char*)malloc((strlen(jogo.Platform)+1)*sizeof(char));
-    strcpy(jogos03[i].Platform,jogo.Platform);
+    jogos03[pos].Platform = (char*)malloc((strlen(jogo.Platform)+1)*sizeof(char));
+    strcpy(jogos03[pos].Platform,jogo.Platform);
 
-    jogos03[i].Year_Of_Release =  jogo.Year_Of_Release;
+    jogos03[pos].Year_Of_Release =  jogo.Year_Of_Release;
 
-    jogos03[i].Genre = (char*)malloc((strlen(jogo.Genre)+1)*sizeof(char));
-    strcpy(jogos03[i].Genre,jogo.Genre);
+    jogos03[pos].Genre = (char*)malloc((strlen(jogo.Genre)+1)*sizeof(char));
+    strcpy(jogos03[pos].Genre,jogo.Genre);
 
-    jogos03[i].Publisher = (char*)malloc((strlen(jogo.Publisher)+1)*sizeof(char));
-    strcpy(jogos03[i].Publisher,jogo.Publisher);
+    jogos03[pos].Publisher = (char*)malloc((strlen(jogo.Publisher)+1)*sizeof(char));
+    strcpy(jogos03[pos].Publisher,jogo.Publisher);
 
-    jogos03[i].NA_Sales = jogo.NA_Sales;
+    jogos03[pos].NA_Sales = jogo.NA_Sales;
 
-    jogos03[i].EU_Sales = jogo.EU_Sales;
+    jogos03[pos].EU_Sales = jogo.EU_Sales;
 
-    jogos03[i].JP_sales = jogo.JP_sales;
+    jogos03[pos].JP_sales = jogo.JP_sales;
 
-    jogos03[i].Other_Sales = jogo.Other_Sales;
+    jogos03[pos].Other_Sales = jogo.Other_Sales;
 
-    jogos03[i].Global_Sales = jogo.Global_Sales;
+    jogos03[pos].Global_Sales = jogo.Global_Sales;
 
     ++(*tam);
     return 1;
   }
   return 0;
   
+}
+
+Tlista criaListaLinear(int cap, int eOrd){
+  int tamanho;
+  Tlista l;
+  
+  if (eOrd == 0)
+    tamanho = cap + 1;
+  else
+    tamanho = cap;
+
+  Games* jogo = (Games*)malloc(tamanho*sizeof(Games));
+  
+  l.capacidade = tamanho;
+  l.tam = 0;
+  l.Lista = jogo;
+  l.eOrdenada = eOrd;
+
+  return l;
+  
+}
+
+int Busca_Geral(int ID, Tlista l){
+  if(l.eOrdenada == 0){
+      return buscaPorId(ID, l.Lista, l.tam);
+      
+  }
+  else{
+   
+   return buscaBinRecPorId(ID, l.Lista, 0, l.tam);
+  }
+}
+
+int Inc_Geral(Games jogo, Tlista *l){
+  if((*l).eOrdenada == 0){
+     return incJogo(jogo, (*l).Lista, &((*l).tam));
+  }
+  else{
+   int ok=incJogoOrdenado(jogo, (*l).Lista, &((*l).tam));
+   
+    return ok;
+  }
+}
+
+int Rem_Geral(Games jogo, Tlista *l){
+  
+  if((*l).eOrdenada == 0){
+    
+     return remJogo(jogo, (*l).Lista, &((*l).tam));
+  }
+  else{
+   return remJogoOrdenado(jogo, (*l).Lista, &((*l).tam));
+  }
 }

@@ -1,13 +1,7 @@
-// Biblioteca de funções
-
-#include <stdio.h>  // <- printf(), fopen(), fclose(), ...
-#include <stdlib.h> // <- exit()
-#include <string.h> // <- strcpy()
-
-#include "struct.h"
-Games* IniciaLista(int capacidade);
-int buscaPorId(int ID, Games* lista, int *tam);
-int buscaBinPorId(int ID, Games *lista, int ini, int fim);
+#include "funcoes.h"
+#include <stdio.h>  
+#include <stdlib.h>
+#include <string.h>
 
 Games* carregaDados(char *fileName, int *tam)
 {
@@ -93,8 +87,8 @@ void limpaJogos02(Games *jogos, int Pos){
 
 //FUNÇÕES PARA LISTAS DESORDENADAS
 
-int buscaPorId(int ID, Games* lista, int *tam){
-  for(int i = 0; i < *tam; i++){
+int buscaPorId(int ID, Games* lista, int tam){
+  for(int i = 0; i < tam; i++){
     if(ID == lista[i].ID)
       return i;
     }
@@ -102,7 +96,7 @@ int buscaPorId(int ID, Games* lista, int *tam){
 }
 
 int incJogo(Games jogos, Games* jogos02, int* tam){
-  int ok = buscaPorId(jogos.ID,jogos02, tam);
+  int ok = buscaPorId(jogos.ID,jogos02, *tam);
   if(ok==-1){
     jogos02[*tam].ID = jogos.ID;
         
@@ -139,11 +133,11 @@ int incJogo(Games jogos, Games* jogos02, int* tam){
 }
 
 int remJogo(Games jogo, Games* jogos02, int* tam){
-  if(*tam>1){
-    int ok = buscaPorId(jogo.ID,jogos02, tam);
+  if((*tam)>1){
+    int ok = buscaPorId(jogo.ID,jogos02, *tam);
     if(ok!=-1){
       limpaJogos02(jogos02, ok);
-      jogos02[ok] = jogos02[*tam-1];
+      jogos02[ok] = jogos02[(*tam-1)];
       --(*tam);
       return 1;
     }
@@ -151,6 +145,7 @@ int remJogo(Games jogo, Games* jogos02, int* tam){
   if(*tam == 1){
     limpaJogos02(jogos02, 0);
     --(*tam);
+    return 1;
   }
   return 0;
 }
@@ -158,44 +153,50 @@ int remJogo(Games jogo, Games* jogos02, int* tam){
 //FUNÇÕE PARA LISTAS ORDENADAS
 
 int buscaBinRecPorId(int ID, Games *lista, int ini, int fim){
-  if(fim>=ini){
+  if(fim>ini){
     int meio = (fim+ini)/2;
     if(ID == lista[meio].ID){
       return meio;
     }else if(ID < lista[meio].ID){
       return buscaBinRecPorId(ID, lista, ini, meio-1);
     }
-    else{
+    else if(ID > lista[meio].ID) {
       return buscaBinRecPorId(ID, lista, meio+1, fim);
     }
   }
-  return -1;
+  return ini;
+
 }
 
-int buscaBinPorId(int ID, Games *lista, int ini, int fim){
+int buscaBinPorId(int ID, Games *lista, int tamanho){
+    int inicio = 0;
+    int fim  = tamanho-1;
+    int meio;
 
-  if(fim>=ini){
-    for(int i=0; i<(fim+ini); i++){
-      int meio = (fim+ini)/2;
-      if(ID == lista[meio].ID){
-        return meio;
-      }else if(ID < lista[meio].ID){
-        fim = meio-1;
-      }
-      else{
-        ini = meio+1;
-      }
+    while(inicio<fim){
+        meio = (inicio+fim)/2;
+
+        if(lista[meio].ID == ID){
+            return meio;
+        }
+        else if(lista[meio].ID<ID){
+            inicio = meio + 1;
+        }
+        else{
+            fim = meio-1;
+        }
+
     }
-  }
-  return -1;
+    return -inicio;
+  
 }
 
 int remJogoOrdenado(Games jogo, Games* jogos03, int* tam){
   if((*tam)>1){
-    int ok = buscaBinRecPorId(jogo.ID,jogos03,0,*tam);
-    if(ok!=-1){
+    int pos = buscaBinRecPorId(jogo.ID,jogos03,0,*tam);
+    if(jogos03[pos].ID == jogo.ID){
       
-      for(int i=ok; i<(*tam)-1; i++){
+      for(int i=pos; i<(*tam)-1; i++){
         limpaJogos02(jogos03, i);
     
         jogos03[i].ID = jogos03[i+1].ID;
@@ -238,53 +239,100 @@ int remJogoOrdenado(Games jogo, Games* jogos03, int* tam){
 }
 
 int incJogoOrdenado(Games jogo, Games* jogos03, int* tam){
-
-  int ok = buscaBinRecPorId(jogo.ID,jogos03,0,*tam);
-  int i, j;
-  if(ok==-1){
-    // Encontra a posição correta para o novo jogo
-    for (i = 0; i < *tam; i++){
-      if (jogo.ID > jogos03[i].ID){
-        break;
-      }
-     }
-    // Move os elementos maiores para a direita para abrir espaço para o novo jogo
-    for(j = *tam - 1; j >= i; j--){
+  
+  int pos = buscaBinRecPorId(jogo.ID,jogos03,0,*tam);
+  int j;
+  if(jogos03[pos].ID != jogo.ID){
+    // Mosve os elementos maiores para a direita para abrir espaço para o novo jogo
+    for(j = *tam - 1; j >= pos; j--){
 
       jogos03[j+1] = jogos03[j];
 
     }
     // Insere o novo jogo na posição correta
 
-    jogos03[i].ID = jogo.ID;
+    jogos03[pos].ID = jogo.ID;
         
-    jogos03[i].Name = (char*)malloc((strlen(jogo.Name)+1)*sizeof(char));
-    strcpy(jogos03[i].Name,jogo.Name);
+    jogos03[pos].Name = (char*)malloc((strlen(jogo.Name)+1)*sizeof(char));
+    strcpy(jogos03[pos].Name,jogo.Name);
             
-    jogos03[i].Platform = (char*)malloc((strlen(jogo.Platform)+1)*sizeof(char));
-    strcpy(jogos03[i].Platform,jogo.Platform);
+    jogos03[pos].Platform = (char*)malloc((strlen(jogo.Platform)+1)*sizeof(char));
+    strcpy(jogos03[pos].Platform,jogo.Platform);
 
-    jogos03[i].Year_Of_Release =  jogo.Year_Of_Release;
+    jogos03[pos].Year_Of_Release =  jogo.Year_Of_Release;
 
-    jogos03[i].Genre = (char*)malloc((strlen(jogo.Genre)+1)*sizeof(char));
-    strcpy(jogos03[i].Genre,jogo.Genre);
+    jogos03[pos].Genre = (char*)malloc((strlen(jogo.Genre)+1)*sizeof(char));
+    strcpy(jogos03[pos].Genre,jogo.Genre);
 
-    jogos03[i].Publisher = (char*)malloc((strlen(jogo.Publisher)+1)*sizeof(char));
-    strcpy(jogos03[i].Publisher,jogo.Publisher);
+    jogos03[pos].Publisher = (char*)malloc((strlen(jogo.Publisher)+1)*sizeof(char));
+    strcpy(jogos03[pos].Publisher,jogo.Publisher);
 
-    jogos03[i].NA_Sales = jogo.NA_Sales;
+    jogos03[pos].NA_Sales = jogo.NA_Sales;
 
-    jogos03[i].EU_Sales = jogo.EU_Sales;
+    jogos03[pos].EU_Sales = jogo.EU_Sales;
 
-    jogos03[i].JP_sales = jogo.JP_sales;
+    jogos03[pos].JP_sales = jogo.JP_sales;
 
-    jogos03[i].Other_Sales = jogo.Other_Sales;
+    jogos03[pos].Other_Sales = jogo.Other_Sales;
 
-    jogos03[i].Global_Sales = jogo.Global_Sales;
+    jogos03[pos].Global_Sales = jogo.Global_Sales;
 
     ++(*tam);
     return 1;
   }
   return 0;
   
+}
+
+Tlista criaListaLinear(int cap, int eOrd){
+  int tamanho;
+  Tlista l;
+  
+  if (eOrd == 0)
+    tamanho = cap + 1;
+  else
+    tamanho = cap;
+
+  Games* jogo = (Games*)malloc(tamanho*sizeof(Games));
+  
+  l.capacidade = tamanho;
+  l.tam = 0;
+  l.Lista = jogo;
+  l.eOrdenada = eOrd;
+
+  return l;
+  
+}
+
+int Busca_Geral(int ID, Tlista l){
+  if(l.eOrdenada == 0){
+      return buscaPorId(ID, l.Lista, l.tam);
+      
+  }
+  else{
+   
+   return buscaBinRecPorId(ID, l.Lista, 0, l.tam);
+  }
+}
+
+int Inc_Geral(Games jogo, Tlista *l){
+  if((*l).eOrdenada == 0){
+     return incJogo(jogo, (*l).Lista, &((*l).tam));
+  }
+  else{
+   int ok=incJogoOrdenado(jogo, (*l).Lista, &((*l).tam));
+   
+    return ok;
+  }
+}
+
+int Rem_Geral(Games jogo, Tlista *l){
+  
+  if((*l).eOrdenada == 0){
+    
+     return remJogo(jogo, (*l).Lista, &((*l).tam));
+  }
+  else{
+   return remJogoOrdenado(jogo, (*l).Lista, &((*l).tam));
+  }
 }
