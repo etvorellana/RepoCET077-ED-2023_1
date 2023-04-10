@@ -1,4 +1,5 @@
-#define CSVSIZE 46068
+#ifndef FUNCOES_H
+#define FUNCOES_H
 
 typedef struct {
 
@@ -14,17 +15,50 @@ typedef struct {
     float priceFinal;
     float priceOriginal;
     float discount;
-    char *steamDeck;
 
 } Jogos;
 
-Jogos* carregaDados( char *fileName, int *tam );
-Jogos* criaAcervo( int capacidade );
-void limpaAcervo( Jogos *acervo, int tamanhoAcervo );
-void limpaRegistro( Jogos *jogos);
-void imprimeOsDados( Jogos *lista, int i );
-int buscaPorId( int idDoApp, Jogos* lista, int tam );
-int incRegistro( Jogos origem, Jogos* destino, int* tam );
-int remRegistro( int idDoApp, Jogos* lista, int* tam );
-int verificaExistencia( Jogos* subColecao, int idDoApp, int tamanhoColecao );
-int buscaBinPorISBN_(int idProcurado, Jogos* lista, int tam);
+typedef struct{
+
+    Jogos* lista;
+    int capacidade;
+    int tamanho;
+    int isOrdenada;
+} TListaLinear;
+
+typedef struct {
+
+    Jogos* pilha;
+    int capacidade;   
+    int topo;       
+} TPilhaLinear;
+
+typedef struct {
+
+    Jogos* fila;    
+    int capacidade;
+    int inicio;
+    int fim;
+} TFilaLinear;
+
+Jogos* carregaDados( char *fileName, int *tam ); 
+Jogos* criaAcervo( int capacidade ); 
+
+void limpaAcervo( Jogos *acervo, int tamanhoAcervo ); 
+
+int incRegistro( Jogos origem, Jogos* destino, int* tam ); 
+int buscaPorId( int idDoApp, Jogos* lista, int tam ); 
+int remRegistro( int idDoApp, Jogos* lista, int* tam ); 
+
+int buscaBinPorId(int idProcurado, Jogos* lista, int tam); 
+int incOrdRegistro(Jogos jogo, Jogos* lista, int* tam); 
+int remOrdRegistro(int idARemover, Jogos* lista, int* tam); 
+
+void inicializaListaLinear(TListaLinear* lista, int capacidade, int isOrdenada); 
+TListaLinear* criaListaLinear(int capacidade, int isOrdenada); 
+int buscaNaLista(int idProcurado, TListaLinear* linear);
+int insereNaLista(Jogos jogo, TListaLinear* linear);
+int isEmpty(TListaLinear* linear);
+int removeDaLista(int idARemover, TListaLinear* linear); //função modificada
+
+#endif
