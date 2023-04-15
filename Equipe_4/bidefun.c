@@ -424,3 +424,82 @@ TSongs *removeDaLista(TSongs song, TListaLinear *listaLinear) {
                                     &(listaLinear->tam), pos);
   }
 }
+
+//inicializa uma estrutura de pilha 
+int inicioPilhalinear(TPilhaLinear *pilha, int cap)
+{
+  // capacidade total da pilha
+  pilha -> cap = cap;
+
+  // topo com posição inicial = 0
+  pilha -> topo = 0;
+
+  // alocação de memória
+  pilha -> pilha = (TSongs*) malloc(cap * sizeof(TSongs));
+
+  // se alocação for bem sucedida
+  if(pilha -> pilha)
+    return 1;
+  else
+    return 0;
+}
+
+// inserir novo elemento na pilha
+int pushTSongs (TSongs song, TPilhaLinear *pilha)
+{
+  // se a pilha não estiver cheia
+  if (pilha -> topo < pilha -> cap)
+  {
+    pilha -> pilha[pilha -> topo].Position = song.Position;
+    pilha -> pilha[pilha -> topo].Key = song.Key;
+
+    // dava erro no tamanho estranhamente entao ao *2
+    // garante que vai ter o espaço
+    pilha -> pilha[pilha -> topo].ArtistName = (char *)malloc(strlen(song.ArtistName) * 2);
+    strcpy(pilha -> pilha[pilha -> topo].ArtistName, song.ArtistName);
+
+    pilha -> pilha[pilha -> topo].SongName = (char *)malloc(strlen(song.SongName) * 2);
+    strcpy(pilha -> pilha[pilha -> topo].SongName, song.SongName);
+
+    pilha -> pilha[pilha -> topo].Days = song.Days;
+    pilha -> pilha[pilha -> topo].Top10Times = song.Top10Times;
+    pilha -> pilha[pilha -> topo].PeakPosition = song.PeakPosition;
+
+    pilha -> pilha[pilha -> topo].PeakPositionXtimes = (char *)malloc(strlen(song.PeakPositionXtimes) * 2);
+    strcpy(pilha -> pilha[pilha -> topo].PeakPositionXtimes, song.PeakPositionXtimes);
+
+    pilha -> pilha[pilha -> topo].PeakStreams = song.PeakStreams;
+    pilha -> pilha[pilha -> topo].TotalStreams = song.TotalStreams;
+
+    // incremento topo
+    pilha -> topo ++;
+
+    return 1;
+  }
+
+  //caso contrário
+  else
+    return 0;
+}
+
+// remover elemento da pilha
+int popTSongs(TPilhaLinear *pilha)
+{
+  // verificando se existe algum elemento na pilha
+  if (pilha -> topo > 0)
+  {
+    // decremento do topo
+    pilha -> topo --;
+
+    //limpando os campos
+    free(pilha -> pilha[pilha -> topo].ArtistName);
+    free(pilha -> pilha[pilha -> topo].SongName);
+    free(pilha -> pilha[pilha -> topo].PeakPositionXtimes);
+
+    return 1;
+  }
+
+  //caso contrário 
+  else
+  return 0;
+}

@@ -55,3 +55,6 @@ TSongs* RemRegistro_nao_ordenado(TSongs song, TSongs *lista, int *tamaux, int po
 TSongs* removeDaLista(TSongs song, TListaLinear* listaLinear);
 int buscaNaLista(TSongs song, TListaLinear* listaLinear);
 int menu(void);
+int inicioPilhalinear(TPilhaLinear *pilha, int cap);
+int pushTSongs(TSongs song, TPilhaLinear *pilha);
+int popTSongs(TPilhaLinear *pilha);
