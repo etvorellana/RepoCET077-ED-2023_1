@@ -6,11 +6,69 @@
 
 int main(void) {
   TSongs *acervo;
-  int tam = 0;
+  int tam = 0, acerto = 0, erro = 0, i = 0;
+  int e = 0, pe = 0, fe = 0;
 
   acervo = carregaDados("Data/newSongs.csv", &tam);
+  printf("============= PINHA ============\n");
+  printf("Qual a Capacidade da pilha?\n");
+  scanf("%d", &pe);
+  setbuf(stdin, NULL);
 
+  TPilhaLinear *pilha = criaPilhaLinear(pe);
+  printf("Quantos itens deseja adicionar a pilha?\n");
+  scanf("%d", &pe);
+  setbuf(stdin, NULL);
+  
+    for (i = 0; i < pe; i++) {
+      int aleatorio = rand() % 9000;
+    
+     if (pushTSongs(acervo[aleatorio], pilha)){
+          acerto++;   
+      }else{
+        erro++;
+      }
+    }
+
+  printf("\nforam %d tentativas\n%d inclusoes\n%d falhas",i, acerto, erro);
+  printf("\nQuantos itens deseja remover da pilha?\n");
+  scanf("%d", &pe);
+  setbuf(stdin, NULL);
+  acerto = 0;
+  for(i = 0; i < pe; i++){
+    popTSongs(pilha);
+  }
+  printf("\nremoçao feita !!\nNOVO TAMANHO DA PILHA %d", pilha -> topo);
+
+
+
+
+
+  /*printf("============ FILA ==============\n\n");
+  printf("Qual a Capacidade da fila?\n");
+  scanf("%d", &fe);
+  setbuf(stdin, NULL);
+
+  TFilaLinear *fila = criaFila(fe);
+  printf("Quantos itens deseja adicionar a fila?\n");
+  scanf("%d", &fe);
+  setbuf(stdin, NULL);
+  int aleatorio;
+  for (i = 0; i < pe; i++) {
+    int aleatorio = rand() % 9000;
+  
+   if (enqueue(fila)){
+        acerto++;   
+    }else{
+      erro++;
+    }
+  }
+
+*/
+  
   // MENU
+/*
+  
   printf("Bem vindo ao seu criador de estrutura de dados favorito!\n");
   printf("\nPressione enter para iniciar!");
   getchar();
@@ -230,6 +288,7 @@ int main(void) {
     }
   }
   printf("Obrigado por utilizar, volte sempre!<3");
+  */
   limpaAcervo(acervo, tam);
   return 0;
 }
