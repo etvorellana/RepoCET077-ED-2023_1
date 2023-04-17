@@ -22,6 +22,24 @@ typedef struct{
 }Tlista;
 
 
+typedef struct
+{
+   Games* pilha;   
+    int cap;       
+    int topo;       
+}TPilhaLinear;
+
+
+
+typedef struct
+{
+    Games* fila;    
+    int cap;       
+    int ini;        
+    int fim;        
+} TFilaLinear;
+
+
 Games* carregaDados(char *fileName, int *tam);
 
 Games* IniciaLista(int capacidade);
@@ -29,6 +47,8 @@ Games* IniciaLista(int capacidade);
 void limpaJogos(Games *jogos, int tam);
 
 void limpaJogos02(Games *jogos, int Pos);
+
+void limpaJogos03(Games *jogo);
 
 int buscaPorId(int ID, Games* lista, int tam);
 
@@ -51,3 +71,23 @@ int Busca_Geral(int ID, Tlista l);
 int Inc_Geral(Games jogo, Tlista *l);
 
 int Rem_Geral(Games jogo, Tlista *l);
+
+TFilaLinear* criaFilaLinear(int cap);
+
+TPilhaLinear* criaPilhaLinear(int cap);
+
+int insereNaFila(Games jogo, TFilaLinear* fila);
+
+int insereNaPilha(Games jogo, TPilhaLinear* pilha);
+
+Games* removeDaFila(TFilaLinear* fila);
+
+Games* removeDaPilha(TPilhaLinear* pilha);
+
+void demonstrar_add_pilha(int try1,int ok,TPilhaLinear *pilha);
+
+void demonstrar_rem_pilha(TPilhaLinear *pilha);
+
+void demonstrar_add_fila(int try1,int ok,TFilaLinear *fila);
+
+void demonstrar_rem_fila(TFilaLinear *fila);
