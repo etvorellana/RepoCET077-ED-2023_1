@@ -1,4 +1,4 @@
-#include <stdio.h>  // <- printf(), fopen(), fclose(), ...
+ #include <stdio.h>  // <- printf(), fopen(), fclose(), ...
 #include <stdlib.h> // <- exit()
 #include <string.h> // <- strcpy()
 
@@ -125,13 +125,13 @@ int BuscaPorRank(int R, TSongs *lista, int tam) {
 }
 
 int busca_binaria(TSongs *lista, int tamanho, int item) {
-//printf("aaaaaaaaaaaaaaa%d", item);
+  // printf("aaaaaaaaaaaaaaa%d", item);
   int esquerda = 0, direita = tamanho - 1;
   int meio = (esquerda + direita) / 2;
   while (esquerda <= direita) {
-    //printf("entra no while");
+    // printf("entra no while");
     if (lista[meio].Position == item) {
-printf("achamo\n");
+      printf("achamo\n");
       return meio;
     } else if (lista[meio].Position < item) {
       esquerda = meio + 1;
@@ -140,7 +140,7 @@ printf("achamo\n");
     }
     meio = (esquerda + direita) / 2;
   }
-printf("!achamo\n");
+  printf("!achamo\n");
 
   return esquerda;
 }
@@ -213,7 +213,7 @@ int RemRegistro_ordenado(TSongs song, TSongs *lista, int *tamaux) {
 }
 //
 TListaLinear *criaListaLinear(int cap, int eOrd) {
-  //printf("\nCriando lista\n");
+  // printf("\nCriando lista\n");
   TListaLinear *listaLinear = (TListaLinear *)malloc(sizeof(TListaLinear));
 
   if (!listaLinear) {
@@ -239,26 +239,26 @@ TListaLinear *criaListaLinear(int cap, int eOrd) {
     exit(-1);
   }
 
-  //printf("\nRetornando lista\n");
+  // printf("\nRetornando lista\n");
   return listaLinear;
 }
 //
 int buscaNaLista(TSongs song, TListaLinear *listaLinear) {
-//printf("entrou na busca\n");
+  // printf("entrou na busca\n");
   int posicao;
 
   if (listaLinear->tam == 0) {
     return 0;
   } else if (listaLinear->eOrd != 0) {
-//printf("entrou na busca ordenada\n");
+    // printf("entrou na busca ordenada\n");
     posicao =
         busca_binaria(listaLinear->lista, listaLinear->tam, song.Position);
-    //printf("\nEsta na lista!\n");
+    // printf("\nEsta na lista!\n");
     return posicao;
   } else {
-//printf("entrou na busca !ordenada\n");
+    // printf("entrou na busca !ordenada\n");
     posicao = BuscaPorRank(song.Position, listaLinear->lista, listaLinear->tam);
-    //printf("\nNao esta na lista!\n");
+    // printf("\nNao esta na lista!\n");
 
     return posicao;
   }
@@ -360,17 +360,18 @@ int IncRegistro(TSongs song, TSongs *lista, int *tamaux, int pos) {
 }
 
 int insereNaLista(TSongs song, TListaLinear *listaLinear) {
-//printf("entrou na inserção\n");
+  // printf("entrou na inserção\n");
   int pos = buscaNaLista(song, listaLinear);
 
   if (listaLinear->lista[pos].Position != song.Position) {
-//printf("entrou no if");
-    if (listaLinear->eOrd != 0){
-//printf("entrou na inserção ordenada\n");
+    // printf("entrou no if");
+    if (listaLinear->eOrd != 0) {
+      // printf("entrou na inserção ordenada\n");
       return IncRegistroOrd(song, listaLinear->lista, &(listaLinear->tam), pos);
-    }else{
-//printf("entrou na inserção !ordenada");
-      return IncRegistro(song, listaLinear->lista, &(listaLinear->tam), pos);}
+    } else {
+      // printf("entrou na inserção !ordenada");
+      return IncRegistro(song, listaLinear->lista, &(listaLinear->tam), pos);
+    }
   }
 }
 
@@ -425,9 +426,23 @@ TSongs *removeDaLista(TSongs song, TListaLinear *listaLinear) {
   }
 }
 
-//inicializa uma estrutura de pilha 
-int inicioPilhalinear(TPilhaLinear *pilha, int cap)
-{
+TPilhaLinear *criaPilhaLinear(int cap) {
+  TPilhaLinear *p = (TPilhaLinear *)malloc(sizeof(TPilhaLinear));
+  if (p == NULL) {
+    printf("Erro: memória insuficiente!\n");
+    exit(1);
+  }
+  p->pilha = (TSongs *)malloc(cap * sizeof(TSongs));
+  if (p->pilha == NULL) {
+    printf("Erro: memória insuficiente!\n");
+    exit(1);
+  }
+  p->cap = cap;
+  p->topo = 0;
+  return p;
+}
+// inicializa uma estrutura de pilha
+/*int inicioPilhalinear(TPilhaLinear *pilha, int cap) {
   // capacidade total da pilha
   pilha -> cap = cap;
 
@@ -443,63 +458,130 @@ int inicioPilhalinear(TPilhaLinear *pilha, int cap)
   else
     return 0;
 }
-
+*/
 // inserir novo elemento na pilha
-int pushTSongs (TSongs song, TPilhaLinear *pilha)
-{
+int pushTSongs(TSongs song, TPilhaLinear *pilha) {
+
   // se a pilha não estiver cheia
-  if (pilha -> topo < pilha -> cap)
-  {
-    pilha -> pilha[pilha -> topo].Position = song.Position;
-    pilha -> pilha[pilha -> topo].Key = song.Key;
+  if (pilha->topo < pilha->cap) {
+    pilha->pilha[pilha->topo].Position = song.Position;
+    pilha->pilha[pilha->topo].Key = song.Key;
 
     // dava erro no tamanho estranhamente entao ao *2
     // garante que vai ter o espaço
-    pilha -> pilha[pilha -> topo].ArtistName = (char *)malloc(strlen(song.ArtistName) * 2);
-    strcpy(pilha -> pilha[pilha -> topo].ArtistName, song.ArtistName);
+    pilha->pilha[pilha->topo].ArtistName =
+        (char *)malloc(strlen(song.ArtistName) * 2);
+    strcpy(pilha->pilha[pilha->topo].ArtistName, song.ArtistName);
 
-    pilha -> pilha[pilha -> topo].SongName = (char *)malloc(strlen(song.SongName) * 2);
-    strcpy(pilha -> pilha[pilha -> topo].SongName, song.SongName);
+    pilha->pilha[pilha->topo].SongName =
+        (char *)malloc(strlen(song.SongName) * 2);
+    strcpy(pilha->pilha[pilha->topo].SongName, song.SongName);
 
-    pilha -> pilha[pilha -> topo].Days = song.Days;
-    pilha -> pilha[pilha -> topo].Top10Times = song.Top10Times;
-    pilha -> pilha[pilha -> topo].PeakPosition = song.PeakPosition;
+    pilha->pilha[pilha->topo].Days = song.Days;
+    pilha->pilha[pilha->topo].Top10Times = song.Top10Times;
+    pilha->pilha[pilha->topo].PeakPosition = song.PeakPosition;
 
-    pilha -> pilha[pilha -> topo].PeakPositionXtimes = (char *)malloc(strlen(song.PeakPositionXtimes) * 2);
-    strcpy(pilha -> pilha[pilha -> topo].PeakPositionXtimes, song.PeakPositionXtimes);
+    pilha->pilha[pilha->topo].PeakPositionXtimes =
+        (char *)malloc(strlen(song.PeakPositionXtimes) * 2);
+    strcpy(pilha->pilha[pilha->topo].PeakPositionXtimes,
+           song.PeakPositionXtimes);
 
-    pilha -> pilha[pilha -> topo].PeakStreams = song.PeakStreams;
-    pilha -> pilha[pilha -> topo].TotalStreams = song.TotalStreams;
+    pilha->pilha[pilha->topo].PeakStreams = song.PeakStreams;
+    pilha->pilha[pilha->topo].TotalStreams = song.TotalStreams;
 
     // incremento topo
-    pilha -> topo ++;
+    pilha->topo++;
 
     return 1;
   }
 
-  //caso contrário
+  // caso contrário
   else
     return 0;
 }
 
 // remover elemento da pilha
-int popTSongs(TPilhaLinear *pilha)
-{
+int popTSongs(TPilhaLinear *pilha) {
   // verificando se existe algum elemento na pilha
-  if (pilha -> topo > 0)
-  {
+  if (pilha->topo > 0) {
     // decremento do topo
-    pilha -> topo --;
+    pilha->topo--;
 
-    //limpando os campos
-    free(pilha -> pilha[pilha -> topo].ArtistName);
-    free(pilha -> pilha[pilha -> topo].SongName);
-    free(pilha -> pilha[pilha -> topo].PeakPositionXtimes);
+    // limpando os campos
+    free(pilha->pilha[pilha->topo].ArtistName);
+    free(pilha->pilha[pilha->topo].SongName);
+    free(pilha->pilha[pilha->topo].PeakPositionXtimes);
 
     return 1;
   }
 
-  //caso contrário 
+  // caso contrário
   else
+    return 0;
+}
+
+TFilaLinear *criaFila(int cap) {
+  TFilaLinear *p = (TFilaLinear *)malloc(sizeof(TFilaLinear));
+  if (p == NULL) {
+    printf("Erro: memória insuficiente!\n");
+    exit(1);
+  }
+
+  p->fila = (TSongs *)malloc(cap * sizeof(TSongs));
+  if (p->fila == NULL) {
+    printf("Erro: memória insuficiente!\n");
+    exit(1);
+  }
+  p->cap = cap;
+  p->ini = 0;
+  p->fim = 0;
+  return p;0
+}
+
+int enqueue(TSongs song, TFilaLinear *fila) {
+  if (fila->fim - fila->ini == fila->cap) { // a fila esta cheia
+    return fila->cap;
+  } else {
+    // função para na inserir elementos repetidos da fila?
+    fila->fila[fila->fim].Position = song.Position;
+    fila->fila[fila->fim].Key = song.Key;
+
+    fila->fila[fila->fim].ArtistName =
+        (char *)malloc(strlen(song.ArtistName) * 2);
+    strcpy(fila->fila[fila->fim].ArtistName, song.ArtistName);
+
+    fila->fila[fila->fim].SongName = (char *)malloc(strlen(song.SongName) * 2);
+    strcpy(fila->fila[fila->fim].SongName, song.SongName);
+
+    fila->fila[fila->fim].Days = song.Days;
+    fila->fila[fila->fim].Top10Times = song.Top10Times;
+    fila->fila[fila->fim].PeakPosition = song.PeakPosition;
+
+    fila->fila[fila->fim].PeakPositionXtimes =
+        (char *)malloc(strlen(song.PeakPositionXtimes) * 2);
+    strcpy(fila->fila[fila->fim].PeakPositionXtimes, song.PeakPositionXtimes);
+
+    fila->fila[fila->fim].PeakStreams = song.PeakStreams;
+    fila->fila[fila->fim].TotalStreams = song.TotalStreams;
+    
+    fila-> fim = fila->fim + 1;
+    return 1;
+  }
   return 0;
+}
+
+TSongs *dequeue(TFilaLinear *fila) {
+  if (fila->ini == fila->fim) {
+    return NULL;
+  } else {
+    TSongs* filaAux = (TSongs*) malloc(sizeof(TSongs));
+    filaAux = &fila->fila[fila->ini];
+    
+    free(fila->fila[fila->ini].ArtistName);
+    free(fila->fila[fila->ini].SongName);
+    free(fila->fila[fila->ini].PeakPositionXtimes);
+    
+    fila->ini = fila->ini + 1;
+    return filaAux;
+  }
 }
