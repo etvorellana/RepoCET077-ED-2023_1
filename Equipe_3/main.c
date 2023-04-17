@@ -1,310 +1,240 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#include<time.h>
+#include <stdbool.h>
 
-#define CSVSIZE 10000
+#include"dataFun.h"
 
-typedef struct ProjetoDataSet {
-    char *nCdg;
-    char *codigofp;
-    char *marca;
-    char *modelo;
-    int anoModelo;
-    int mesReferencia;
-    int anoReferencia;
-    float valor;
-} t_Fipe;
-
-// Protótipos
-t_Fipe *carregaDados(char *arquivo, int *tam);
-int buscaElemento(t_Fipe *fipe, int tam, char *idBusca);
-t_Fipe *criar_sublista(t_Fipe *lista, int registro, int tam);
-void incluir_item(t_Fipe item, t_Fipe **sublista, int *tam);
-void remover_elemento(char *id_chave, t_Fipe *lista, int *tam);
-int busca_binaria_recursiva(t_Fipe *array, int tam, char *id);
-int procurar_id_estoque(t_Fipe *fipe, int n_registros, char *codigo_procurado);
-
-int main() {
-
-    t_Fipe *fipe;
-    int tam;
-    //int i;
-
-    fipe = carregaDados("datasetFipe.csv", &tam);
-
-    t_Fipe *sublista = NULL;
-    int tam_sublista = 0;
-    char idBuscado[20];
-    int posicao;
-
-    printf("digite o id do produto para criar a sublista: ");
-    scanf("%s", idBuscado);
-    posicao = buscaElemento(fipe, tam, idBuscado);
-    if (posicao >= 0) {
-        sublista = criar_sublista(fipe, posicao, tam_sublista + 1);
-        tam_sublista++;
-        printf("Sublista criada com o produto de id %s.\n", idBuscado);
-    } else {
-        printf("Produto nao encontrado para criar a sublista.\n");
-    }
-
-    printf("digite o id do produto para incluir na sublista: ");
-    scanf("%s", idBuscado);
-    posicao = buscaElemento(fipe, tam, idBuscado);
-    if (posicao >= 0) {
-        incluir_item(fipe[posicao], &sublista, &tam_sublista);
-        printf("Produto de id %s incluido na sublista.\n", idBuscado);
-    } else {
-        printf("Produto nao encontrado para incluir na sublista.\n");
-    }
-
-    printf("digite o id do produto para remover da sublista: ");
-    scanf("%s", idBuscado);
-    remover_elemento(idBuscado, sublista, &tam_sublista);
-
-    char id[15];
-    printf("digite o id para busca binaria recursiva: ");
-    scanf("%s", id);
-
-    int resultado = busca_binaria_recursiva(fipe, tam, id);
-
-    if (resultado != -1) {
-        printf("Elemento '%s' encontrado na posicao %d\n", id, resultado);
-    } else {
-        printf("Elemento '%s' nao encontrado\n", id);
-    }
-
-    free(fipe);
-    free(sublista);
-
-    return 0;
-}
-
-//Carrega Dados do Arquivo
-t_Fipe *carregaDados(char *arquivo, int *tam)
+int main()
 {
-    t_Fipe *fipe;
-    FILE *fp;
+    int tam = CSVSIZE; // Inicializa o tamanho da lista original a partir do valor definido na constante CSVSIZE
+    int cap = 100; // Inicializa a capacidade da sublista a ser gerado
+    int tamSubFipeValor = 0; // Inicializa o tamanho da sublista como zero
+    int *tamSubFipe = &tamSubFipeValor; // Cria um ponteiro para o tamanho da sublista
 
-    char str[900];
-    int i = 0;
+    srand(time(NULL)); // Inicializa o gerador de nï¿½meros aleatï¿½rios
 
-    fipe = (t_Fipe *)malloc(CSVSIZE * sizeof(t_Fipe));
+    t_Fipe *fipe = carregaDados("datasetFipe.csv", &tam); // Carrega os dados do arquivo CSV e atualiza o tamanho do conjunto original
+    //t_ListaLinear *fipe = carregaDados("datasetFipe.csv", &tam);
 
-    if (fipe == NULL) {
-        printf("ERRO! Falha ao alocar memoria!\n");
-        exit(1);
-    }
+    char idBusca[] = "13265"; // Define o ID a ser buscado na lista original
+    int index = buscaPorId(fipe, tam, idBusca); // Busca o registro na lista original pelo ID e retorna seu ï¿½ndice
+    printf("Id Buscado %s -> Indice %d\n", idBusca, index); // Imprime o resultado da busca
 
-    fp = fopen(arquivo, "r");
+    t_Fipe *subFipe; // Cria um ponteiro para a sublista
+    subFipe = criaFipe(cap + 1); // Aloca memï¿½ria para a sublista
 
-    if (fp == NULL) {
-        printf("ERRO! Arquivo nao pode ser aberto.\n");
-        exit(1);
-    }
+    bool jaAddTodos = false; // Variï¿½vel de controle para verificar se a sublista jï¿½ contï¿½m todos os registros da lista original
 
-    char *ok;
-    ok = fgets(str, 900, fp);
-    if (ok == NULL) {
-        printf("Erro lendo o cabecalho do CSV!!!\n");
-        exit(1);
-    }
+    while (*tamSubFipe < cap && !jaAddTodos) { // Loop para gerar a sublista atï¿½ atingir a capacidade mï¿½xima ou incluir todos os registros da lista original
+        int index = rand() % tam; // Gera um ï¿½ndice aleatï¿½rio da lista original
+        bool jaAdd = false; // Variï¿½vel de controle para verificar se o registro jï¿½ foi adicionado a sublista
 
-    i = 0;
-    char sep[] = ",";
-
-    while (!feof(fp) && i < CSVSIZE) {
-        ok = fgets(str, 900, fp);
-        if (ok) {
-            char *campo;
-            campo = strtok(str, sep);
-            fipe[i].nCdg = strdup(campo);
-            campo = strtok(NULL, sep);
-            fipe[i].codigofp = strdup(campo);
-            campo = strtok(NULL, sep);
-            fipe[i].marca = strdup(campo);
-            campo = strtok(NULL, sep);
-            fipe[i].modelo = strdup(campo);
-            campo = strtok(NULL, sep);
-            fipe[i].anoModelo = atoi(campo);
-            campo = strtok(NULL, sep);
-            fipe[i].mesReferencia = atoi(campo);
-            campo = strtok(NULL, sep);
-            fipe[i].anoReferencia = atoi(campo);
-            campo = strtok(NULL, sep);
-            fipe[i].valor = atof(campo);
-            i++;
+        // Verifica se o ï¿½ndice gerado aleatoriamente jï¿½ foi adicionado a sublista
+        for (int i = 0; i < *tamSubFipe; i++) {
+            if (strcmp(fipe[index].nCdg, subFipe[i].nCdg) == 0) { // Compara os cï¿½digos de cada registro
+                jaAdd = true;
+                break;
+            }
         }
+
+        if (!jaAdd && incRegistro(fipe[index], subFipe, tamSubFipe)) { // Adiciona o registro ao subconjunto, se ainda nï¿½o tiver sido adicionado
+            printf("Registro inserido com sucesso!\n");
+        } else {
+            printf("Registro nao inserido!\n");
+        }
+
+        // Verifica se todos os registros da lista original jï¿½ foram adicionados a sublista
+        jaAddTodos = (*tamSubFipe >= tam);
     }
-    fclose(fp);
-    *tam = i;
-    return fipe;
-}
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+    int contadorRemovidos = 0; // Contador de registros removidos
+    bool *indicesRemovidos = calloc(*tamSubFipe, sizeof(bool)); // Array para acompanhar quais ï¿½ndices jï¿½ foram removidos
 
-int procurar_id_estoque(t_Fipe *fipe, int n_registros, char *codigo_procurado)
-{
-    int encontrou = 0;
-
-    for (int j = 0; j < n_registros; j++)
+    // Loop que continua atï¿½ que todos os registros da sublista sejam removidos
+    while(contadorRemovidos < *tamSubFipe)
     {
-        if (strcmp(fipe[j].nCdg, codigo_procurado) == 0)
-        {
-            encontrou = 1;
-            printf("Registro encontrado:\n");
-            printf("Num codigo: %s\n", fipe[j].nCdg);
-            printf("Codigo fipe: %s\n", fipe[j].codigofp);
-            printf("Marca: %s\n", fipe[j].marca);
-            printf("Modelo: %s\n", fipe[j].modelo);
-            printf("ano do Modelo: %d\n", fipe[j].anoModelo);
-            printf("Mes de Referencia: %d\n", fipe[j].mesReferencia);
-            printf("Ano de Referencia: %d\n", fipe[j].anoReferencia);
-            printf("Valor: %.2f\n", fipe[j].valor);
+        int indice = rand() % *tamSubFipe; // Gera um ï¿½ndice aleatï¿½rio da sublista
+
+        // Verifica se o ï¿½ndice gerado nï¿½o foi removido anteriormente
+        if (!indicesRemovidos[indice]) {
+            // Tenta remover o registro do ï¿½ndice gerado na sublista
+            if (remRegistro(subFipe[indice].nCdg, subFipe, tamSubFipe) != -1) {
+                printf("Registro removido com sucesso!\n");
+                indicesRemovidos[indice] = true; // Marca o ï¿½ndice como removido
+                contadorRemovidos++; // Incrementa o contador de registros removidos
+            } else {
+                printf("Registro nao removido!\n");
+            }
         }
     }
 
-    if (!encontrou)
-    {
-        printf("Nenhum registro encontrado com o idEstoque %s\n", codigo_procurado);
-        return 0;
-    }
+    free(indicesRemovidos); // Libera a memï¿½ria alocada para o array de ï¿½ndices removidos
 
-    return 1;
-}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Chamada da funï¿½ï¿½o buscIdOrd
+    int indexOrd = buscIdOrd(idBusca, fipe, tam); // Busca o registro na lista original de forma ordenada pelo ID e retorna seu ï¿½ndice
+    printf("Id Buscado (busca ordenada) %s -> Indice %d\n", idBusca, indexOrd); // Imprime o resultado da busca ordenada
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Chamada da funï¿½ï¿½o incRegOrd
+    int posInc = incRegOrd(fipe[index], fipe, &tam);
+    printf("Registro %s incluido na posicao ordenada %d\n", idBusca, posInc);
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Chamada da funï¿½ï¿½o criaListaLinear
+    int capacidade = 100;
+    t_ListaLinear *listaLinear = criaListaLinear(capacidade, TRUE);
+    printf("Lista linear criada com capacidade %d e ordenada: %d\n", listaLinear->cap, listaLinear->ehOrd);
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  /*  // Chama a funï¿½ï¿½o insereNaLista com um registro e a sublista
+    int registrosInseridos = 0;
 
-int buscaElemento(t_Fipe *fipe, int tam, char *idBusca)
-{
-    for(int i = 0; i < tam; i++)
-    {
-        // Comparando o ID de busca 'idBusca' com o ID do elemento atual da lista 'fipe'
-        if (strcmp(fipe[i].nCdg, idBusca) == 0)
-        {
-            // Se os IDs são iguais, retorna o índice do elemento encontrado
-            return i;
+    for (int i = 0; i < cap; i++) {
+        int index;
+        bool registroJaAdicionado;
+
+        do {
+            index = rand() % tam;
+            int posicaoEncontrada = BuscaNaListaLinear(fipe[index].nCdg, listaLinear);
+
+            registroJaAdicionado = (posicaoEncontrada >= 0);
+        } while (registroJaAdicionado);
+
+        int resultadoInsercao = insereNaLista(fipe[index], listaLinear, 1); // 1 indica que a lista ï¿½ ordenada
+
+        if (resultadoInsercao) {
+            printf("Registro inserido com sucesso!\n");
+            registrosInseridos++; // Incrementa o contador de registros inseridos
+        } else {
+            printf("Registro nao inserido!\n");
         }
     }
-    // Se o elemento não foi encontrado na lista, retorna -1
-    return -1;
-}
 
+    printf("Total de registros inseridos na lista linear: %d\n", registrosInseridos); // Imprime o total de registros inseridos na lista linear
+ *//*   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Chama a funï¿½ï¿½o BuscaNaListaLinear com o ID de busca e a sublista
+    char idChave[] = "35214";
 
-t_Fipe *criar_sublista(t_Fipe *lista, int registro, int tam) {
-    // Alocando memória para a sublista com tamanho 'tam' vezes o tamanho de um elemento t_Fipe
-    t_Fipe *sublista = (t_Fipe *)malloc(tam * sizeof(t_Fipe));
+    int posicaoEncontrada = BuscaNaListaLinear(idChave, listaLinear);
 
+    if (posicaoEncontrada >= 0) {
+        printf("Registro encontrado na posicao: %d\n", posicaoEncontrada);
+    } else {
+        printf("Registro nao encontrado. Posicao sugerida para insercao: %d\n", -posicaoEncontrada);
+    }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+    //cria fila Linear
+    t_FilaLinear *fila = criaFilaLinear(capacidade);
 
-    if (sublista == NULL) {
-        printf("ERRO! Falha ao alocar memoria para sublista!\n");
-        exit(1);
+    if (fila == NULL) {
+        printf("Falha ao criar a fila.\n");
+        return 1;
     }
 
-    // Copiando o elemento na posição 'registro' da lista original para a primeira posição da sublista
-    sublista[0] = lista[registro];
+    printf("\nFila criada com sucesso! Capacidade: %d\n", fila->cap);
 
-    // Retornando o ponteiro para a sublista criada
-    return sublista;
-}
-
-
-void incluir_item(t_Fipe item, t_Fipe **sublista, int *tam) {
-    // Incrementa o tamanho da sublista em 1
-    (*tam)++;
-
-    // Realoca a memória da sublista para acomodar o novo elemento
-    *sublista = (t_Fipe *)realloc(*sublista, (*tam) * sizeof(t_Fipe));
-
-    if (*sublista == NULL) {
-        printf("ERRO! Falha ao realocar memoria para sublista!\n");
-        exit(1);
+    printf("\nAdicionar elementos a fila.\n");
+    int aux;
+    for (int i = 0; i<90; i++){
+        index = rand()%tam;
+        aux = InserirNaFila(fila, fipe[index]);
+        if (aux==1){
+            printf("Elemento adicionado com sucesso!\n");
+        }else{
+            printf("Nao foi possivel adicionar o Elemento!\n");
+        }
     }
 
-    // Insere o novo item na última posição da sublista
-    (*sublista)[*tam - 1] = item; //queremos acessar um elemento específico dentro do array
-}
+    printf("\nQuantidade de Elementos na fila: %d\n", fila->fim-fila->ini);
 
+    t_Fipe* trFila;
+    printf("\nRemovendo 10 elementos da elementos da fila.\n\n");
+    for(int i=0; i<10; i++){
+        trFila = RemoveDaFila(fila);
+        if (trFila != NULL){
+            printf("Elemento removido com sucesso! Codigo do elemento removido: %s --\n", trFila->nCdg);
+        } else {
+            printf("Erro ao remover elemento!\n");
+        }
+    }
 
-void remover_elemento(char *id_chave, t_Fipe *lista, int *tam) {
-    // Inicializa o índice do elemento a ser removido como -1 (não encontrado)
-    int index = -1;
+    printf("\nQuantidade de Elementos na fila: %d\n", fila->fim-fila->ini);
 
-    // Percorre a lista em busca do elemento com a chave id_chave
-    for (int i = 0; i < *tam; i++) {
-        if (strcmp(lista[i].nCdg, id_chave) == 0) {
-            // Se o elemento for encontrado, guarda o índice e interrompe o loop
-            index = i;
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // cria pilha linear
+    t_pilhaLinear *pilha = criaPilhaLinear(capacidade);
+
+    if (pilha == NULL) {
+        printf("Falha ao criar a pilha.\n");
+        return 1;
+    }
+
+    printf("\nPilha criada com sucesso! Capacidade: %d\n", pilha->cap);
+
+    printf("\nAdicionar Elementos a Pilha\n");
+
+    for (int i = 0; i<150; i++){
+        index = rand()%tam;
+        if(insereNaPilha(fipe[index], pilha)){
+            printf("Elemento empilhado com sucesso!\n");
+        }
+        else{
+            printf("Erro ao Empilhar!\n\n");
+            break;
+        }
+    }
+    printf("\nQuantidade de Elementos na fila: %d\n", pilha->topo);
+
+    printf("\Esvaziando a pilha.\n");
+
+    t_Fipe* trPilha;
+    for (int i=0; i<150; i++){
+        trPilha = RemoverdaPilha(pilha);
+        if (trPilha != NULL){
+            printf("Elemento %s removido com sucesso.\n", trPilha->nCdg);
+        } else {
+            printf("Nao foi possivel remover! Pilha Vazia!\n\n");
             break;
         }
     }
 
-    // Se o elemento foi encontrado
-    if (index >= 0) {
-        // Desloca os elementos posteriores ao elemento encontrado uma posição à esquerda
-        for (int i = index; i < (*tam) - 1; i++) {
-            lista[i] = lista[i + 1];
-        }
-        // Decrementa o tamanho da lista em 1
-        (*tam)--;
-        printf("Elemento removido com sucesso.\n");
-    } else {
-        printf("Elemento nao encontrado na sublista.\n");
+    printf("\nQuantidade de Elementos na fila: %d\n", pilha->topo);
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/*
+//Feita por Henio
+
+    if(estacheia(pilha)== -1 ){
+        printf("nï¿½o empilha");
     }
+    else{
+            printf("pilha vazia , vamos empilhar\n\n");
+    for(int i = 0; i < 100; i++) {
+    int index = rand() % (tam+1);
+    printf("--[%d]-- %s\n",index,fipe[index].modelo);
+
+    empilhar(fipe[index],pilha,100);
+
+    }
+    }
+    if(estacheia(pilha))
+    {
+        printf("\nPilha Encheu\n");
+    }
+*/
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    limpaFipe(fipe, tam); // Libera a memï¿½ria alocada para a lista original
+    limpaFipe(subFipe, *tamSubFipe); // Libera a memï¿½ria alocada para a sublista
+    free(tamSubFipe); // Libera a memï¿½ria alocada para o ponteiro que armazena o tamanho da sublista
+    limpaListaLinear(listaLinear); // Limpa a lista linear
+    // Liberar memï¿½ria alocada
+    free(fila->dados);
+    free(fila);
+    free(pilha->pilha);
+    free(pilha);
+
+    printf("\nPrograma execultado com sucesso!!!\n\n");
+
+    return 0;
 }
-
-
-int busca_binaria_recursiva(t_Fipe *array, int tam, char *id) {
-    // Caso base: se o tamanho do array for 0, o elemento não foi encontrado
-    if (tam == 0) {
-        return -1;
-    }
-
-    // Encontre a posição do meio do array
-    int posicao = tam / 2;
-    // Compare o valor na posição do meio com o valor desejado
-    int comparacao = strcmp(array[posicao].nCdg, id);
-
-    // Se o valor do meio for menor que o valor desejado
-    if (comparacao < 0) {
-        // Chame a função recursivamente para a metade direita do array
-        return busca_binaria_recursiva(array + posicao + 1, tam - posicao - 1, id);
-    }
-    // Se o valor do meio for igual ao valor desejado, retorne a posição encontrada
-    else if (comparacao == 0) {
-        return posicao;
-    }
-    // Se o valor do meio for maior que o valor desejado
-    else {
-        // Chame a função recursivamente para a metade esquerda do array
-        return busca_binaria_recursiva(array, posicao, id);
-    }
-}
-
-
-int busca_binaria_iterativa(t_Fipe *array, int tam, char *id) {
-    int inicio = 0;
-
-    // Enquanto o tamanho da parte do array a ser pesquisada for maior que 0
-    while (tam > 0) {
-        // Encontre a posição do meio da parte do array a ser pesquisada
-        int posicao = tam / 2;
-        // Compare o valor na posição do meio com o valor desejado
-        int comparacao = strcmp(array[inicio + posicao].nCdg, id);
-
-        // Se o valor do meio for menor que o valor desejado
-        if (comparacao < 0) {
-            // Ajuste o início para depois da posição do meio e diminue o tamanho
-            inicio += posicao + 1;
-            tam -= posicao + 1;
-        }
-        // Se o valor do meio for igual ao valor desejado, retorna a posição encontrada
-        else if (comparacao == 0) {
-            return inicio + posicao;
-        }
-        // Se o valor do meio for maior que o valor desejado, ajusta o tamanho
-        else {
-            tam = posicao;
-        }
-    }
-
-    // Caso o valor desejado não seja encontrado, retorne -1
-    return -1;
-}
-

@@ -64,7 +64,7 @@ fscanf(fp,",%f,%f,%f,%f,%f,",&jogos[i].NA_Sales,&jogos[i].EU_Sales,&jogos[i].JP_
 
 Games* IniciaLista(int capacidade){
   Games* jogos;
-  jogos = (Games*) malloc((capacidade+1)*sizeof(Games));
+  jogos = (Games*) malloc((capacidade)*sizeof(Games));
   return jogos;
 }
 
@@ -85,19 +85,27 @@ void limpaJogos02(Games *jogos, int Pos){
     free(jogos[Pos].Publisher);
 }
 
+void limpaJogos03(Games *jogo){
+    free(jogo->Name);
+    free(jogo->Platform);
+    free(jogo->Genre);
+    free(jogo->Publisher);
+}
+
 //FUNÇÕES PARA LISTAS DESORDENADAS
 
 int buscaPorId(int ID, Games* lista, int tam){
-  for(int i = 0; i < tam; i++){
+  int i;
+  for(i = 0; i < tam; i++){
     if(ID == lista[i].ID)
       return i;
     }
-  return -1;
+  return i;
 }
 
 int incJogo(Games jogos, Games* jogos02, int* tam){
   int ok = buscaPorId(jogos.ID,jogos02, *tam);
-  if(ok==-1){
+  if(ok == (*tam)){
     jogos02[*tam].ID = jogos.ID;
         
     jogos02[*tam].Name = (char*)malloc((strlen(jogos.Name)+1)*sizeof(char));
@@ -135,7 +143,7 @@ int incJogo(Games jogos, Games* jogos02, int* tam){
 int remJogo(Games jogo, Games* jogos02, int* tam){
   if((*tam)>1){
     int ok = buscaPorId(jogo.ID,jogos02, *tam);
-    if(ok!=-1){
+    if(ok != (*tam)){
       limpaJogos02(jogos02, ok);
       jogos02[ok] = jogos02[(*tam-1)];
       --(*tam);
@@ -284,18 +292,15 @@ int incJogoOrdenado(Games jogo, Games* jogos03, int* tam){
   
 }
 
+//FUNÇÕES PARA BUSCA, REMOÇÃO E INCLUSÃO GERAL
+  
 Tlista criaListaLinear(int cap, int eOrd){
-  int tamanho;
+  
   Tlista l;
   
-  if (eOrd == 0)
-    tamanho = cap + 1;
-  else
-    tamanho = cap;
-
-  Games* jogo = (Games*)malloc(tamanho*sizeof(Games));
+  Games* jogo = IniciaLista(cap);
   
-  l.capacidade = tamanho;
+  l.capacidade = cap;
   l.tam = 0;
   l.Lista = jogo;
   l.eOrdenada = eOrd;
@@ -306,12 +311,20 @@ Tlista criaListaLinear(int cap, int eOrd){
 
 int Busca_Geral(int ID, Tlista l){
   if(l.eOrdenada == 0){
-      return buscaPorId(ID, l.Lista, l.tam);
-      
+    if(l.tam == 0){
+      return 0;
+    }else{
+       return buscaPorId(ID, l.Lista, l.tam);
+    }
   }
   else{
+   if(l.tam == 0){
+     return 0;
+   }
+    else{
+      return buscaBinRecPorId(ID, l.Lista, 0, l.tam);
+    }
    
-   return buscaBinRecPorId(ID, l.Lista, 0, l.tam);
   }
 }
 
@@ -334,5 +347,211 @@ int Rem_Geral(Games jogo, Tlista *l){
   }
   else{
    return remJogoOrdenado(jogo, (*l).Lista, &((*l).tam));
+  }
+}
+
+//FUNÇÕES PARA PILHAS
+
+void demonstrar_add_pilha(int try1,int ok,TPilhaLinear *pilha){
+  scanf("%*c");
+  system("clear||cls");
+  printf("\n--------------------------Inclusão Pilha---------------------");
+  printf("\n\nTentativas de inclusão na Pilha: %d",try1);
+  printf("\nforam incluidos %d registros na Pilha",ok);
+
+  if(pilha->topo == pilha->cap){
+    printf("\n\n\tPilha cheia\n");
+  }
+  
+  for(int i = pilha->topo-1;i>=0;i-- ){
+      printf("\n\t%d",pilha->pilha[i].ID);
+    }
+
+  
+}
+
+void demonstrar_rem_pilha(TPilhaLinear *pilha){
+  scanf("%*c");
+  system("clear||cls");
+  printf("\n--------------------------Remoção Pilha---------------------");
+ 
+  if(pilha->topo == 0){
+    printf("\n\tPilha vazia");
+  }else{
+    for(int i = pilha->topo-1;i>=0;i-- ){
+      printf("\n\t%d",pilha->pilha[i].ID);
+    }
+  }
+  
+  
+}
+
+TPilhaLinear* criaPilhaLinear(int cap){
+    TPilhaLinear *fila;
+  
+    fila = (TPilhaLinear*)malloc(sizeof(TPilhaLinear));
+    fila->cap = cap;
+    fila->topo = 0;
+    fila->pilha=IniciaLista(cap);
+  
+    return fila;
+}
+
+int insereNaPilha(Games jogo, TPilhaLinear* pilha){
+    if(pilha->topo == pilha->cap){
+      return 0;
+    }
+
+    int ok = buscaPorId(jogo.ID, pilha->pilha, pilha->topo);
+    if(ok != pilha->topo){
+      return 0;
+    }
+    else{
+      
+      pilha->pilha[pilha->topo].ID = jogo.ID;
+          
+      pilha->pilha[pilha->topo].Name = (char*)malloc((strlen(jogo.Name)+1)*sizeof(char));
+      strcpy(pilha->pilha[pilha->topo].Name,jogo.Name);
+              
+      pilha->pilha[pilha->topo].Platform = (char*)malloc((strlen(jogo.Platform)+1)*sizeof(char));
+      strcpy(pilha->pilha[pilha->topo].Platform,jogo.Platform);
+  
+      pilha->pilha[pilha->topo].Year_Of_Release =  jogo.Year_Of_Release;
+  
+      pilha->pilha[pilha->topo].Genre = (char*)malloc((strlen(jogo.Genre)+1)*sizeof(char));
+      strcpy(pilha->pilha[pilha->topo].Genre,jogo.Genre);
+  
+      pilha->pilha[pilha->topo].Publisher = (char*)malloc((strlen(jogo.Publisher)+1)*sizeof(char));
+      strcpy(pilha->pilha[pilha->topo].Publisher,jogo.Publisher);
+  
+      pilha->pilha[pilha->topo].NA_Sales = jogo.NA_Sales;
+  
+      pilha->pilha[pilha->topo].EU_Sales = jogo.EU_Sales;
+  
+      pilha->pilha[pilha->topo].JP_sales = jogo.JP_sales;
+  
+      pilha->pilha[pilha->topo].Other_Sales = jogo.Other_Sales;
+  
+      pilha->pilha[pilha->topo].Global_Sales = jogo.Global_Sales;
+
+      pilha->topo++;
+      return 1;
+    }
+}
+
+Games* removeDaPilha(TPilhaLinear* pilha){
+  
+  if(pilha->topo == 0){
+    return NULL;
+  }
+  else{
+    Games *jogo_removido;
+    jogo_removido = (Games*)malloc(sizeof(Games));
+    jogo_removido = &(pilha->pilha[pilha->topo-1]);
+    pilha->topo--;
+    return jogo_removido;
+  }
+    
+}
+
+//FUNÇÕES PARA FILA
+
+void demonstrar_add_fila(int try1,int ok,TFilaLinear *fila){
+  scanf("%*c");
+  system("clear||cls");
+  printf("\n--------------------------Inclusão Fila---------------------");
+  printf("\n\nTentativas de inclusão na Fila: %d",try1);
+  printf("\nforam incluidos %d registros na Fila",ok);
+
+  if(fila->fim - fila->ini == fila->cap){
+    printf("\n\n\tFila cheia\n");
+  }
+  
+  for(int i = fila->fim-1;i>=fila->ini;i-- ){
+      printf("\n\t%d",fila->fila[i].ID);
+    }
+}
+
+void demonstrar_rem_fila(TFilaLinear *fila){
+  scanf("%*c");
+  system("clear||cls");
+  printf("\n--------------------------Remoção Fila---------------------");
+ 
+  if(fila->ini == fila->fim){
+    printf("\n\tFila vazia");
+  }else{
+    for(int i = fila->fim-1;i>=fila->ini;i-- ){
+      printf("\n\t%d",fila->fila[i].ID);
+    }
+  }
+}
+
+
+TFilaLinear* criaFilaLinear(int cap){
+  TFilaLinear *no;
+
+  no = (TFilaLinear*) malloc(sizeof(TFilaLinear));
+  no->fila = IniciaLista(cap);
+  no->cap = cap;
+  no->ini = 0;
+  no->fim = 0;
+  
+  return no;
+}
+
+int insereNaFila(Games jogo, TFilaLinear* fila){
+
+  if(fila->fim - fila->ini == fila->cap){
+    return 0;
+  }
+  int ok = buscaPorId(jogo.ID, fila->fila, fila->fim);
+  if(ok != fila->fim){
+    return 0;
+  }
+  else{
+    
+    fila->fila[fila->fim].ID = jogo.ID;
+          
+    fila->fila[fila->fim].Name = (char*)malloc((strlen(jogo.Name)+1)*sizeof(char));
+    strcpy(fila->fila[fila->fim].Name,jogo.Name);
+              
+    fila->fila[fila->fim].Platform = (char*)malloc((strlen(jogo.Platform)+1)*sizeof(char));
+    strcpy(fila->fila[fila->fim].Platform,jogo.Platform);
+  
+    fila->fila[fila->fim].Year_Of_Release =  jogo.Year_Of_Release;
+  
+    fila->fila[fila->fim].Genre = (char*)malloc((strlen(jogo.Genre)+1)*sizeof(char));
+    strcpy(fila->fila[fila->fim].Genre,jogo.Genre);
+  
+    fila->fila[fila->fim].Publisher = (char*)malloc((strlen(jogo.Publisher)+1)*sizeof(char));
+    strcpy(fila->fila[fila->fim].Publisher,jogo.Publisher);
+  
+    fila->fila[fila->fim].NA_Sales = jogo.NA_Sales;
+  
+    fila->fila[fila->fim].EU_Sales = jogo.EU_Sales;
+  
+    fila->fila[fila->fim].JP_sales = jogo.JP_sales;
+  
+    fila->fila[fila->fim].Other_Sales = jogo.Other_Sales;
+  
+    fila->fila[fila->fim].Global_Sales = jogo.Global_Sales;
+
+    fila->fim++;
+    
+    return 1;
+      
+  }
+}
+
+Games* removeDaFila(TFilaLinear* fila){
+  if(fila->ini == fila->fim){
+    return NULL;
+  }
+  else{
+    Games *jogo_removido;
+    jogo_removido = (Games*)malloc(sizeof(Games));
+    jogo_removido = &(fila->fila[fila->ini]);
+    fila->ini++;
+    return jogo_removido;
   }
 }
