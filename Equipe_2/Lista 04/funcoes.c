@@ -151,10 +151,8 @@ int isFilaCheia(TFilaLinear* fila) {
 
 Jogos* removeDaFila(TFilaLinear* fila) {
     
-    if (isFilaVazia(fila)) {
-        fila->fim = -1;
-        return 0;
-    }
+    if (isFilaVazia(fila)) return 0;
+    
     Jogos *item = &fila->fila[fila->inicio];
     fila->inicio++;
     
