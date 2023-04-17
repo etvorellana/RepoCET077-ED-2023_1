@@ -33,19 +33,18 @@ typedef struct {
   int fim;        
 } TFilaLinear;
 
+// Principal
 TSongs* carregaDados(char *filename, int *tam);
 void limpaAcervo(TSongs *acervo, int tam);
 void limpaRegistro(TSongs song); 
+// ---------
 int BuscaPorRank(int R, TSongs *lista, int tam);
-// int IncRegistro(TSongs song, TSongs *lista, int *tam);
 int RemRegistro(TSongs song, TSongs *lista, int *tamaux);
-// int RemRegistro_nao_ordenado(TSongs song, TSongs *lista, int *tamaux);
 int busca_binaria(TSongs *lista, int tamanho, int item);
 int buscaBinporPOSICAOi(int position, TSongs* lista, int tam);
 int buscaBinporPOSICAO(int position, TSongs *lista, int tam, int *existe);
-// int IncRegistroOrd(TSongs song, TSongs *lista, int *tamaux);
-// int RemRegistroOrd(TSongs song, TSongs *lista, int *tamaux);
 int RemRegistro_ordenado(TSongs song, TSongs *lista, int *tamaux);
+// Lista
 TListaLinear* criaListaLinear(int cap, int eOrd);
 int IncRegistroOrd(TSongs song, TSongs *lista, int *tamaux, int pos);
 int IncRegistro(TSongs song, TSongs *lista, int *tamaux, int pos);
@@ -55,6 +54,15 @@ TSongs* RemRegistro_nao_ordenado(TSongs song, TSongs *lista, int *tamaux, int po
 TSongs* removeDaLista(TSongs song, TListaLinear* listaLinear);
 int buscaNaLista(TSongs song, TListaLinear* listaLinear);
 int menu(void);
+TSongs* removeDaLista(TSongs song, TListaLinear* listaLinear);
+int buscaNaLista(TSongs song, TListaLinear* listaLinear);
+int menu(void);
+// Pilha
+TPilhaLinear* criaPilhaLinear(int cap);
 int inicioPilhalinear(TPilhaLinear *pilha, int cap);
 int pushTSongs(TSongs song, TPilhaLinear *pilha);
 int popTSongs(TPilhaLinear *pilha);
+// Fila
+TFilaLinear* criaFila(int cap);
+int enqueue(TSongs song, TFilaLinear *fila);
+TSongs* dequeue(TFilaLinear *fila); 
