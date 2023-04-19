@@ -117,6 +117,8 @@ Jogos *carregaDados(char *fileName, int *tam) {
 
 int buscaPorId(int idDoApp, Jogos *lista, int tam) {
 
+    lista[tam].appId = idDoApp;
+
     int cont = 0;
 
     while (cont < tam) {

@@ -140,6 +140,45 @@ int insereNaFila(Jogos item, TFilaLinear* filaParametro) {
     return 0;
 }
 
+int insereNaFila(Jogos item, TFilaLinear* filaParametro){
+
+    if(!isFilaCheia(filaParametro)){
+
+        filaParametro->fila[filaParametro->fim] = item;
+
+        filaParametro->fila[filaParametro->fim].appId = item.appId;
+
+        filaParametro->fila[filaParametro->fim].title  = (char*)malloc((strlen(item.title)));
+        strcpy(filaParametro->fila[filaParametro->fim].title, item.title); 
+        
+        filaParametro->fila[filaParametro->fim].dataRelease  = (char*)malloc(strlen(item.dataRelease));
+        strcpy(filaParametro->fila[filaParametro->fim].dataRelease, item.dataRelease);
+        
+        filaParametro->fila[filaParametro->fim].win  = (char*)malloc(strlen(item.win));
+        strcpy(filaParametro->fila[filaParametro->fim].win, item.win);
+
+        filaParametro->fila[filaParametro->fim].mac  = (char*)malloc(strlen(item.mac));
+        strcpy(filaParametro->fila[filaParametro->fim].mac, item.mac);
+
+        filaParametro->fila[filaParametro->fim].linux  = (char*)malloc(strlen(item.linux));
+        strcpy(filaParametro->fila[filaParametro->fim].linux, item.linux);
+
+        filaParametro->fila[filaParametro->fim].rating  = (char*)malloc(strlen(item.rating));
+        strcpy(filaParametro->fila[filaParametro->fim].rating, item.rating);
+
+        filaParametro->fila[filaParametro->fim].positiveRatio = item.positiveRatio;
+        filaParametro->fila[filaParametro->fim].userReviews = item.userReviews;
+        filaParametro->fila[filaParametro->fim].priceFinal = item.priceFinal;
+        filaParametro->fila[filaParametro->fim].priceOriginal = item.priceOriginal;
+        filaParametro->fila[filaParametro->fim].discount = item.discount;
+
+        filaParametro->fim++;
+        return 1;
+    }else{
+        return 0;
+    }
+}
+
 int isFilaCheia(TFilaLinear* fila) {
 
     if((fila->fim - fila->inicio) == fila->capacidade){
