@@ -5,7 +5,7 @@
 #define TRUE 1
 #define FALSE 0
 
-int main(){
+int main(){ 
 
     Jogos* acervo;
     TListaLinear *listaOrdenada, *listaDesordenada;
@@ -108,6 +108,5 @@ int main(){
     //Output das tentativas e conclusões de remoção NÃO ORDENADA
     printf("Foram realizadas %d tentativas de remoção - NÃO ORDENADA\n", tentativa);
     printf("Foram removidos %d registros na coleção - NÃO ORDENADA\n\n", conseguiuRemover);
-
 
 }

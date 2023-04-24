@@ -129,17 +129,6 @@ void limpaAcervo(Jogos *acervo, int tamanhoAcervo) {
     free(acervo);
 }
 
-int insereNaFila(Jogos item, TFilaLinear* filaParametro) {
-    
-    if( !isFilaCheia(filaParametro) ) {
-        filaParametro->fila[filaParametro->fim] = item;
-        filaParametro->fim++;
-        return 1;
-    }
-    
-    return 0;
-}
-
 int insereNaFila(Jogos item, TFilaLinear* filaParametro){
 
     if(!isFilaCheia(filaParametro)){
@@ -191,7 +180,7 @@ int isFilaCheia(TFilaLinear* fila) {
 Jogos* removeDaFila(TFilaLinear* fila) {
     
     if (isFilaVazia(fila)) return 0;
-    
+     
     Jogos *item = &fila->fila[fila->inicio];
     fila->inicio++;
     
@@ -265,7 +254,7 @@ Jogos* removeDaPilha(TPilhaLinear* PilhaLinear) {
     if (isPilhaVazia(PilhaLinear)) return 0;
 
     Jogos *removido;
-    removido = &PilhaLinear->pilha[PilhaLinear->topo];
+    removido = &PilhaLinear->pilha[PilhaLinear->topo-1];
     PilhaLinear->topo--;
     
     return removido;

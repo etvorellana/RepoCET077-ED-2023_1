@@ -117,8 +117,6 @@ Jogos *carregaDados(char *fileName, int *tam) {
 
 int buscaPorId(int idDoApp, Jogos *lista, int tam) {
 
-    lista[tam].appId = idDoApp;
-
     int cont = 0;
 
     while (cont < tam) {
@@ -225,7 +223,7 @@ int incOrdRegistro(Jogos origem, Jogos* destino, int* tam) {
     int posicao;
     int retorno = buscaBinPorId(origem.appId, destino, *tam);
 
-    if(retorno < 0 && *tam > 0){
+    if(retorno < 0 && *tam > 0) {
         for (i = 0; i < *tam; i++){
             if (origem.appId > destino[i].appId){
                 posicao = i;
@@ -236,9 +234,10 @@ int incOrdRegistro(Jogos origem, Jogos* destino, int* tam) {
 
     if (retorno < 0) {
        
+       //A capacidade já está sendo tratada na main, ou seja, tamanho < capacidade.
         if(*tam > 0) 
             for (j = *tam - 1; j >= posicao; j--)
-                destino[j+1] = destino[j]; //Movendo os maiores
+                destino[j+1] = destino[j]; //Movendo os maiores para a direita
 
         destino[posicao].appId = origem.appId;
 
@@ -276,27 +275,26 @@ int incOrdRegistro(Jogos origem, Jogos* destino, int* tam) {
 
 int remOrdRegistro(int idARemover, Jogos* lista, int* tam){
 
-    lista[*tam].appId = idARemover;
-    int pos = buscaPorId(idARemover, lista, *tam);
+    //lista[*tam].appId = idARemover;
+    int pos = buscaBinPorId(idARemover, lista, *tam);
 
-    if(pos != *tam) {
+    if(pos != -1) {
 
         for( int i = pos; i < *tam; i++) lista[pos] = lista[pos+1];
         
         *tam = *tam - 1;
 
         return TRUE;
-
     }
     return FALSE;
 }
 
-void inicializaListaLinear(TListaLinear* lista, int capacidade, int isOrdenada) {
+void inicializaListaLinear(TListaLinear* linear, int capacidade, int isOrdenada) {
     
-    lista->lista = (Jogos*) malloc(capacidade * sizeof(Jogos));
-    lista->capacidade = capacidade;
-    lista->tamanho = 0;
-    lista->isOrdenada = isOrdenada;
+    linear->lista = (Jogos*) malloc(capacidade * sizeof(Jogos));
+    linear->capacidade = capacidade;
+    linear->tamanho = 0;
+    linear->isOrdenada = isOrdenada;
 
 }
 
@@ -355,4 +353,81 @@ int removeDaLista(int idARemover, TListaLinear* linear){
         //return linear->lista; //não conseguimos acessar exatamente a posicao
     }
 
+}
+
+int insereNaFila(Jogos item, TFilaLinear* filaParametro) {
+    
+    if( !full(filaParametro) ) {
+        filaParametro->fila[filaParametro->fim] = item;
+        filaParametro->fim++;
+        return 1;
+    }
+    
+    return 0;
+    
+}
+
+int isFull(TFilaLinear* fila) {
+
+    if(fila->fim == fila->capacidade){
+        return 1;
+    }
+
+    return 0;
+}
+
+Jogos* removeDaFila(TFilaLinear* fila) {
+    Jogos* item = &fila->fila[fila->inicio];
+    fila->inicio++;
+
+    if (emptyFile(fila)) {
+        fila->fim = -1;
+    }
+    return item;
+}
+
+int emptyFila(TFilaLinear * fila){
+    if (fila->inicio == -1) {
+        return 1;
+    }
+
+    return 0;
+}
+
+TPilhaLinear* iniciarPilha (){
+	TPilhaLinear *pilha = (TPilhaLinear*) malloc (sizeof(TPilhaLinear));
+	pilha = NULL;
+	return pilha;
+}
+
+int pilhaVazia(TPilhaLinear* pilha) {
+    if (pilha->topo == -1) {
+        return 1;
+    }
+    return 0;
+}
+
+int pilhaCheia(TPilhaLinear* pilha) {
+    if (pilha->topo == pilha->capacidade-1) {
+        return 1;
+    }
+    return 0;
+}
+
+int insereNaPilha(Jogos jogo, TPilhaLinear* pilha) {
+    if (PilhaCheia(pilha)) {
+        return 0;
+    }
+    pilha->topo++;
+    pilha->pilha[pilha->topo] = jogo;
+    return 1;
+}
+
+int removeDaPilha(TPilhaLinear* pilha) {
+    if (PilhaVazia(pilha)) {
+        return 0;
+    }
+    pilha->topo--;
+    
+    return 1;
 }
