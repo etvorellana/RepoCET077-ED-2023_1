@@ -504,10 +504,6 @@ int insereNaFila(Games jogo, TFilaLinear* fila){
   if(fila->fim - fila->ini == fila->cap){
     return 0;
   }
-  int ok = buscaPorId(jogo.ID, fila->fila, fila->fim);
-  if(ok != fila->fim){
-    return 0;
-  }
   else{
     
     fila->fila[fila->fim].ID = jogo.ID;
