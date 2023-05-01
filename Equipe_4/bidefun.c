@@ -1,4 +1,4 @@
- #include <stdio.h>  // <- printf(), fopen(), fclose(), ...
+#include <stdio.h>  // <- printf(), fopen(), fclose(), ...
 #include <stdlib.h> // <- exit()
 #include <string.h> // <- strcpy()
 
@@ -535,7 +535,7 @@ TFilaLinear *criaFila(int cap) {
   p->cap = cap;
   p->ini = 0;
   p->fim = 0;
-  return p;0
+  return p;
 }
 
 int enqueue(TSongs song, TFilaLinear *fila) {
@@ -583,5 +583,101 @@ TSongs *dequeue(TFilaLinear *fila) {
     
     fila->ini = fila->ini + 1;
     return filaAux;
+  }
+}
+
+//listas encadeadas 
+int cpyTsong(TSongs song, TSongs *end)
+{
+    end = (TSongs*) malloc(sizeof(TSongs));
+    
+    if(end)
+    {
+        // função para na inserir elementos repetidos da fila?
+      end -> Position = song.Position;
+      end -> Key = song.Key;
+
+      end -> ArtistName = (char *) malloc(strlen(song.ArtistName) * 2);
+      strcpy(end -> ArtistName, song.ArtistName);
+
+      end -> SongName = (char *)malloc(strlen(song.SongName) * 2);
+      strcpy(end -> SongName, song.SongName);
+
+      end -> Days = song.Days;
+      end -> Top10Times = song.Top10Times;
+      end -> PeakPosition = song.PeakPosition;
+
+      end -> PeakPositionXtimes = (char *) malloc(strlen(song.PeakPositionXtimes) * 2);
+      strcpy(end -> PeakPositionXtimes, song.PeakPositionXtimes);
+
+      end -> PeakStreams = song.PeakStreams;
+      end -> TotalStreams = song.TotalStreams;
+      
+      return TRUE;
+    }
+
+    return FALSE;
+}
+
+//cria pilha encadeada
+int cria_pilha(Tpilha *p)
+{
+  p -> topo = NULL;
+  p -> tam = 0;
+  return TRUE;
+}
+
+//insere na pilha 
+int empilhaEnc(TSongs song, Tpilha *p)
+{
+  No *novo = malloc(sizeof(No));
+
+  if(cpyTsong(song, &novo -> song))
+  {
+    // p->tam também serve de verificação 
+    if (p -> topo == NULL)
+    {
+      p -> topo = malloc (sizeof(No));
+      p -> topo = novo;
+      p -> tam ++;
+      return TRUE;
+    }
+
+    else
+    {
+      novo -> proximo = p -> topo;
+      p -> topo = novo;
+      p -> tam ++;
+      return TRUE;
+    }
+  }
+
+  return FALSE;
+}
+
+//desempilha
+No* desempilhaEnc(Tpilha *p)
+{
+  //Se tiver algum elemento na lista 
+  if(p -> topo)
+  {
+    No *remove = p -> topo;
+    p -> topo = remove -> proximo;
+    return remove;
+  }
+
+  return NULL;
+}
+
+//print pilha
+void printPilhaEnc(Tpilha *p)
+{
+  No *print = p -> topo;
+
+  //enquanto print for diferente de NULL
+  while(print)
+  {
+    printf("posicao:\t%d\nmusica:\t%s", print -> song.Position, print -> song.SongName);
+    print = print -> proximo;
   }
 }
