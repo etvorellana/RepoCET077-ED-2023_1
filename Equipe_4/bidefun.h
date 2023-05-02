@@ -1,6 +1,7 @@
 #define CSVSIZE 13000
 #define TRUE 1
 #define FALSE 0
+#define EX 100
 
 typedef struct {
   int Position;
@@ -98,7 +99,10 @@ No* desempilhaEnc(Tpilha *p);
 void printPilhaEnc(Tpilha *p);
 
 //fila
-int criaFila(Tfila *f);
+int cria_fila(Tfila *f);
 int insere_fila(TSongs song, Tfila *f);
 No *remove_fila(Tfila *f);
 void print_fila(Tfila *f);
+
+//menu
+void menu_lista5(TSongs *acervo, TListaLinear *l, Tpilha *p, Tfila *f, int *tam);

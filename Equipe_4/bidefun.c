@@ -687,7 +687,7 @@ void printPilhaEnc(Tpilha *p)
 }
 
 //Cria fila 
-int criaFila(Tfila *f)
+int cria_fila(Tfila *f)
 {
   f -> inicio = NULL;
   f -> fim = NULL;
@@ -753,4 +753,83 @@ void print_fila(Tfila *f)
     printf("posicao:\t%d\nmusica:\t%s", print -> song.Position, print -> song.SongName);
     print = print -> proximo;
   }
+}
+
+void menu_lista5(TSongs *acervo, TListaLinear *l, Tpilha *p, Tfila *f, int *tam)
+{
+  // carregar o dataset
+  acervo = carregaDados("../Data/newSongs.csv", tam);
+  
+  //inicializo a lista, a pilha e a fila
+  l = criaListaLinear(EX, TRUE);
+  int aux = cria_pilha(p);
+  TSongs *remove = NULL;
+
+  if (!aux)
+    exit(-1);
+  aux = cria_fila(f);
+  if (!aux)
+    exit(-1);
+
+  //adicionando itens aleatórios na lista
+  aux = 0;
+  while (aux < EX)
+  {
+    int aleatorio = rand() % 9000;
+    if(insereNaLista(acervo[aleatorio], l))
+      aux ++;
+  }
+
+  //print primeiro e ultimo da lista
+  printf("posicao:\t%d\nmusica:\t%s", l -> lista[0].Position, l -> lista[0].SongName);
+  printf("posicao:\t%d\nmusica:\t%s", l -> lista[99].Position, l -> lista[99].SongName);
+
+  //remove da lista e insere na pilha
+  aux = 0;
+  while (aux < EX)
+  {
+    remove = removeDaLista(l -> lista[aux], l);
+
+    if(empilhaEnc(*remove, p))
+      aux ++;
+    else
+      exit(1);
+
+    free(remove);
+  }
+
+  //recebe o retorno da função remove
+  No *remover = NULL;
+
+  //tira da pilha e insere na fila
+  aux = 0;
+  while (aux < EX)
+  {
+    remover = desempilhaEnc(p);
+
+    if(insere_fila(remover -> song, f))
+      aux ++;
+    else
+      exit(2);
+
+    free(remover);
+  }
+
+  //tira da fila e insere na lista novamente 
+  aux = 0;
+  while (aux < EX)
+  {
+    remover = remove_fila(f);
+
+    if (insereNaLista(remover -> song, l))
+      aux ++;
+    else 
+      exit(3);
+  }
+
+  //print primeiro e o ultimo
+  printf("posicao:\t%d\nmusica:\t%s", l -> lista[0].Position, l -> lista[0].SongName);
+  printf("posicao:\t%d\nmusica:\t%s", l -> lista[99].Position, l -> lista[99].SongName);
+
+  printf("FIM DA DEMONSTRACAO!!");
 }
