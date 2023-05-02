@@ -586,7 +586,10 @@ TSongs *dequeue(TFilaLinear *fila) {
   }
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 //listas encadeadas 
+
+//copia Tsong
 int cpyTsong(TSongs song, TSongs *end)
 {
     end = (TSongs*) malloc(sizeof(TSongs));
@@ -631,6 +634,7 @@ int cria_pilha(Tpilha *p)
 int empilhaEnc(TSongs song, Tpilha *p)
 {
   No *novo = malloc(sizeof(No));
+  novo -> proximo = NULL;
 
   if(cpyTsong(song, &novo -> song))
   {
@@ -673,6 +677,75 @@ No* desempilhaEnc(Tpilha *p)
 void printPilhaEnc(Tpilha *p)
 {
   No *print = p -> topo;
+
+  //enquanto print for diferente de NULL
+  while(print)
+  {
+    printf("posicao:\t%d\nmusica:\t%s", print -> song.Position, print -> song.SongName);
+    print = print -> proximo;
+  }
+}
+
+//Cria fila 
+int criaFila(Tfila *f)
+{
+  f -> inicio = NULL;
+  f -> fim = NULL;
+  f -> tam = 0;
+
+  return TRUE;
+}
+
+//inserir na fila
+int insere_fila(TSongs song, Tfila *f)
+{
+  //cria um novo No
+  No *novo = malloc (sizeof(No));
+  novo -> proximo = NULL;
+
+  //se a cópia foi bem sucedida
+  if (cpyTsong(song, &novo -> song))
+  {
+    //se inicio == NULL (f -> tam também serve para o teste)
+    if (!f -> inicio)
+    {
+      f -> inicio = novo;
+      f -> fim = novo;
+    }
+
+    else
+    {
+      f -> fim -> proximo = novo;
+      f -> fim = novo;
+    }
+
+    f -> tam ++;
+    return TRUE;
+  }
+
+  return FALSE;
+}
+
+//Remover da fila
+No *remove_fila(Tfila *f)
+{
+  No *remove = NULL;
+
+  //se existir algum elemento na fila (f -> tam também serve para o teste)
+  if(f -> inicio)
+  {
+    remove = f -> inicio;
+    f -> inicio = remove -> proximo;
+    f -> tam --;
+  }
+
+  return remove;
+}
+
+//imprime a fila
+void print_fila(Tfila *f)
+{
+  No *print = f -> inicio;
 
   //enquanto print for diferente de NULL
   while(print)

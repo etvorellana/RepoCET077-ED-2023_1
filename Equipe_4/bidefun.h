@@ -45,6 +45,12 @@ typedef struct {
   int tam;
 }Tpilha;
 
+typedef struct {
+  No *inicio;
+  No *fim;
+  int tam;
+}Tfila;
+
 // Principal
 TSongs* carregaDados(char *filename, int *tam);
 void limpaAcervo(TSongs *acervo, int tam);
@@ -83,8 +89,16 @@ int enqueue(TSongs song, TFilaLinear *fila);
 TSongs* dequeue(TFilaLinear *fila); 
 
 //listas encadeadas
+
+//pilha
 int cpyTsong(TSongs song, TSongs *end);
 int cria_pilha(Tpilha *p);
 int empilhaEnc(TSongs song, Tpilha *p);
 No* desempilhaEnc(Tpilha *p);
 void printPilhaEnc(Tpilha *p);
+
+//fila
+int criaFila(Tfila *f);
+int insere_fila(TSongs song, Tfila *f);
+No *remove_fila(Tfila *f);
+void print_fila(Tfila *f);
