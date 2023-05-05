@@ -28,7 +28,7 @@ int main(void){
     int i = 0;
     int id, escolha, idDoAPP;
 
-    acervo = (Jogos *)malloc(CSVSIZE * sizeof(Jogos));
+    acervo = (Jogos *) malloc(CSVSIZE * sizeof(Jogos));
 
     fp = fopen("../../Data/dataSetEquipe2.csv", "r");
 
@@ -172,6 +172,7 @@ int main(void){
         } while (id != -1);
     
     }else{
+        
         int cont = 0;
         printf("Entre com o ID do App: ");
         scanf("%d", &idDoAPP);

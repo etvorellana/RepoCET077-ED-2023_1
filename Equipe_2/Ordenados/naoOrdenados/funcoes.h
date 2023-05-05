@@ -54,11 +54,22 @@ int buscaBinPorId(int idProcurado, Jogos* lista, int tam);
 int incOrdRegistro(Jogos jogo, Jogos* lista, int* tam); 
 int remOrdRegistro(int idARemover, Jogos* lista, int* tam); 
 
-void inicializaListaLinear(TListaLinear* lista, int capacidade, int isOrdenada); 
+void inicializaListaLinear(TListaLinear* linear, int capacidade, int isOrdenada); 
 TListaLinear* criaListaLinear(int capacidade, int isOrdenada); 
 int buscaNaLista(int idProcurado, TListaLinear* linear);
 int insereNaLista(Jogos jogo, TListaLinear* linear);
 int isEmpty(TListaLinear* linear);
 int removeDaLista(int idARemover, TListaLinear* linear); //função modificada
+
+int insereNaFila(Jogos item, TFilaLinear* filaParametro);
+int isFull(TFilaLinear* fila);
+int emptyFila(TFilaLinear * fila);
+Jogos* removeDaFila(TFilaLinear* fila);
+
+TPilhaLinear* iniciarPilha ();
+int pilhaVazia(TPilhaLinear* pilha);
+int pilhaCheia(TPilhaLinear* pilha);
+int insereNaPilha(Jogos jogo, TPilhaLinear* pilha);
+int removeDaPilha(TPilhaLinear* pilha);
 
 #endif

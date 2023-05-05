@@ -6,9 +6,13 @@
 
 int main(void) {
   TSongs *acervo;
+  TListaLinear *l;
+  Tpilha *p;
+  Tfila *f;
   int tam = 0, acerto = 0, erro = 0, i = 0;
   int e = 0, pe = 0, fe = 0;
 
+/*
   acervo = carregaDados("Data/newSongs.csv", &tam);
   printf("============= PINHA ============\n");
   printf("Qual a Capacidade da pilha?\n");
@@ -40,7 +44,7 @@ int main(void) {
   }
   printf("\nremoçao feita !!\nNOVO TAMANHO DA PILHA %d", pilha -> topo);
 
-
+*/
 
 
 
@@ -292,3 +296,6 @@ int main(void) {
   limpaAcervo(acervo, tam);
   return 0;
 }
+
+
+menu_lista5(acervo, l, p, f, tam);
