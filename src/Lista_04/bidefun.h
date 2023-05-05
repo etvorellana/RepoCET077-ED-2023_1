@@ -115,6 +115,16 @@ void limpaAcervo(TBook *acervo, int tam);
 */
 void limpaRegistro(TBook book);
 
+TBook* clonaBook(TBook book);
+
+void cpyTBook(TBook src, TBook *dest);
+
+void imprimeTBook(TBook book);
+
+void impResumo(TBook book);
+
+void imprimeAcervo(TBook *acervo, int tam);
+
 /*
     Esta função faz uma busca na lista de tamanho tam
     pelo registro com campo isbn especifico.
@@ -197,6 +207,8 @@ int remRegistro(char* isbn, TBook* lista, int* tam);
     * Ponteiro para o endereço de memória alocado para o array
 */
 TBook* criaAcervo(int capacidade);
+
+TBook* criaAcervoOrd(int cap);
 
 /*
     Esta função faz uma busca em uma lista ordenada, de 

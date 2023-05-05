@@ -115,6 +115,54 @@ TBook* carregaDados(char *fileName, int *tam)
     return acervo;
 }
 
+TBook* clonaBook(TBook book)
+{
+    TBook *novo = (TBook*) malloc(sizeof(TBook));
+    novo->bookID = book.bookID;
+    novo->title = (char*) malloc(strlen(book.title));
+    strcpy(novo->title, book.title);
+    novo->authors = (char*) malloc(strlen(book.authors));
+    strcpy(novo->authors, book.authors);
+    novo->avgRating = book.avgRating;
+    novo->isbn = (char*) malloc(strlen(book.isbn));
+    strcpy(novo->isbn, book.isbn);
+    novo->isbn13 = (char*) malloc(strlen(book.isbn13));
+    strcpy(novo->isbn13, book.isbn13);
+    novo->lang = (char*) malloc(strlen(book.lang));
+    strcpy(novo->lang, book.lang);
+    novo->numPages = book.numPages;
+    novo->ratCounts = book.ratCounts;
+    novo->txtRevCounts = book.txtRevCounts;
+    novo->pubDate = (char*) malloc(strlen(book.pubDate));
+    strcpy(novo->pubDate, book.pubDate);
+    novo->publisher = (char*) malloc(strlen(book.publisher));
+    strcpy(novo->publisher, book.publisher);
+    return novo;
+}
+
+void cpyTBook(TBook src, TBook *dest)
+{
+    dest->bookID = src.bookID;
+    dest->title = (char*) malloc(strlen(src.title));
+    strcpy(dest->title, src.title);
+    dest->authors = (char*) malloc(strlen(src.authors));
+    strcpy(dest->authors, src.authors);
+    dest->avgRating = src.avgRating;
+    dest->isbn = (char*) malloc(strlen(src.isbn));
+    strcpy(dest->isbn, src.isbn);
+    dest->isbn13 = (char*) malloc(strlen(src.isbn13));
+    strcpy(dest->isbn13, src.isbn13);
+    dest->lang = (char*) malloc(strlen(src.lang));
+    strcpy(dest->lang, src.lang);
+    dest->numPages = src.numPages;
+    dest->ratCounts = src.ratCounts;
+    dest->txtRevCounts = src.txtRevCounts;
+    dest->pubDate = (char*) malloc(strlen(src.pubDate));
+    strcpy(dest->pubDate, src.pubDate);
+    dest->publisher = (char*) malloc(strlen(src.publisher));
+    strcpy(dest->publisher, src.publisher);
+}
+
 void limpaAcervo(TBook *acervo, int tam)
 {
     for(int j = 0; j < tam; j++)
@@ -125,15 +173,45 @@ void limpaAcervo(TBook *acervo, int tam)
 
 void limpaRegistro(TBook book)
 {
-        free(book.title);
-        free(book.authors);
-        free(book.isbn);
-        free(book.isbn13);
-        free(book.lang);
-        free(book.pubDate);
-        free(book.publisher);
-    }
-    free(acervo);
+    free(book.title);
+    free(book.authors);
+    free(book.isbn);
+    free(book.isbn13);
+    free(book.lang);
+    free(book.pubDate);
+    free(book.publisher);
+}
+
+void imprimeTBook(TBook book)
+{
+    printf("bookID: %d\n", book.bookID);
+    printf("title: %s\n", book.title);
+    printf("authors: %s\n", book.authors);
+    printf("avgRating: %f\n", book.avgRating);
+    printf("isbn: %s\n", book.isbn);
+    printf("isbn13: %s\n", book.isbn13);
+    printf("lang: %s\n", book.lang);
+    printf("numPages: %d\n", book.numPages);
+    printf("ratCounts: %d\n", book.ratCounts);
+    printf("txtRevCounts: %d\n", book.txtRevCounts);
+    printf("pubDate: %s\n", book.pubDate);
+    printf("publisher: %s\n", book.publisher);
+}
+
+void impResumo(TBook book)  
+{
+    printf("bookID: %d, ", book.bookID);
+    printf("title: %s, ", book.title);
+    printf("authors: %s, ", book.authors);
+    printf("isbn: %s, ", book.isbn);
+    printf("isbn13: %s\n", book.isbn13);
+}
+
+
+void imprimeAcervo(TBook *acervo, int tam)
+{
+    for(int i = 0; i < tam; i++)
+        impResumo(acervo[i]);
 }
 
 /*
@@ -173,6 +251,8 @@ int buscaPorISBN__(char *isbn, TBook* lista, int tam)
 
 /*
     Segunda versão na forma recursiva
+    antes de usar copiar para a lista[tam].isbn o isbn a ser 
+    buscado 
 */
 int buscaPorISBN___(char *isbn, TBook* lista, int tam)
 {
@@ -188,6 +268,8 @@ int buscaPorISBN___(char *isbn, TBook* lista, int tam)
 
 /*
     Segunda versão na forma não recursiva
+    antes de usar copiar para a lista[tam].isbn o isbn a ser 
+    buscado 
 */
 int buscaPorISBN(char *isbn, TBook* lista, int tam)
 {
@@ -197,10 +279,18 @@ int buscaPorISBN(char *isbn, TBook* lista, int tam)
     return i;
 }
 
+
 TBook* criaAcervo(int cap)
 {
     TBook* acervo;
     acervo = (TBook*) malloc((cap + 1)*sizeof(TBook));
+    return acervo;
+}
+
+TBook* criaAcervoOrd(int cap)
+{
+    TBook* acervo;
+    acervo = (TBook*) malloc((cap)*sizeof(TBook));
     return acervo;
 }
 
@@ -218,49 +308,7 @@ int incRegistro(TBook book, TBook* lista, int* tam)
     if(pos == *tam) // se não encontrou
     {
         // copia o registro para a posição tam
-        //int bookID
-        lista[pos].bookID = book.bookID;
-        
-        //char *title
-        lista[pos].title = (char*) malloc(strlen(book.title)); // aloca uma array 
-        strcpy(lista[pos].title, book.title); // copia o conteúdo da string
-        
-        //char *authors
-        lista[pos].authors = (char*) malloc(strlen(book.title));
-        strcpy(lista[pos].authors, book.authors);
-
-        //float avgRating
-        lista[pos].avgRating = book.avgRating; // converte em float
-
-        //char *isbn
-        lista[pos].isbn = (char*) malloc(strlen(book.isbn));
-        strcpy(lista[pos].isbn, book.isbn);
-
-        //char *isbn13
-        lista[pos].isbn13 = (char*) malloc(strlen(book.isbn13));
-        strcpy(lista[pos].isbn13, book.isbn13);
-
-        //char *lang
-        lista[pos].lang = (char*) malloc(strlen(book.lang));
-        strcpy(lista[pos].lang, book.lang);
-
-        //int numPages
-        lista[pos].numPages = book.numPages;
-
-        //int ratCounts
-        lista[pos].ratCounts = book.ratCounts;
-
-        //int txtRevCounts
-        lista[pos].txtRevCounts = book.txtRevCounts;
-
-        //char pubDate[11]
-        lista[pos].pubDate = (char*) malloc(strlen(book.pubDate));
-        strcpy(lista[pos].pubDate, book.pubDate);
-
-        //char publisher[100];    // publisher - Scholastic Inc. 
-        lista[pos].publisher = (char*) malloc(strlen(book.publisher));
-        strcpy(lista[pos].publisher, book.publisher);
-        
+        cpyTBook(book, &lista[*tam]);
         *tam += 1;
         return TRUE;
     }else{
@@ -285,36 +333,78 @@ int remRegistro(char* isbn, TBook* lista, int* tam)
 
 }
 
+/*
+    Primeira versão (busca linear) na forma recursiva
+    antes de usar copiar para a lista[tam].isbn o isbn a ser 
+    buscado 
+*/
 
-int buscaOrdPorISBN(char *isbn, TBook* lista, int tam)
+int buscaOrdLinearPorISBN(char *isbn, TBook* lista, int tam)
 {
-    int i = 0;
-    //while(strcmp(isbn, lista[i].isbn) != 0)
-    while(strcmp(isbn, lista[i].isbn) < 0)
-    {
-        i++;
-    }
-    if (strcmp(isbn, lista[i].isbn) == 0)
-        return i;
+    // a list não pode estar vazia
+    // comparar o isbn com o primeiro elemento da lista
+    int res = strcmp(lista[0].isbn , isbn);
+    if(res < 0) // se diferente de zero então é diferente
+        // chama a função recursivamente com o resto da lista
+        return 1 + buscaOrdLinearPorISBN(isbn, &lista[1], tam-1);
     else
-        return -i;
+        return 0; // está na posição de índice 0
 }
 
-int buscaBinPorISBN(char *isbn, TBook* lista, int tam)
+/*
+    Primeira versão (busca linear) na forma não recursiva
+    antes de usar copiar para a lista[tam].isbn o isbn a ser 
+    buscado 
+*/
+
+int buscaOrdLinearPorISBN_(char *isbn, TBook* lista, int tam)
 {
-    if (tam == 0)
-        return -1;
-    int pos = tam / 2;
+    int i = 0;
+    while(strcmp(isbn, lista[i].isbn) < 0)
+        i++;
+    return i;
+}
+
+/*
+    Primeira versão (busca linear) na forma recursiva
+*/
+
+int buscaBinPorISBN(char *isbn, TBook* lista, int ini, int fim)
+{
+    if (ini >= fim)
+        return 0;
+    int pos = (ini + fim)/2;
     if (strcmp(isbn, lista[pos].isbn) < 0)
-        return buscaBinPorISBN(isbn, lista, pos);
+        return buscaBinPorISBN(isbn, lista, 0, pos - 1);
     else if(strcmp(isbn, lista[pos].isbn) == 0)
         return pos;
     else
-        return pos + buscaBinPorISBN(isbn, &lista[pos+1], tam - pos - 1) + 1;
+        return pos + buscaBinPorISBN(isbn, lista, pos + 1, fim) + 1;
 }
+
+/*
+    Primeira versão (busca linear) na forma não recursiva
+*/
 
 int buscaBinPorISBN_(char *isbn, TBook* lista, int tam)
 {
+    int ini = 0, fim = tam, pos;
+    while (ini < fim)
+    {
+        pos = (ini + fim)/2;
+        if (strcmp(isbn, lista[pos].isbn) < 0)
+            fim = pos - 1;
+        else if(strcmp(isbn, lista[pos].isbn) == 0)
+            return pos;
+        else
+            ini = pos + 1;
+    }
+    return pos;
+}
+
+int buscaOrdPorISBN(char *isbn, TBook* lista, int tam)
+{
+    
     
 }
 
