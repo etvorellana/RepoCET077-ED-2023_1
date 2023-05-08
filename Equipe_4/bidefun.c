@@ -894,11 +894,11 @@ void menu_lista5(TSongs *acervo) {
   // inicializo a lista
   printf("\nLista\n-------------\n");
   No *inicio = criaListaEncRandom(acervo, EX);
-  imprimeListaEnc(inicio);
-   //imprimeListIni_Fim(inicio);
+  //imprimeListaEnc(inicio);
+   imprimeListIni_Fim(inicio);
 
   //remove da lista e insere na pilha
-  printf("\nPilha\n-------------\n");
+ // printf("\nPilha\n-------------\n");
   Tpilha* pilha = cria_pilha();
   TSongs remove;
 
@@ -909,10 +909,10 @@ void menu_lista5(TSongs *acervo) {
     
   }
 
-  printPilhaEnc(pilha);
+ // printPilhaEnc(pilha);
 
   //remove da pilha e insere na fila
-  printf("\nFila\n-------------\n");
+ // printf("\nFila\n-------------\n");
   Tfila* fila = cria_fila();
   TSongs rmv;
   int aux = 0;
@@ -924,7 +924,7 @@ void menu_lista5(TSongs *acervo) {
    
   }
 
-  print_fila(fila);
+ // print_fila(fila);
 
   //remove da pilha e insere na fila
   printf("\nLista\n-------------\n");
@@ -936,8 +936,8 @@ void menu_lista5(TSongs *acervo) {
    
   }
 
-  imprimeListaEnc(inicio);
-  // imprimeListIni_Fim(inicio);
+  //imprimeListaEnc(inicio);
+  imprimeListIni_Fim(inicio);
   
   printf("\n\nFIM DA DEMONSTRACAO!!");
   limpaAcervo(acervo, tam);
