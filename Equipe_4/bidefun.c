@@ -125,7 +125,6 @@ int BuscaPorRank(int R, TSongs *lista, int tam) {
 }
 
 int busca_binaria(TSongs *lista, int tamanho, int item) {
-  // printf("aaaaaaaaaaaaaaa%d", item);
   int esquerda = 0, direita = tamanho - 1;
   int meio = (esquerda + direita) / 2;
   while (esquerda <= direita) {
@@ -563,8 +562,8 @@ int enqueue(TSongs song, TFilaLinear *fila) {
 
     fila->fila[fila->fim].PeakStreams = song.PeakStreams;
     fila->fila[fila->fim].TotalStreams = song.TotalStreams;
-    
-    fila-> fim = fila->fim + 1;
+
+    fila->fim = fila->fim + 1;
     return 1;
   }
   return 0;
@@ -574,262 +573,372 @@ TSongs *dequeue(TFilaLinear *fila) {
   if (fila->ini == fila->fim) {
     return NULL;
   } else {
-    TSongs* filaAux = (TSongs*) malloc(sizeof(TSongs));
+    TSongs *filaAux = (TSongs *)malloc(sizeof(TSongs));
     filaAux = &fila->fila[fila->ini];
-    
+
     free(fila->fila[fila->ini].ArtistName);
     free(fila->fila[fila->ini].SongName);
     free(fila->fila[fila->ini].PeakPositionXtimes);
-    
+
     fila->ini = fila->ini + 1;
     return filaAux;
   }
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
-//listas encadeadas 
+// listas encadeadas
 
-//copia Tsong
-int cpyTsong(TSongs song, TSongs *end)
-{
-    end = (TSongs*) malloc(sizeof(TSongs));
+// NOTsong
+No *alocaNoSong() {
+  No *p = (No *)malloc(sizeof(No));
+  p->proximo = NULL;
+  return p;
+}
+
+// apagar NOTsong
+void destroiNoSong(No *p) { free(p); }
+
+// lista NOTsong
+No *criaListaEnc(TSongs *lista, int tam) {
+  No *head;
+  if (tam == 0)
+    return NULL;
+  else {
+    head = alocaNoSong();
+    cpyTsong(lista[0], &head->song);
+    No *p = head;
+    for (int i = 1; i < tam; i++) {
+      p->proximo = alocaNoSong();
+      p = p->proximo;
+      cpyTsong(lista[i], &p->song);
+    }
+    return head;
+  }
+}
+
+No *criaListaEncRandom(TSongs *acervo, int tam) {
+  No *head = alocaNoSong();
+  No *aux = head;
+
+  if (tam == 0)
+    return NULL;
+
+  int num = rand() % 7000;
+  cpyTsong(acervo[num], &head->song);
+  tam--;
+  while (tam > 0) {
+    num = rand() % 7000;
+    while (aux->proximo != NULL)
+      aux = aux->proximo;
+    aux->proximo = alocaNoSong();
+    aux = aux->proximo;
+    cpyTsong(acervo[num], &aux->song);
+    tam--;
+  }
+  return head;
+}
+
+// imprime lista NOTsong
+void imprimeListaEnc(No *head) {
+  No *p = head;
+  while (p) {
+    printf("posicao:\t%d    musica:\t%s\n", p->song.Position,p->song.SongName);
+    p = p->proximo;
+  }
+}
+void imprimeListIni_Fim(No *head) {
+  No *p = head;
+   printf("posicao:\t%d    musica:\t%s\n", p->song.Position,p->song.SongName);
+  
+  while (p->proximo) 
+     p = p->proximo;
     
-    if(end)
-    {
-        // função para na inserir elementos repetidos da fila?
-      end -> Position = song.Position;
-      end -> Key = song.Key;
+printf("posicao:\t%d    musica:\t%s\n", p->song.Position,p->song.SongName);
+  
+}
 
-      end -> ArtistName = (char *) malloc(strlen(song.ArtistName) * 2);
-      strcpy(end -> ArtistName, song.ArtistName);
+// destroi lista NOTsong
+void destroiListaEnc(No *head) {
+  No *p = head;
+  while (p != NULL) {
+    No *aux = p;
+    p = p->proximo;
+    destroiNoSong(aux);
+  }
+}
 
-      end -> SongName = (char *)malloc(strlen(song.SongName) * 2);
-      strcpy(end -> SongName, song.SongName);
-
-      end -> Days = song.Days;
-      end -> Top10Times = song.Top10Times;
-      end -> PeakPosition = song.PeakPosition;
-
-      end -> PeakPositionXtimes = (char *) malloc(strlen(song.PeakPositionXtimes) * 2);
-      strcpy(end -> PeakPositionXtimes, song.PeakPositionXtimes);
-
-      end -> PeakStreams = song.PeakStreams;
-      end -> TotalStreams = song.TotalStreams;
-      
-      return TRUE;
+// busca por chave NOTsong
+No *buscaPorPosicao(int position, No *head) {
+  No *p = head;
+  while (p != NULL) {
+    if (position == p->song.Position) {
+      return p;
+      p = p->proximo;
     }
+    return NULL;
+  }
+}
 
+// incluir registro no final por NOTsong
+void incRegistroEnc(TSongs song, No *head) {
+  No* aux = alocaNoSong();
+  aux = head;
+  while (aux->proximo != NULL)
+      aux = aux->proximo;
+  aux->proximo = alocaNoSong();
+  cpyTsong(song, &aux->proximo->song);
+}
+
+// remoção especifica por NOTsong
+int remRegistroEsp(int position, No *head) {
+  No *p = buscaPorPosicao(position, head);
+  if (p != NULL) {
+    if (p == head) {
+      head = p->proximo;
+      destroiNoSong(p);
+    } else {
+      No *ant = head;
+      while (ant->proximo != p)
+        ant = ant->proximo;
+      ant->proximo = p->proximo;
+      destroiNoSong(p);
+    }
+    return TRUE;
+  } else {
     return FALSE;
+  }
 }
 
-//cria pilha encadeada
-int cria_pilha(Tpilha *p)
-{
-  p -> topo = NULL;
-  p -> tam = 0;
-  return TRUE;
+// remover do final da lista
+TSongs remRegistroFim(No *head) {
+  if (head->proximo == NULL) {
+    TSongs song;
+    cpyTsong(head->song, &song);
+    free(head);
+    return song;
+  } else {
+    No *aux = head;
+    No *aux2;
+    while(aux->proximo->proximo != NULL)
+      aux = aux->proximo;
+    aux2 = aux->proximo;
+    aux -> proximo = NULL;
+    TSongs song;
+    cpyTsong(aux2->song, &song);
+    free(aux2->proximo);
+    return song;
+  }
 }
 
-//insere na pilha 
-int empilhaEnc(TSongs song, Tpilha *p)
-{
-  No *novo = malloc(sizeof(No));
-  novo -> proximo = NULL;
+//----------------------------------------------
 
-  if(cpyTsong(song, &novo -> song))
-  {
-    // p->tam também serve de verificação 
-    if (p -> topo == NULL)
-    {
-      p -> topo = malloc (sizeof(No));
-      p -> topo = novo;
-      p -> tam ++;
+// copia Tsong
+int cpyTsong(TSongs song, TSongs *end) {
+
+  if (end) {
+
+    end->Position = song.Position;
+    end->Key = song.Key;
+
+    end->ArtistName = (char *)malloc(strlen(song.ArtistName) * 2);
+    strcpy(end->ArtistName, song.ArtistName);
+
+    end->SongName = (char *)malloc(strlen(song.SongName) * 2);
+    strcpy(end->SongName, song.SongName);
+
+    end->Days = song.Days;
+    end->Top10Times = song.Top10Times;
+    end->PeakPosition = song.PeakPosition;
+
+    end->PeakPositionXtimes =
+        (char *)malloc(strlen(song.PeakPositionXtimes) * 2);
+    strcpy(end->PeakPositionXtimes, song.PeakPositionXtimes);
+
+    end->PeakStreams = song.PeakStreams;
+    end->TotalStreams = song.TotalStreams;
+
+    return 1;
+  }
+
+  return 0;
+}
+
+// cria pilha encadeada
+Tpilha *cria_pilha() {
+  Tpilha *p = malloc(sizeof(Tpilha));
+  if (!p)
+    return NULL;
+  p->topo = NULL;
+  p->tam = 0;
+  return p;
+}
+
+// insere na pilha
+int empilhaEnc(TSongs song, Tpilha *p) {
+  No *novo = alocaNoSong();
+  novo->proximo = NULL;
+
+  if (cpyTsong(song, &novo->song)) {
+    if (p->topo == NULL) {
+      p->topo = novo;
+      p->tam++;
       return TRUE;
     }
 
-    else
-    {
-      novo -> proximo = p -> topo;
-      p -> topo = novo;
-      p -> tam ++;
+    else {
+      novo->proximo = p->topo;
+      p->topo = novo;
+      p->tam++;
       return TRUE;
     }
   }
-
   return FALSE;
 }
 
-//desempilha
-No* desempilhaEnc(Tpilha *p)
-{
-  //Se tiver algum elemento na lista 
-  if(p -> topo)
-  {
-    No *remove = p -> topo;
-    p -> topo = remove -> proximo;
-    return remove;
+// desempilha
+TSongs desempilhaEnc(Tpilha *p) {
+  // Se tiver algum elemento na lista
+  if (p->topo) {
+    No *remove = p->topo;
+    TSongs aux;
+    cpyTsong(remove->song, &aux);
+    p->topo = remove->proximo;
+    free(remove);
+    return aux;
   }
-
-  return NULL;
+  TSongs a;
+  return a;
 }
 
-//print pilha
-void printPilhaEnc(Tpilha *p)
-{
-  No *print = p -> topo;
+// print pilha
+void printPilhaEnc(Tpilha *p) {
+  No *print = p->topo;
 
-  //enquanto print for diferente de NULL
-  while(print)
-  {
-    printf("posicao:\t%d\nmusica:\t%s", print -> song.Position, print -> song.SongName);
-    print = print -> proximo;
+  // enquanto print for diferente de NULL
+  while (print != NULL) {
+    printf("posicao:\t%d    musica:\t%s\n", print->song.Position,
+           print->song.SongName);
+    print = print->proximo;
   }
 }
 
-//Cria fila 
-int cria_fila(Tfila *f)
-{
-  f -> inicio = NULL;
-  f -> fim = NULL;
-  f -> tam = 0;
-
-  return TRUE;
+// Cria fila
+Tfila *cria_fila() {
+  Tfila *f = malloc(sizeof(Tfila));
+  if (!f)
+    return NULL;
+  f->inicio = NULL;
+  f->fim = NULL;
+  f->tam = 0;
+  return f;
 }
 
-//inserir na fila
-int insere_fila(TSongs song, Tfila *f)
-{
-  //cria um novo No
-  No *novo = malloc (sizeof(No));
-  novo -> proximo = NULL;
+// inserir na fila
+int insere_fila(TSongs song, Tfila *f) {
+  // cria um novo No
+  No *novo = alocaNoSong();
+  novo->proximo = NULL;
 
-  //se a cópia foi bem sucedida
-  if (cpyTsong(song, &novo -> song))
-  {
-    //se inicio == NULL (f -> tam também serve para o teste)
-    if (!f -> inicio)
-    {
-      f -> inicio = novo;
-      f -> fim = novo;
+  // se a cópia foi bem sucedida
+  if (cpyTsong(song, &novo->song)) {
+    // se inicio == NULL (f -> tam também serve para o teste)
+    if (!f->inicio) {
+      f->inicio = novo;
+      f->fim = novo;
     }
 
-    else
-    {
-      f -> fim -> proximo = novo;
-      f -> fim = novo;
+    else {
+      f->fim->proximo = novo;
+      f->fim = novo;
     }
 
-    f -> tam ++;
+    f->tam++;
     return TRUE;
   }
 
   return FALSE;
 }
 
-//Remover da fila
-No *remove_fila(Tfila *f)
-{
+// Remover da fila
+TSongs remove_fila(Tfila *f) {
   No *remove = NULL;
-
-  //se existir algum elemento na fila (f -> tam também serve para o teste)
-  if(f -> inicio)
-  {
-    remove = f -> inicio;
-    f -> inicio = remove -> proximo;
-    f -> tam --;
-  }
-
-  return remove;
-}
-
-//imprime a fila
-void print_fila(Tfila *f)
-{
-  No *print = f -> inicio;
-
-  //enquanto print for diferente de NULL
-  while(print)
-  {
-    printf("posicao:\t%d\nmusica:\t%s", print -> song.Position, print -> song.SongName);
-    print = print -> proximo;
-  }
-}
-
-void menu_lista5(TSongs *acervo, TListaLinear *l, Tpilha *p, Tfila *f, int *tam)
-{
-  // carregar o dataset
-  acervo = carregaDados("../Data/newSongs.csv", tam);
-  
-  //inicializo a lista, a pilha e a fila
-  l = criaListaLinear(EX, TRUE);
-  int aux = cria_pilha(p);
-  TSongs *remove = NULL;
-
-  if (!aux)
-    exit(-1);
-  aux = cria_fila(f);
-  if (!aux)
-    exit(-1);
-
-  //adicionando itens aleatórios na lista
-  aux = 0;
-  while (aux < EX)
-  {
-    int aleatorio = rand() % 9000;
-    if(insereNaLista(acervo[aleatorio], l))
-      aux ++;
-  }
-
-  //print primeiro e ultimo da lista
-  printf("posicao:\t%d\nmusica:\t%s", l -> lista[0].Position, l -> lista[0].SongName);
-  printf("posicao:\t%d\nmusica:\t%s", l -> lista[99].Position, l -> lista[99].SongName);
-
-  //remove da lista e insere na pilha
-  aux = 0;
-  while (aux < EX)
-  {
-    remove = removeDaLista(l -> lista[aux], l);
-
-    if(empilhaEnc(*remove, p))
-      aux ++;
-    else
-      exit(1);
-
+  TSongs aux;
+  // se existir algum elemento na fila (f -> tam também serve para o teste)
+  if (f->inicio) {
+    remove = f->inicio;
+    cpyTsong(remove->song, &aux);
+    f->inicio = remove->proximo;
+    f->tam--;
     free(remove);
   }
+  return aux;
+}
 
-  //recebe o retorno da função remove
-  No *remover = NULL;
+// imprime a fila
+void print_fila(Tfila *f) {
+  No *print = f->inicio;
 
-  //tira da pilha e insere na fila
-  aux = 0;
-  while (aux < EX)
-  {
-    remover = desempilhaEnc(p);
+  // enquanto print for diferente de NULL
+  while (print) {
+    printf("posicao:\t%d    musica:\t%s\n", print->song.Position,
+           print->song.SongName);
+    print = print->proximo;
+  }
+}
 
-    if(insere_fila(remover -> song, f))
-      aux ++;
-    else
-      exit(2);
+void menu_lista5(TSongs *acervo) {
+  // carregar o dataset
+  int tam;
+  acervo = carregaDados("Data/newSongs.csv", &tam);
 
-    free(remover);
+  // inicializo a lista
+  printf("\nLista\n-------------\n");
+  No *inicio = criaListaEncRandom(acervo, EX);
+  imprimeListaEnc(inicio);
+   //imprimeListIni_Fim(inicio);
+
+  //remove da lista e insere na pilha
+  printf("\nPilha\n-------------\n");
+  Tpilha* pilha = cria_pilha();
+  TSongs remove;
+
+  for(int i = 0; i < EX;i++){
+
+    remove = remRegistroFim(inicio);
+    empilhaEnc(remove, pilha);
+    
   }
 
-  //tira da fila e insere na lista novamente 
-  aux = 0;
-  while (aux < EX)
-  {
-    remover = remove_fila(f);
+  printPilhaEnc(pilha);
 
-    if (insereNaLista(remover -> song, l))
-      aux ++;
-    else 
-      exit(3);
+  //remove da pilha e insere na fila
+  printf("\nFila\n-------------\n");
+  Tfila* fila = cria_fila();
+  TSongs rmv;
+  int aux = 0;
+  
+  for(int i = 0; i < EX;i++){
+
+    rmv = desempilhaEnc(pilha);
+    insere_fila(rmv, fila);
+   
   }
 
-  //print primeiro e o ultimo
-  printf("posicao:\t%d\nmusica:\t%s", l -> lista[0].Position, l -> lista[0].SongName);
-  printf("posicao:\t%d\nmusica:\t%s", l -> lista[99].Position, l -> lista[99].SongName);
+  print_fila(fila);
 
-  printf("FIM DA DEMONSTRACAO!!");
+  //remove da pilha e insere na fila
+  printf("\nLista\n-------------\n");
+
+  for(int i = 0; i < EX;i++){
+
+    rmv = remove_fila(fila);
+    incRegistroEnc(rmv, inicio);
+   
+  }
+
+  imprimeListaEnc(inicio);
+  // imprimeListIni_Fim(inicio);
+  
+  printf("\n\nFIM DA DEMONSTRACAO!!");
+  limpaAcervo(acervo, tam);
 }
