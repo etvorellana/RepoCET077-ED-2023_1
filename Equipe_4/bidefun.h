@@ -1,7 +1,7 @@
 #define CSVSIZE 8000
 #define TRUE 1
 #define FALSE 0
-#define EX 10
+#define EX 100
 
 typedef struct {
   int Position;
