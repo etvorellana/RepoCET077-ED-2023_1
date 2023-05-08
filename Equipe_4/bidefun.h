@@ -1,7 +1,7 @@
-#define CSVSIZE 13000
+#define CSVSIZE 8000
 #define TRUE 1
 #define FALSE 0
-#define EX 100
+#define EX 10
 
 typedef struct {
   int Position;
@@ -91,18 +91,31 @@ TSongs* dequeue(TFilaLinear *fila);
 
 //listas encadeadas
 
+//lista
+No* alocaNoSong();
+void destroiNoSong(No* p);
+No* criaListaEnc(TSongs *lista, int tam);
+No* criaListaEncRandom(TSongs *acervo, int tam);
+void imprimeListaEnc(No* head);
+void destroiListaEnc(No* head);
+No* buscaPorPosicao(int position, No* head);
+void incRegistroEnc(TSongs song, No* head);
+int remRegistroEsp(int position, No* head);
+TSongs remRegistroFim(No* head);
+void imprimeListIni_Fim(No* head);
+
 //pilha
 int cpyTsong(TSongs song, TSongs *end);
-int cria_pilha(Tpilha *p);
+Tpilha* cria_pilha();
 int empilhaEnc(TSongs song, Tpilha *p);
-No* desempilhaEnc(Tpilha *p);
+TSongs desempilhaEnc(Tpilha *p);
 void printPilhaEnc(Tpilha *p);
 
 //fila
-int cria_fila(Tfila *f);
+Tfila* cria_fila();
 int insere_fila(TSongs song, Tfila *f);
-No *remove_fila(Tfila *f);
+TSongs remove_fila(Tfila *f);
 void print_fila(Tfila *f);
 
 //menu
-void menu_lista5(TSongs *acervo, TListaLinear *l, Tpilha *p, Tfila *f, int *tam);
+void menu_lista5(TSongs *acervo);
