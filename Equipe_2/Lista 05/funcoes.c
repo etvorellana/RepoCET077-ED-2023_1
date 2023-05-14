@@ -2,8 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "funcoes.h"
-#define TRUE 1
-#define FALSE 0
 
 Jogos *criaAcervo(int capacidade)
 {
@@ -142,9 +140,11 @@ int isPilhaVazia(Pilha *pilha)
     return 0;
 }
 
-int isPilhaCheia(Pilha *pilha) {
+int isPilhaCheia(Pilha *pilha)
+{
 
-    if (pilha->tam == 100) return 1;
+    if (pilha->tam == 100)
+        return 1;
 
     return 0;
 }
@@ -167,10 +167,10 @@ void imprimePilha(Pilha *pilha)
     }
 }
 
-void imprimeElementoPilha( Pilha *pilha ) {
+void imprimeElementoPilha(Pilha *pilha)
+{
 
     printf("%s", pilha->topo->jogo->title);
-
 }
 
 int empilhar(Jogos *jogo, Pilha *pilha)
@@ -192,18 +192,17 @@ int empilhar(Jogos *jogo, Pilha *pilha)
 Jogos *desempilha(Pilha *pilha)
 {
 
-    if (isPilhaVazia(pilha)) return NULL;
+    if (isPilhaVazia(pilha))
+        return NULL;
 
     ElementoPilha *aux = pilha->topo;
     Jogos *jogo = pilha->topo->jogo;
 
-    
     pilha->topo = pilha->topo->prox;
-    //free(aux);
+    free(aux);
     pilha->tam--;
-    
+
     return jogo;
-    
 }
 
 Fila *inicializaFila()
@@ -225,7 +224,6 @@ int insereNaFila(Jogos *jogo, Fila *fila)
     if (elementoFila == NULL)
         return 0;
 
-    //copiaJogos( *jogo, elementoFila->jogo );
     elementoFila->jogo = jogo;
     elementoFila->prox = NULL;
 
@@ -237,8 +235,10 @@ int insereNaFila(Jogos *jogo, Fila *fila)
     }
     else
     {
-        fila->fim = elementoFila;
+        fila->fim->prox = elementoFila;
     }
+
+    fila->fim = elementoFila;
 
     return 1;
 }
@@ -253,17 +253,10 @@ Jogos *removeDaFila(Fila *fila)
     ElementoFila *aux = fila->inicio;
 
     Jogos *itemRemovido = aux->jogo;
-    //copiaJogos( *aux->jogo, itemRemovido );
 
     fila->inicio = aux->prox;
 
-    // Caso haja apenas 1 elemento na fila
-    if (fila->inicio == NULL)
-    {
-        fila->fim = NULL;
-    }
-
-    //free(aux);
+    free(aux);
 
     return itemRemovido;
 }
@@ -277,23 +270,25 @@ int isFilaVazia(Fila *fila)
     return 0;
 }
 
-void imprimeElementoFila( Fila *fila ) {
+void imprimeElementoFila(Fila *fila)
+{
 
     printf("%s", fila->inicio->jogo->title);
-
 }
 
-int insereEncadeado(Jogos *jogo, Encadeado *listaEncadeada) {
+int insereEncadeado(Jogos *jogo, Encadeado *listaEncadeada)
+{
 
     ElementoEncadeado *novoElemento = (ElementoEncadeado *)malloc(sizeof(ElementoEncadeado));
     ElementoEncadeado *ultimoNo = listaEncadeada->topo;
 
     // Verificar se alocou espaço.
-    if (novoElemento == NULL) return 0;
+    if (novoElemento == NULL)
+        return 0;
 
     // Preenche o novo nó.
     novoElemento->jogo = jogo;
-    //copiaJogos( *jogo, novoElemento->jogo );
+    // copiaJogos( *jogo, novoElemento->jogo );
     novoElemento->prox = NULL;
 
     // Se a lista estiver vazia, o novo nó será o primeiro nó
@@ -315,31 +310,33 @@ int insereEncadeado(Jogos *jogo, Encadeado *listaEncadeada) {
     ultimoNo->prox = novoElemento;
 
     listaEncadeada->tam++;
-    
+
     return 1;
 }
 
-Jogos* removeEncadeado( Encadeado* listaEncadeada ) {
+Jogos *removeEncadeado(Encadeado *listaEncadeada)
+{
 
-    Jogos* jogo;
-    ElementoEncadeado* auxiliar;
+    Jogos *jogo;
+    ElementoEncadeado *auxiliar;
 
-    if( listaEncadeada->tam == 0 ) return NULL;
+    if (listaEncadeada->tam == 0)
+        return NULL;
 
-    //copiaJogos( *listaEncadeada->topo->jogo, jogo );
+    // copiaJogos( *listaEncadeada->topo->jogo, jogo );
     jogo = listaEncadeada->topo->jogo;
 
     auxiliar = listaEncadeada->topo;
     listaEncadeada->topo = listaEncadeada->topo->prox;
-    //free( auxiliar );
+    // free( auxiliar );
 
     listaEncadeada->tam--;
 
     return jogo;
-
 }
 
-Encadeado *inicializaListaEncadeada() {
+Encadeado *inicializaListaEncadeada()
+{
 
     Encadeado *listaEncadeada = (Encadeado *)malloc(sizeof(Encadeado));
 
@@ -349,52 +346,23 @@ Encadeado *inicializaListaEncadeada() {
     return listaEncadeada;
 }
 
-void imprimeElementoListaEncadeada( Encadeado* lista ) {
+void imprimeElementoListaEncadeada(Encadeado *lista)
+{
 
-    ElementoEncadeado* auxiliar = lista->topo;
+    ElementoEncadeado *auxiliar = lista->topo;
 
     printf("%s.", auxiliar->jogo->title);
-
 }
 
-void imprimeUltimoElementoListaEncadeada( Encadeado *listaEncadeada ) {
+void imprimeUltimoElementoListaEncadeada(Encadeado *listaEncadeada)
+{
 
-    ElementoEncadeado* auxiliar = listaEncadeada->topo;
+    ElementoEncadeado *auxiliar = listaEncadeada->topo;
 
-    while( auxiliar->prox != NULL ) {
+    while (auxiliar->prox != NULL)
+    {
         auxiliar = auxiliar->prox;
     }
 
     printf("%s.\n", auxiliar->jogo->title);
-
-}
-
-void copiaJogos( Jogos origem, Jogos* destino ) {
-
-    destino = (Jogos*) malloc (sizeof(Jogos));
-
-    destino->title = (char*) malloc((strlen(origem.title)));
-    strcpy(destino->title, origem.title); 
-        
-    destino->dataRelease  = (char*) malloc(strlen(origem.dataRelease));
-    strcpy(destino->dataRelease, origem.dataRelease);
-        
-    destino->win  = (char*) malloc(strlen(origem.win));
-    strcpy(destino->win, origem.win);
-
-    destino->mac  = (char*)malloc(strlen(origem.mac));
-    strcpy(destino->mac, origem.mac);
-
-    destino->linux  = (char*)malloc(strlen(origem.linux));
-    strcpy(destino->linux, origem.linux);
-
-    destino->rating  = (char*)malloc(strlen(origem.rating));
-    strcpy(destino->rating, origem.rating);
-
-    destino->positiveRatio = origem.positiveRatio;
-    destino->userReviews = origem.userReviews;
-    destino->priceFinal = origem.priceFinal;
-    destino->priceOriginal = origem.priceOriginal;
-    destino->discount = origem.discount;
-
 }

@@ -86,6 +86,4 @@ Encadeado* inicializaListaEncadeada();
 void imprimeElementoListaEncadeada( Encadeado* listaEncadeada );
 void imprimeUltimoElementoListaEncadeada( Encadeado *listaEncadeada );
 
-void copiaJogos( Jogos origem, Jogos* destino );
-
 #endif
