@@ -1,11 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <ctype.h>
+#define N 16
 
 typedef struct
 {
     int key;
-    char *str;
     float val;
 }TInfo;
 
@@ -13,144 +12,115 @@ typedef TInfo *PInfo;
 
 struct noArvBin{
     TInfo info;
+    int nivel;
     struct noArvBin *esq;
     struct noArvBin *dir;
-    int niv; //nível do no
-    int prf; // profundidade do no
-    int alt; // altura do nó
 };
 
 typedef struct noArvBin TNoArvBin;
 typedef TNoArvBin *PNoArvBin;
 
-PNoArvBin iniArvBin(TInfo info);
-void geraInfo(TInfo *info);
-PNoArvBin incArvBin(TInfo info, PNoArvBin raiz);
+PNoArvBin newNoArvBin();
+PNoArvBin insereNoArvBin(PNoArvBin arv, TInfo info, int nivel);
+void printArv(PNoArvBin arv, int tipo);
 
 int main(void)
 {
-    char arvRep[5][65];
-    //inicializando a representação
+    PInfo lista;
     
-    int i, j;
-    int pos; 
-    TInfo info;
-    PNoArvBin raizArv = NULL;
-    
+    lista = (PInfo) malloc(N * sizeof(TInfo));
+    // Criando uma lista
+    for(int i = 0; i < N; i++)
+    {
+        lista[i].key = rand() % 100;
+        lista[i].val = 5.0*rand()/RAND_MAX;
+        //todo: verificar para nao ter chaves repetidas
+        printf("(%d, %.2f)  ", lista[i].key, lista[i].val);
+    }
 
-    
+    printf("\n------------------\n");
 
-    for(i = 0; i < 5; i++)
-        printf("%s\n\n", arvRep[i]);
+    PNoArvBin arv = NULL;
+    for(int i = 0; i < N; i++)
+    {
+        arv = insereNoArvBin(arv, lista[i], 0);
+    }
 
 
-    geraInfo(&info);
-    incArvBin(info, raizArv);
+    printArv(arv, 0);
+    printf("\n");
+    printf("------------------\n");
+    printArv(arv, 1);
+    printf("\n");
+    printf("------------------\n");
+    printArv(arv, 2);
+    printf("\n");
+    printf("------------------\n");
+    printArv(arv, 3);
+    printf("\n");
 
-    
     return 0;
 }
 
-void arv2mat(char **arvRep, PNoArvBin raiz)
+PNoArvBin newNoArvBin()
 {
-       
-    
+    PNoArvBin arv = (PNoArvBin) malloc(sizeof(TNoArvBin));
+    arv->dir = NULL;
+    arv->esq = NULL;
+    return arv;
 }
 
-void clearMat(char **arvRep)
+PNoArvBin insereNoArvBin(PNoArvBin arv, TInfo info, int nivel){
+    if(arv == NULL){
+        arv = newNoArvBin();
+        arv->info = info;
+        arv->nivel = nivel;
+    }else if(info.key < arv->info.key){
+        arv->esq = insereNoArvBin(arv->esq, info, ++nivel);
+    }else{
+        arv->dir = insereNoArvBin(arv->dir, info, ++nivel);
+    }
+    return arv;
+}
+
+void printArv(PNoArvBin arv, int tipo)
 {
-    int step = 64;
-    int i, j, pos;
-    for(i = 0; i < 5; i++)
-        for(j = 0; j < 65; j++)        
-            arvRep[i][j] = ' ';
-    for(i = 0; i < 5; i++)
+    if(arv != NULL)
     {
-        pos = step/2;
-        while (pos < 64)
+        if (tipo == 0)
         {
-            arvRep[i][pos-2] = '[';
-            arvRep[i][pos+1] = ']';
-            pos += step;
+            printArv(arv->esq, tipo);
+            printf("(%d, %.2f, %d)  ", arv->info.key, arv->info.val, arv->nivel);
+            printArv(arv->dir, tipo);
+        }else if (tipo == 1)
+        {   
+            printf("(%d, %.2f, %d)  ", arv->info.key, arv->info.val, arv->nivel);
+            printArv(arv->esq, tipo);
+            printArv(arv->dir, tipo);
+        }else if (tipo == 2)
+        {
+            printArv(arv->esq, tipo);
+            printArv(arv->dir, tipo);
+            printf("(%d, %.2f, %d)  ", arv->info.key, arv->info.val, arv->nivel);
+        }else{
+            printArv(arv->dir, tipo);
+            printf("(%d, %.2f, %d)  ", arv->info.key, arv->info.val, arv->nivel);
+            printArv(arv->esq, tipo);
         }
-        step /= 2;
-        arvRep[i][64] = '\0';
-    }
+    }       
 }
 
-PNoArvBin iniArvBin(TInfo info)
-{
-    PNoArvBin no = (PNoArvBin) malloc(sizeof(TNoArvBin));
-    no->info = info;
-    no->esq = NULL;
-    no->dir = NULL;
-    no->niv = 0;
-    no-> prf = 0;
-    no->alt = 0;
-}
-
-void geraInfo(TInfo *info)
-{   
-    int strSize = (10+rand(5));
-    int i = 0;
-    int dif = 'z' - 'a' + 1;
-    info->key = rand()%100;
-    info->str = (char*) malloc(sizeof(char)*(strSize+1));
-    info->str[strSize] = '\0';
-    for(i = 0; i < strSize; i++)
-        info->str[i] = 'a' + rand()%dif;
-    info->str[0] = toupper(info->str[0]);
-    info->val = rand();
-    info->val /= RAND_MAX;
-    info->val *= 100; 
-    return;
-}
-
-
-/*
-    - alt: A altura de um nó é o comprimento do caminho mais longo entre ele e 
-    uma folha;
-    - prf: A profundidade de um nó é a distância percorrida deste nó até a 
-    raiz;
-    - niv: O Nível de um nó é o número de nós do caminho da raiz até o nó;
-*/
-PNoArvBin incArvBin(TInfo info, PNoArvBin raiz)
-{
-    int niv, alt, prf;
-    niv = prf = alt = 0;
-    if(raiz == NULL)
+PNoArvBin buscaNaArv(PNoArvBin arv, int key){
+    if(arv == NULL){
+        return NULL;
+    }else if(arv->info.key == key)
     {
-        raiz = iniArvBin(info);
-        raiz->info = info;
+        return arv;
+    }else if(key < arv->info.key)
+    {
+        return buscaNaArv(arv->esq, key);
+    }else
+    {
+        return buscaNaArv(arv->dir, key);
     }
-    else
-    {   
-        PNoArvBin subArv, prox = raiz;
-        int dir;
-        do
-        {
-            subArv = prox;
-            if(subArv->info.key == info.key)
-                return raiz;  // não pode ter nos com a mesma chave
-            dir = rand()%2; // escolha uma direção
-            if (dir) //dir == 1 or dir = TRUE 
-                prox = subArv->dir;
-            else
-                prox = subArv->esq;
-            niv++;
-        }while(prox != NULL);
-        if(dir)
-        {
-            subArv->dir = iniArvBin(info);
-            subArv->dir->info = info;
-            subArv->dir->niv = niv;
-        }
-        else
-        {
-            subArv->esq = iniArvBin(info);
-            subArv->esq->info = info;
-            subArv->esq->niv = niv;
-        }
-    }
-    return raiz;
 }
