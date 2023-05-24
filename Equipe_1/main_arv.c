@@ -59,10 +59,10 @@ int main(void)
     printf("------------------\n");
     printArv(arv, 3);
     printf("\n");
-    int i = 0;
+    int i;
 
 
-    for(i; i < N; i++){
+    for(i = 0; i < N; i++){
         printArv(arv,0);
         printf("\n");
         printf("Valor na iteração: %d\n",i);
@@ -142,20 +142,25 @@ PNoArvBin removeNoArvBin(PNoArvBin arv, TInfo info){
   
     if(arv->info.key == info.key){
         if(arv->dir != NULL && arv->esq != NULL){
-            PNoArvBin aux = newNoArvBin();
+            PNoArvBin aux;
             aux = arv->dir;
-            while(aux->esq != NULL){
-            aux = aux->esq;
-            }
+            for(aux; aux->esq != NULL; aux = aux -> esq);
             arv->info = aux->info;
             arv->dir = removeNoArvBin(arv->dir,aux->info);
             return arv;
         }else if(arv->dir == NULL && arv->esq == NULL){
+            free(arv);
             return NULL;
         }else if(arv->dir != NULL){
-            return arv->dir;
+            PNoArvBin aux;
+            aux = arv->dir;
+            free(arv);
+            return aux;
         }else if(arv->esq != NULL){
-            return arv->esq;
+            PNoArvBin aux;
+            aux = arv->esq;
+            free(arv);
+            return aux;
         }
     }
     else{
