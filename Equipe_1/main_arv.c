@@ -60,10 +60,13 @@ int main(void)
     printArv(arv, 3);
     printf("\n");
     int i = 0;
+
+
     for(i; i < N; i++){
-        printf("Valor na iteração: %d\n",i);
         printArv(arv,0);
-        printf("%d\n", lista[i]);
+        printf("\n");
+        printf("Valor na iteração: %d\n",i);
+        printf("Item que vai ser removido: %d\n", lista[i].key);
         arv = removeNoArvBin(arv, lista[i]);
         printf("\n");
     }
