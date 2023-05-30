@@ -2,13 +2,11 @@
 #include <stdlib.h>
 #define N 16
 
-typedef struct
-{
+typedef struct{
     int key;
     float val;
 }TInfo;
 
-typedef TInfo *PInfo;
 
 struct noArvBin{
     TInfo info;
@@ -17,16 +15,18 @@ struct noArvBin{
     struct noArvBin *dir;
 };
 
+typedef TInfo *PInfo;
 typedef struct noArvBin TNoArvBin;
 typedef TNoArvBin *PNoArvBin;
 
 PNoArvBin newNoArvBin();
 PNoArvBin insereNoArvBin(PNoArvBin arv, TInfo info, int nivel);
 void printArv(PNoArvBin arv, int tipo);
-PNoArvBin removeNoArvBin(PNoArvBin arv, TInfo info);
+PNoArvBin buscaNaArv(PNoArvBin arv, int key);
+PNoArvBin removeNoArvBin(PNoArvBin arvore, TInfo info);
 
-int main(void)
-{
+int main(void){
+
     PInfo lista;
     
     lista = (PInfo) malloc(N * sizeof(TInfo));
@@ -42,11 +42,9 @@ int main(void)
     printf("\n------------------\n");
 
     PNoArvBin arv = NULL;
-    for(int i = 0; i < N; i++)
-    {
+    for(int i = 0; i < N; i++){
         arv = insereNoArvBin(arv, lista[i], 0);
     }
-
 
     printArv(arv, 0);
     printf("\n");
@@ -59,23 +57,11 @@ int main(void)
     printf("------------------\n");
     printArv(arv, 3);
     printf("\n");
-    int i;
-
-
-    for(i = 0; i < N; i++){
-        printArv(arv,0);
-        printf("\n");
-        printf("Valor na iteração: %d\n",i);
-        printf("Item que vai ser removido: %d\n", lista[i].key);
-        arv = removeNoArvBin(arv, lista[i]);
-        printf("\n");
-    }
 
     return 0;
 }
 
-PNoArvBin newNoArvBin()
-{
+PNoArvBin newNoArvBin(){
     PNoArvBin arv = (PNoArvBin) malloc(sizeof(TNoArvBin));
     arv->dir = NULL;
     arv->esq = NULL;
@@ -95,22 +81,17 @@ PNoArvBin insereNoArvBin(PNoArvBin arv, TInfo info, int nivel){
     return arv;
 }
 
-void printArv(PNoArvBin arv, int tipo)
-{
-    if(arv != NULL)
-    {
-        if (tipo == 0)
-        {
+void printArv(PNoArvBin arv, int tipo){
+    if(arv != NULL){
+        if (tipo == 0){
             printArv(arv->esq, tipo);
             printf("(%d, %.2f, %d)  ", arv->info.key, arv->info.val, arv->nivel);
             printArv(arv->dir, tipo);
-        }else if (tipo == 1)
-        {   
+        }else if (tipo == 1){   
             printf("(%d, %.2f, %d)  ", arv->info.key, arv->info.val, arv->nivel);
             printArv(arv->esq, tipo);
             printArv(arv->dir, tipo);
-        }else if (tipo == 2)
-        {
+        }else if (tipo == 2){
             printArv(arv->esq, tipo);
             printArv(arv->dir, tipo);
             printf("(%d, %.2f, %d)  ", arv->info.key, arv->info.val, arv->nivel);
@@ -134,42 +115,38 @@ PNoArvBin buscaNaArv(PNoArvBin arv, int key){
     }
 }
 
-PNoArvBin removeNoArvBin(PNoArvBin arv, TInfo info){
-  
-    if(arv == NULL){
+PNoArvBin removeNoArvBin(PNoArvBin arvore, TInfo info) {
+    //verificacao para arvore vazia.
+    if (arvore == NULL){
         return NULL;
     }
-  
-    if(arv->info.key == info.key){
-        if(arv->dir != NULL && arv->esq != NULL){
-            PNoArvBin aux;
-            aux = arv->dir;
-            for(aux; aux->esq != NULL; aux = aux -> esq);
-            arv->info = aux->info;
-            arv->dir = removeNoArvBin(arv->dir,aux->info);
-            return arv;
-        }else if(arv->dir == NULL && arv->esq == NULL){
-            free(arv);
+
+    if(info.key == arvore->info.key){
+        // Se o nó não possui filhos 
+        if(arvore->esq == NULL && arvore->dir == NULL){
+            free(arvore);
             return NULL;
-        }else if(arv->dir != NULL){
-            PNoArvBin aux;
-            aux = arv->dir;
-            free(arv);
-            return aux;
-        }else if(arv->esq != NULL){
-            PNoArvBin aux;
-            aux = arv->esq;
-            free(arv);
-            return aux;
         }
+        //se ha filhos pela direita
+        if (arvore->esq == NULL){
+            PNoArvBin arvoreAux = arvore->dir;
+            free(arvore);
+            return arvoreAux;
+        }
+        //se ha filhos pela esquerda
+        if (arvore->dir == NULL){
+            PNoArvBin arvoreAux = arvore->esq;
+            free(arvore);
+            return arvoreAux;
+        }/*else{
+            //se ha filhos pela esquerda e direita "if(arvore->esq != NULL && arvore->dir != NULL){}":
+        }*/
     }
-    else{
-        if(info.key < arv->info.key){
-            arv->esq = removeNoArvBin(arv->esq, info);
-            return arv;
-        }else{
-            arv->dir = removeNoArvBin(arv->dir, info);
-            return arv;
-        }
+    //se o no a remover eh maior que a raiz, entao deve percorrer a arvore pela direita.
+    if (info.key > arvore->info.key){
+        arvore->dir = removeNoArvBin(arvore->dir, info.key);
+    }else{
+        //senao, o no a remover eh menor que a raiz, percorre pela esquerda.
+        arvore->esq = removeNoArvBin(arvore->esq, info.key);
     }
 }
