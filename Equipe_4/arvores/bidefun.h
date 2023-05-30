@@ -4,6 +4,20 @@
 #define EX 100
 #define N 16
 
+//TSongs
+typedef struct {
+  int Position;
+  long long int Key;
+  char *ArtistName;
+  char *SongName;
+  int Days;
+  float Top10Times;
+  int PeakPosition;
+  char *PeakPositionXtimes;
+  int PeakStreams;
+  int TotalStreams;
+} TSongs;
+
 //Tinfo
 typedef struct 
 {
@@ -16,16 +30,23 @@ typedef Tinfo *PInfo;
 //estrutura para montar a arvore
 typedef struct no
 {
-    Tinfo info;
+    TSongs *song;
     int nivel;
     struct no *dir;
     struct no *esq;
 }NoArv;
 
 NoArv* newNoArvBin();
-NoArv* inserir(NoArv *raiz, Tinfo info, int nivel); //cabeçalho da função para inserir elemento
-void inserir_i(NoArv **raiz, Tinfo info, int nivel); //cabeçalho do procedimento para inserir
+NoArv* inserir(NoArv *raiz, TSongs song, int nivel); //cabeçalho da função para inserir elemento
+void inserir_i(NoArv **raiz, TSongs song, int nivel); //cabeçalho do procedimento para inserir
 void imprimir(NoArv *arv, int tipo); //cabeçalho função para imprimir na tela a arvore
 NoArv* buscaRec(NoArv *raiz, int key); //cabeçalho funçao de busca
 NoArv* buscai(NoArv *raiz, int key); //cabeçalho função de buscai
-NoArv* removeNoArv(NoArv *raiz, Tinfo info); //cabeçalho função de remover
+NoArv* removeNoArv(NoArv *raiz, TSongs song); //cabeçalho função de remover
+void menu();
+
+//Manipular TSongs
+TSongs *carregaDados(char *fileName, int *tam);
+void limpaAcervo(TSongs *acervo, int tam);
+void limpaRegistro(TSongs song);
+TSongs* cpyTsong(TSongs song, TSongs *end);
