@@ -153,25 +153,25 @@ NoArv* newNoArvBin()
     arv->dir = NULL;
     arv->esq = NULL;
     arv -> song = NULL;
+    arv -> altura = 0;
     return arv;
 }
 
-NoArv* inserir(NoArv *raiz, TSongs song, int nivel) //corpo da função para inserir elemento
+NoArv* inserir(NoArv *raiz, TSongs song) //corpo da função para inserir elemento
 {
     if (!raiz) //se raiz for igual a NULL
     {
         raiz = newNoArvBin(); //alocando espaço na memória
         raiz -> song = cpyTsong(song, raiz -> song); //atribuição do valor
-        raiz -> nivel = nivel;
         return raiz;
     }
 
     else //caso contrário
     {
         if (song.Position < raiz -> song -> Position) //se value for menor que o valor que estiver no campo
-            raiz -> esq = inserir(raiz -> esq, song, ++nivel);
+            raiz -> esq = inserir(raiz -> esq, song);
         else //caso seja maior
-            raiz -> dir = inserir(raiz -> dir, song, ++nivel);
+            raiz -> dir = inserir(raiz -> dir, song);
 
         return raiz;
     }
@@ -204,7 +204,7 @@ void imprimir(NoArv *arv, int tipo)
     }       
 }
 
-void inserir_i(NoArv **raiz, TSongs song, int nivel) //corpo do procedimento
+void inserir_i(NoArv **raiz, TSongs song) //corpo do procedimento
 {
     NoArv *aux = *raiz;
 
@@ -215,13 +215,11 @@ void inserir_i(NoArv **raiz, TSongs song, int nivel) //corpo do procedimento
         else 
             raiz = &aux -> dir;
 
-        nivel++;
         aux = *raiz;
     }
 
     aux = newNoArvBin();
     aux -> song = cpyTsong(song, aux -> song);
-    aux -> nivel = nivel;
 
     *raiz = aux;
 }
@@ -331,7 +329,7 @@ void menu()
         switch (opcao){
         case 1:
             num = rand() % CSVSIZE;
-            raiz = inserir(raiz, acervo[num], 0);
+            raiz = inserir(raiz, acervo[num]);
             break;
         case 2:
         printf("Digite o tipo(1 a 4) da impressao: ");

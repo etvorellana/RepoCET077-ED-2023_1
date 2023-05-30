@@ -31,14 +31,14 @@ typedef Tinfo *PInfo;
 typedef struct no
 {
     TSongs *song;
-    int nivel;
+    int altura;
     struct no *dir;
     struct no *esq;
 }NoArv;
 
 NoArv* newNoArvBin();
-NoArv* inserir(NoArv *raiz, TSongs song, int nivel); //cabeçalho da função para inserir elemento
-void inserir_i(NoArv **raiz, TSongs song, int nivel); //cabeçalho do procedimento para inserir
+NoArv* inserir(NoArv *raiz, TSongs song); //cabeçalho da função para inserir elemento
+void inserir_i(NoArv **raiz, TSongs song); //cabeçalho do procedimento para inserir
 void imprimir(NoArv *arv, int tipo); //cabeçalho função para imprimir na tela a arvore
 NoArv* buscaRec(NoArv *raiz, int key); //cabeçalho funçao de busca
 NoArv* buscai(NoArv *raiz, int key); //cabeçalho função de buscai
