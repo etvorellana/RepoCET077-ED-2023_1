@@ -151,11 +151,18 @@ PNoArvBin removeNoArvBin(PNoArvBin arv, TInfo info){
             arv->dir = removeNoArvBin(arv->dir,aux->info);
             return arv;
         }else if(arv->dir == NULL && arv->esq == NULL){
+            free(arv);
             return NULL;
         }else if(arv->dir != NULL){
-            return arv->dir;
+            PNoArvBin aux;
+            aux = arv->dir;
+            free(arv);
+            return aux;
         }else if(arv->esq != NULL){
-            return arv->esq;
+            PNoArvBin aux;
+            aux = arv->esq;
+            free(arv);
+            return aux;
         }
     }
     else{

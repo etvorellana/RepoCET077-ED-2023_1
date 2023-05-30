@@ -3,5 +3,5 @@
 bin/*
 src/Lista_01/output/*
 src/LiLAS/output/*
-src/Arvore/output/*
+src/Arvores/output/*
 .DS_Store
