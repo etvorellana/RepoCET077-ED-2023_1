@@ -43,6 +43,7 @@ void imprimir(NoArv *arv, int tipo); //cabeçalho função para imprimir na tela
 NoArv* buscaRec(NoArv *raiz, int key); //cabeçalho funçao de busca
 NoArv* buscai(NoArv *raiz, int key); //cabeçalho função de buscai
 NoArv* removeNoArv(NoArv *raiz, TSongs song); //cabeçalho função de remover
+int alturaNo(NoArv *raiz); //cabeçalho função altura
 void menu();
 
 //Manipular TSongs

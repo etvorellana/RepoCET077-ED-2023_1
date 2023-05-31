@@ -147,6 +147,8 @@ TSongs* cpyTsong(TSongs song, TSongs *end)
     return NULL;
 }
 
+//Árvores binárias
+
 NoArv* newNoArvBin()
 {
     NoArv *arv = (NoArv *) malloc(sizeof(NoArv));
@@ -157,13 +159,28 @@ NoArv* newNoArvBin()
     return arv;
 }
 
+int alturaNo(NoArv *raiz)
+{
+    if (!raiz) //raiz == NULL
+        return -1;
+    
+    else // raiz != NULL
+    {
+        int esq = alturaNo(raiz -> esq);
+        int dir = alturaNo(raiz -> dir);
+        if (esq > dir)
+            return esq + 1;
+        else
+            return dir + 1;
+    }
+}
+
 NoArv* inserir(NoArv *raiz, TSongs song) //corpo da função para inserir elemento
 {
     if (!raiz) //se raiz for igual a NULL
     {
         raiz = newNoArvBin(); //alocando espaço na memória
         raiz -> song = cpyTsong(song, raiz -> song); //atribuição do valor
-        return raiz;
     }
 
     else //caso contrário
@@ -172,9 +189,10 @@ NoArv* inserir(NoArv *raiz, TSongs song) //corpo da função para inserir elemen
             raiz -> esq = inserir(raiz -> esq, song);
         else //caso seja maior
             raiz -> dir = inserir(raiz -> dir, song);
-
-        return raiz;
     }
+
+    raiz -> altura = alturaNo(raiz);
+    return raiz;
 }
 
 void imprimir(NoArv *arv, int tipo)
@@ -184,21 +202,21 @@ void imprimir(NoArv *arv, int tipo)
         if (tipo == 0)
         {
             imprimir(arv->esq, tipo);
-            printf("(%d, %s, %d)  ", arv->song->Position, arv->song->SongName, arv->nivel);
+            printf("(%d, %s, %d)  ", arv->song->Position, arv->song->SongName, arv -> altura);
             imprimir(arv->dir, tipo);
         }else if (tipo == 1)
         {   
-            printf("(%d, %s, %d)  ", arv->song->Position, arv->song->SongName, arv->nivel);
+            printf("(%d, %s, %d)  ", arv->song->Position, arv->song->SongName, arv-> altura);
             imprimir(arv->esq, tipo);
             imprimir(arv->dir, tipo);
         }else if (tipo == 2)
         {
             imprimir(arv->esq, tipo);
             imprimir(arv->dir, tipo);
-            printf("(%d, %s, %d)  ", arv->song->Position, arv->song->SongName, arv->nivel);
+            printf("(%d, %s, %d)  ", arv->song->Position, arv->song->SongName, arv-> altura);
         }else{
             imprimir(arv->dir, tipo);
-            printf("(%d, %s, %d)  ", arv->song->Position, arv->song->SongName, arv->nivel);
+            printf("(%d, %s, %d)  ", arv->song->Position, arv->song->SongName, arv-> altura);
             imprimir(arv->esq, tipo);
         }
     }       
@@ -220,6 +238,7 @@ void inserir_i(NoArv **raiz, TSongs song) //corpo do procedimento
 
     aux = newNoArvBin();
     aux -> song = cpyTsong(song, aux -> song);
+    aux -> altura = alturaNo(aux);
 
     *raiz = aux;
 }
@@ -323,7 +342,7 @@ void menu()
 
     do
     {
-        printf("\n\t0 - sair\n\t1 - inserir\n\t2 - imprimir\n\t3 - buscar\n\t");
+        printf("\n\t0 - sair\n\t1 - inserir\n\t2 - imprimir\n\t3 - buscar\n\t4 - altura\n\t");
         scanf("%d", &opcao);
 
         switch (opcao){
@@ -345,6 +364,9 @@ void menu()
                 printf("Valor encontrado: %d - %s\n", busca -> song -> Position, busca -> song -> SongName);
             else 
                 printf("Valor nao encontrado!\n");
+            break;
+        case 4:
+            printf("Altura da arvore: %d\n", raiz -> altura);
             break;
         default:
             if (opcao != 0)
