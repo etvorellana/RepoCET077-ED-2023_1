@@ -31,7 +31,7 @@ typedef Tinfo *PInfo;
 typedef struct no
 {
     TSongs *song;
-    int altura;
+    short altura;
     struct no *dir;
     struct no *esq;
 }NoArv;
@@ -43,7 +43,17 @@ void imprimir(NoArv *arv, int tipo); //cabeçalho função para imprimir na tela
 NoArv* buscaRec(NoArv *raiz, int key); //cabeçalho funçao de busca
 NoArv* buscai(NoArv *raiz, int key); //cabeçalho função de buscai
 NoArv* removeNoArv(NoArv *raiz, TSongs song); //cabeçalho função de remover
-int alturaNo(NoArv *raiz); //cabeçalho função altura
+short alturaNo(NoArv *raiz); //cabeçalho função altura
+short maior(short esq, short dir); //cabeçalho função que retorna a maior altura das duas subarvores
+short alturaNoArv(NoArv *no); //cabeçalho retorna altura do no
+short balanceamento(NoArv *no); //cabeçalho função que retorna o fator de balanceamento
+NoArv* rotacaoEsquerda(NoArv *raiz); //rotação a esquerda
+NoArv* rotacaoDireita(NoArv *raiz); //rotação a direita
+NoArv* rotacaoDirEsq(NoArv *raiz); //rotação direita esquerda
+NoArv* rotacaoEsqDir(NoArv *raiz); //rotação esquerda direita
+NoArv* balancear(NoArv *raiz); //balancear a arvore
+NoArv* inserir_AVL(NoArv *raiz, TSongs song); //inserir balanceada
+NoArv* removeNoArv_AVL(NoArv *raiz, TSongs song); //remove balanceado
 void menu();
 
 //Manipular TSongs

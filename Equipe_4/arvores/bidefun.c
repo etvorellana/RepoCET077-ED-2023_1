@@ -159,7 +159,28 @@ NoArv* newNoArvBin()
     return arv;
 }
 
-int alturaNo(NoArv *raiz)
+short maior(short esq, short dir)
+{
+    return (esq > dir) ? esq : dir;
+}
+
+short alturaNoArv(NoArv *no)
+{
+    if (!no)
+        return -1;
+    else 
+        return no -> altura;
+}
+
+short balanceamento(NoArv *no)
+{
+    if (no)
+        return (alturaNoArv(no -> esq) - alturaNoArv(no -> dir));
+    else 
+        return 0;
+}
+
+short alturaNo(NoArv *raiz)
 {
     if (!raiz) //raiz == NULL
         return -1;
@@ -175,6 +196,71 @@ int alturaNo(NoArv *raiz)
     }
 }
 
+NoArv* rotacaoEsquerda(NoArv *raiz)
+{
+    NoArv *dir = raiz -> dir; //direita do no raiz
+    NoArv *esqDir = dir -> esq; //esquerda do no a direita do raiz
+
+    dir -> esq = raiz; // subarvore a esquerda do no a direita do raiz recebe raiz
+    raiz -> dir = esqDir; // antiga raiz na subarvore direita recebe o esqDir
+
+    raiz -> altura = maior(alturaNoArv(raiz -> esq), alturaNoArv(raiz -> dir)) + 1;
+    dir -> altura = maior(alturaNoArv(dir -> esq), alturaNoArv(dir -> dir)) + 1;
+
+    return dir;
+}
+
+NoArv* rotacaoDireita(NoArv *raiz)
+{
+   NoArv *esq = raiz -> esq; //esquerda do no raiz 
+   NoArv *dirEsq = esq -> dir; //direta do no a esquerda do raiz
+
+   esq -> dir = raiz; //subarvore a direita do nó a esquerda do raiz recebe raiz
+   raiz -> esq = dirEsq; //antiga raiz na subarvore direita recebe o dirEsq
+
+   raiz -> altura = maior(alturaNoArv(raiz -> esq), alturaNoArv(raiz -> dir)) + 1;
+   esq -> altura = maior(alturaNoArv(esq -> esq), alturaNoArv(esq -> dir)) + 1;
+
+   return esq; 
+}
+
+NoArv* rotacaoDirEsq(NoArv *raiz)
+{
+    raiz -> dir = rotacaoDireita(raiz -> dir);
+    return rotacaoEsquerda(raiz);
+}
+
+NoArv* rotacaoEsqDir(NoArv *raiz)
+{
+    raiz -> esq = rotacaoEsquerda(raiz -> esq);
+    return rotacaoDireita(raiz);
+}
+
+NoArv* balancear(NoArv *raiz)
+{
+    short fb = balanceamento(raiz);
+    short fb_esq = balanceamento(raiz -> esq);
+    short fb_dir = balanceamento(raiz -> dir);
+
+    //rotação a esquerda
+    if (fb < -1 && fb_dir <= 0)
+        raiz = rotacaoEsquerda(raiz);
+    
+    //rotação a direita
+    else if (fb > 1 && fb_esq >= 0)
+        raiz = rotacaoDireita(raiz);
+
+    //rotacao direita esquerda
+    else if (fb < -1 && fb_dir > 0)
+        raiz = rotacaoDirEsq(raiz);
+
+    //rotacao esquerda direita
+    else if (fb > 1 && fb_esq < 0)
+        raiz = rotacaoEsqDir(raiz);
+
+    return raiz;
+}
+
 NoArv* inserir(NoArv *raiz, TSongs song) //corpo da função para inserir elemento
 {
     if (!raiz) //se raiz for igual a NULL
@@ -187,12 +273,33 @@ NoArv* inserir(NoArv *raiz, TSongs song) //corpo da função para inserir elemen
     {
         if (song.Position < raiz -> song -> Position) //se value for menor que o valor que estiver no campo
             raiz -> esq = inserir(raiz -> esq, song);
-        else //caso seja maior
+        else if (song.Position > raiz -> song -> Position) //caso seja maior
             raiz -> dir = inserir(raiz -> dir, song);
     }
 
-    raiz -> altura = alturaNo(raiz);
+    raiz -> altura = maior(alturaNoArv(raiz -> esq), alturaNoArv(raiz -> dir)) + 1;
     return raiz;
+}
+
+NoArv* inserir_AVL(NoArv *raiz, TSongs song)
+{
+    if (!raiz) //se raiz for igual a NULL
+    {
+        raiz = newNoArvBin(); //alocando espaço na memória
+        raiz -> song = cpyTsong(song, raiz -> song); //atribuição do valor
+    }
+
+    else //caso contrário
+    {
+        if (song.Position < raiz -> song -> Position) //se value for menor que o valor que estiver no campo
+            raiz -> esq = inserir(raiz -> esq, song);
+        else if (song.Position > raiz -> song -> Position) //caso seja maior
+            raiz -> dir = inserir(raiz -> dir, song);
+    }
+
+    raiz -> altura = maior(alturaNoArv(raiz -> esq), alturaNoArv(raiz -> dir)) + 1;
+
+    return balancear(raiz);
 }
 
 void imprimir(NoArv *arv, int tipo)
@@ -238,7 +345,7 @@ void inserir_i(NoArv **raiz, TSongs song) //corpo do procedimento
 
     aux = newNoArvBin();
     aux -> song = cpyTsong(song, aux -> song);
-    aux -> altura = alturaNo(aux);
+    aux -> altura = maior(alturaNoArv(aux -> esq), alturaNoArv(aux -> dir)) + 1;
 
     *raiz = aux;
 }
@@ -282,39 +389,39 @@ NoArv* removeNoArv(NoArv *raiz, TSongs song) //corpo da função de remoção
     {
         if (song.Position == raiz -> song -> Position) //encontrei o elemento
         {
-            if (raiz -> esq && raiz -> dir) // se as duas sub-arvores são != NULL
-            {
-                NoArv *aux = raiz -> esq;
-                while (aux -> dir)
-                    aux = aux -> dir;
-                raiz -> song = aux -> song;
-                aux -> song = cpyTsong(song, aux->song);
-                raiz -> esq = removeNoArv(raiz -> esq, song);
-                return raiz;
-            }
-
-            else if (raiz -> esq) //se a sub-arvore da esquerda != NULL
-            {
-                NoArv *aux = raiz -> esq;
-                limpaRegistro(*raiz->song);
-                free(raiz);
-                return aux;
-            }
-
-            else if (raiz -> dir) //se a sub-arvore da direita != NULL
-            {
-                NoArv *aux = raiz -> dir;
-                limpaRegistro(*raiz->song);
-                free(raiz);
-                return aux;
-            }
-
-            else //se as duas sub-arvores forem nulas
+            if(!raiz -> esq && !raiz -> dir) //se as duas sub-arvores forem nulas
             {
                 limpaRegistro(*raiz->song);
                 free(raiz);
                 return NULL;
             }
+
+            else 
+            {
+
+                if (raiz -> esq && raiz -> dir) // se as duas sub-arvores são != NULL
+                {
+                    NoArv *aux = raiz -> esq;
+                    while (aux -> dir)
+                        aux = aux -> dir;
+                    raiz -> song = aux -> song;
+                    aux -> song = cpyTsong(song, aux->song);
+                    raiz -> esq = removeNoArv(raiz -> esq, song);
+                    return raiz;
+                }
+
+                else // caso contrário, uma das duas é diferente de NULL
+                {
+                    NoArv *aux;
+                    if (raiz -> esq)
+                        aux = raiz -> esq;
+                    else
+                        aux = raiz -> dir;
+                    limpaRegistro(*raiz->song);
+                    free(raiz);
+                    return aux;
+                }
+            }            
         }
         
         else // caso não tenha encontrado
@@ -327,6 +434,63 @@ NoArv* removeNoArv(NoArv *raiz, TSongs song) //corpo da função de remoção
             return raiz;
         }
     }
+}
+
+NoArv* removeNoArv_AVL(NoArv *raiz, TSongs song)
+{
+    if (!raiz) //se raiz == NULL
+        return NULL;
+    else 
+    {
+        if (song.Position == raiz -> song -> Position) //encontrei o elemento
+        {
+            if(!raiz -> esq && !raiz -> dir) //se as duas sub-arvores forem nulas
+            {
+                limpaRegistro(*raiz->song);
+                free(raiz);
+                return NULL;
+            }
+
+            else 
+            {
+
+                if (raiz -> esq && raiz -> dir) // se as duas sub-arvores são != NULL
+                {
+                    NoArv *aux = raiz -> esq;
+                    while (aux -> dir)
+                        aux = aux -> dir;
+                    raiz -> song = aux -> song;
+                    aux -> song = cpyTsong(song, aux->song);
+                    raiz -> esq = removeNoArv(raiz -> esq, song);
+                    return raiz;
+                }
+
+                else // caso contrário, uma das duas é diferente de NULL
+                {
+                    NoArv *aux;
+                    if (raiz -> esq)
+                        aux = raiz -> esq;
+                    else
+                        aux = raiz -> dir;
+                    limpaRegistro(*raiz->song);
+                    free(raiz);
+                    return aux;
+                }
+            }            
+        }
+        
+        else // caso não tenha encontrado
+        {
+            if (song.Position < raiz -> song -> Position) //se a key for menor que a key da raiz
+                raiz -> esq = removeNoArv(raiz -> esq, song);
+            else //se a key for maior que a key da raiz
+                raiz -> dir = removeNoArv(raiz -> dir, song);
+        }
+
+        raiz -> altura = maior(alturaNoArv(raiz -> esq), alturaNoArv(raiz -> dir)) + 1;
+        return balancear(raiz);
+    }
+
 }
 
 void menu()
