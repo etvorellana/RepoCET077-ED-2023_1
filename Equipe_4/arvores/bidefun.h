@@ -55,6 +55,7 @@ NoArv* balancear(NoArv *raiz); //balancear a arvore
 NoArv* inserir_AVL(NoArv *raiz, TSongs song); //inserir balanceada
 NoArv* removeNoArv_AVL(NoArv *raiz, TSongs song); //remove balanceado
 void menu();
+void menu_AVL();
 
 //Manipular TSongs
 TSongs *carregaDados(char *fileName, int *tam);

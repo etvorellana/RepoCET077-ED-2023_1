@@ -495,10 +495,8 @@ NoArv* removeNoArv_AVL(NoArv *raiz, TSongs song)
 
 void menu()
 {
-    int num;
     int tam;
     int opcao;
-    int tipo;
     int key;
     TSongs *acervo = carregaDados("../../Data/songs.csv", &tam);
     NoArv *raiz = NULL;
@@ -506,19 +504,24 @@ void menu()
 
     do
     {
-        printf("\n\t0 - sair\n\t1 - inserir\n\t2 - imprimir\n\t3 - buscar\n\t4 - altura\n\t");
+        printf("\n\t0 - sair\n\t1 - inserir\n\t2 - imprimir\n\t3 - buscar\n\t4 - altura\n\t5 - remover\n\t");
         scanf("%d", &opcao);
 
         switch (opcao){
         case 1:
-            num = rand() % CSVSIZE;
-            raiz = inserir(raiz, acervo[num]);
+            key = rand() % CSVSIZE;
+            raiz = inserir(raiz, acervo[key]);
             break;
         case 2:
-        printf("Digite o tipo(1 a 4) da impressao: ");
-        scanf("%d", &tipo);
-        printf("Impressao\n-----------------------------------------------\n");
-            imprimir(raiz, tipo);
+            printf("Digite o tipo(1 a 4) da impressao: ");
+            scanf("%d", &key);
+            if (key < 1 || key > 4)
+                printf("tipo invalido!");
+            else 
+            {
+                printf("Impressao\n-----------------------------------------------\n");
+                imprimir(raiz, key);
+            }
             break;
         case 3:
             printf("Digite a key do elemento que procura: ");
@@ -532,6 +535,15 @@ void menu()
         case 4:
             printf("Altura da arvore: %d\n", raiz -> altura);
             break;
+        case 5:
+            printf("Digite a posicao do elemento que deseja excluir");
+            scanf("%d", &key);
+            busca = buscaRec(raiz, key);
+            if (busca)
+                raiz = removeNoArv(raiz, *busca -> song);
+            else 
+                printf("Elemento nao pertence a arvore!");
+            break;
         default:
             if (opcao != 0)
                 printf("Opcao invalida!\n");
@@ -539,4 +551,63 @@ void menu()
         }
     } while (opcao != 0);
     
+}
+
+void menu_AVL()
+{
+    int tam;
+    int opcao;
+    int key;
+    TSongs *acervo = carregaDados("../../Data/songs.csv", &tam);
+    NoArv *raiz = NULL;
+    NoArv *busca = NULL;
+
+    do
+    {
+        printf("\n\t0 - sair\n\t1 - inserir\n\t2 - imprimir\n\t3 - buscar\n\t4 - altura\n\t5 - remover\n\t");
+        scanf("%d", &opcao);
+
+        switch (opcao){
+        case 1:
+            key = rand() % CSVSIZE;
+            raiz = inserir_AVL(raiz, acervo[key]);
+            break;
+        case 2:
+            printf("Digite o tipo(1 a 4) da impressao: ");
+            scanf("%d", &key);
+            if (key < 1 || key > 4)
+                printf("tipo invalido!");
+            else 
+            {
+                printf("Impressao\n-----------------------------------------------\n");
+                imprimir(raiz, key);
+            }
+            break;
+        case 3:
+            printf("Digite a key do elemento que procura: ");
+            scanf("%d", &key);
+            busca = buscaRec(raiz, key);
+            if (busca)
+                printf("Valor encontrado: %d - %s\n", busca -> song -> Position, busca -> song -> SongName);
+            else 
+                printf("Valor nao encontrado!\n");
+            break;
+        case 4:
+            printf("Altura da arvore: %d\n", raiz -> altura);
+            break;
+        case 5:
+            printf("Digite a posicao do elemento que deseja excluir");
+            scanf("%d", &key);
+            busca = buscaRec(raiz, key);
+            if (busca)
+                raiz = removeNoArv_AVL(raiz, *busca -> song);
+            else 
+                printf("Elemento nao pertence a arvore!");
+            break;
+        default:
+            if (opcao != 0)
+                printf("Opcao invalida!\n");
+            break;
+        }
+    } while (opcao != 0);
 }
