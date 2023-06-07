@@ -348,7 +348,8 @@ noArvBin *removeDaArvAVL(noArvBin *arv, int ID)
     else if (arv->jogo.ID == ID)
     {
         if (arv->dir == NULL && arv->esq == NULL)
-        {
+        {   
+            limpaJogo(&(arv->jogo));
             free(arv);
             return NULL;
         }
