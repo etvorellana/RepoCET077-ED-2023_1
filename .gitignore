@@ -4,4 +4,7 @@ bin/*
 src/Lista_01/output/*
 src/LiLAS/output/*
 src/Arvores/output/*
+src/Ordena/output/*
+src/PPE/*
+src/Primeira Prova/*
 .DS_Store
