@@ -431,6 +431,7 @@ NoArv* removeNoArv(NoArv *raiz, TSongs song) //corpo da função de remoção
             else //se a key for maior que a key da raiz
                 raiz -> dir = removeNoArv(raiz -> dir, song);
 
+            raiz -> altura = maior(alturaNoArv(raiz -> esq), alturaNoArv(raiz -> dir)) + 1;
             return raiz;
         }
     }
