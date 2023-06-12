@@ -640,7 +640,7 @@ noArvBin *rotacaoDirEsq(noArvBin *arv)
 
 short balanceamento(noArvBin *no)
 {
-    if (no)
+    if (no != NULL)
         return (alturaDoNo(no->esq) - alturaDoNo(no->dir));
     else
         return 0;
