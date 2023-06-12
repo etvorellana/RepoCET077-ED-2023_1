@@ -357,7 +357,6 @@ noArvBin *removeDaArvAVL(noArvBin *arv, int ID)
         {
             noArvBin *aux = arv->dir;
             limpaJogo(&(arv->jogo));
-
             free(arv);
             arv = aux;
         }
@@ -365,7 +364,6 @@ noArvBin *removeDaArvAVL(noArvBin *arv, int ID)
         {
             noArvBin *aux = arv->esq;
             limpaJogo(&(arv->jogo));
-
             free(arv);
             arv = aux;
         }
