@@ -8,7 +8,7 @@ int main(void)
 {
     Games *jogos;
     int tam = 0;
-    jogos = carregaDados("../../Data/Grupo1DataSet.csv", &tam);
+    jogos = carregaDados("../../../Data/Grupo1DataSet.csv", &tam);
 
     Games *sub_jogo = IniciaLista(N);
 
@@ -137,7 +137,7 @@ int main(void)
         printf("\n---Tentando remover o ID: %d\n\n", sub_jogo[aux].ID);
 
         noArvBin *no = buscaNaArv(arv, sub_jogo[aux].ID);
-        printArv(arv, 0);
+        printArv(arv, 1);
 
         if (no == NULL)
         {
@@ -149,7 +149,7 @@ int main(void)
             arv = removeDaArv(arv, sub_jogo[aux].ID);
         }
 
-        printArv(arv, 0);
+        printArv(arv, 1);
 
         no = buscaNaArv(arv, sub_jogo[aux].ID);
         if (no == NULL)
@@ -172,7 +172,7 @@ int main(void)
         printf("\n---Tentando remover o ID: %d\n\n", sub_jogo[aux].ID);
 
         noArvBin *no = buscaNaArv(arvAVL, sub_jogo[aux].ID);
-        printArv(arvAVL, 0);
+        printArv(arvAVL, 1);
 
         if (no == NULL)
         {
@@ -184,7 +184,7 @@ int main(void)
             arvAVL = removeDaArvAVL(arvAVL, sub_jogo[aux].ID);
         }
 
-        printArv(arvAVL, 0);
+        printArv(arvAVL, 1);
 
         no = buscaNaArv(arvAVL, sub_jogo[aux].ID);
         if (no == NULL)
