@@ -44,7 +44,8 @@ PNoArvBin rotacaoDirEsq(PNoArvBin arv);
 PNoArvBin rotacaoEsqDir(PNoArvBin arv);
 PNoArvBin rotacaoEsq(PNoArvBin arv);
 PNoArvBin rotacaoDir(PNoArvBin arv);
-void printArv(PNoArvBin arv);
+void printArv(PNoArvBin arv, int tipo);
 int incRegistro( Jogos origem, Jogos* destino, int tam ); 
+void limpaRegistro(Jogos jogo);
 
 #endif
