@@ -3,3 +3,24 @@ Joabe Ferreira da Silva Filho
 Maria Eduarda Guedes Alves
 Maykon de Souza Santos
 Deyvid Reis Santos
+
+para compilar e rodar o main.c da pasta pset1 
+* Primeiro compile as partes por separado   
+    $> gcc -o bidefun.o -c bidefun.c
+        ^   ^   ^     ^      ^     ^
+    $> gcc -o main.o -c main.c  
+        ^   ^   ^     ^   ^ 
+* Depois juntar tudo
+    $> gcc -o exem_01 bidefun.o main.o
+        ^    ^  ^    ^       ^         ^
+
+
+para compilar e rodar o arv.c da pasta arvores
+* Primeiro compile as partes por separado   
+    $> gcc -o bidefun.o -c bidefun.c
+        ^   ^     ^      ^      ^     
+    $> gcc -o arv.o -c arv.c  
+        ^   ^   ^    ^   ^ 
+* Depois juntar tudo
+    $> gcc -o exem_01 bidefun.o arv.o
+        ^   ^    ^        ^       ^

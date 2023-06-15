@@ -292,9 +292,9 @@ NoArv* inserir_AVL(NoArv *raiz, TSongs song)
     else //caso contrário
     {
         if (song.Position < raiz -> song -> Position) //se value for menor que o valor que estiver no campo
-            raiz -> esq = inserir(raiz -> esq, song);
+            raiz -> esq = inserir_AVL(raiz -> esq, song);
         else if (song.Position > raiz -> song -> Position) //caso seja maior
-            raiz -> dir = inserir(raiz -> dir, song);
+            raiz -> dir = inserir_AVL(raiz -> dir, song);
     }
 
     raiz -> altura = maior(alturaNoArv(raiz -> esq), alturaNoArv(raiz -> dir)) + 1;
@@ -462,7 +462,7 @@ NoArv* removeNoArv_AVL(NoArv *raiz, TSongs song)
                         aux = aux -> dir;
                     raiz -> song = aux -> song;
                     aux -> song = cpyTsong(song, aux->song);
-                    raiz -> esq = removeNoArv(raiz -> esq, song);
+                    raiz -> esq = removeNoArv_AVL(raiz -> esq, song);
                     return raiz;
                 }
 
@@ -483,9 +483,9 @@ NoArv* removeNoArv_AVL(NoArv *raiz, TSongs song)
         else // caso não tenha encontrado
         {
             if (song.Position < raiz -> song -> Position) //se a key for menor que a key da raiz
-                raiz -> esq = removeNoArv(raiz -> esq, song);
+                raiz -> esq = removeNoArv_AVL(raiz -> esq, song);
             else //se a key for maior que a key da raiz
-                raiz -> dir = removeNoArv(raiz -> dir, song);
+                raiz -> dir = removeNoArv_AVL(raiz -> dir, song);
         }
 
         raiz -> altura = maior(alturaNoArv(raiz -> esq), alturaNoArv(raiz -> dir)) + 1;
