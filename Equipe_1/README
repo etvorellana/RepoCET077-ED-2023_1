@@ -1,1 +1,32 @@
 Colocar aqui os nomes dos integrantes da equipe
+
+    Alice Martins Valero
+    Beatriz Santos de Oliveira
+    Eduardo Takeshi Watanabe
+    Júlia de Araújo Ramos
+    Murilo Patricio Maia
+
+Os arquivos estão organizados da seguinte forma:
+
+    Arvores:
+        
+        Conteúdo:
+            Códigos de árvores não ordenadas.
+        
+        Compilação:
+            $> gcc -o funcoes.o -c funcoes.c
+            $> gcc -o main.o -c main.c
+            $> gcc -o exemplo funcoes.o main.o
+        Rodar:
+            $> ./exemplo
+
+    Arvores_Ordenadas:
+        
+        Conteúdo: 
+            Códigos de árvores ordenadas
+
+        Compilação:
+
+            
+
+    

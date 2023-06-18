@@ -1,7 +1,8 @@
-#include "funcoes_PF.h"
+#include "funcoes.h"
 #include <stdio.h>  
 #include <stdlib.h>
 #include <string.h>
+
 
 Games* carregaDados(char *fileName, int *tam)
 {
@@ -126,6 +127,170 @@ Games CopyGames(Games jogo){
 
    return cpyJogo;
   
+}
+
+int buscaPorId(int ID, Games* lista, int tam){
+  int i;
+  for(i = 0; i < tam; i++){
+    if(ID == lista[i].ID)
+      return i;
+    }
+  return i;
+}
+
+//FUNÇÕES PARA PILHAS
+
+void demonstrar_add_pilha(int try1,int ok,TPilhaLinear *pilha){
+  scanf("%*c");
+  system("clear||cls");
+  printf("\n--------------------------Inclusão Pilha---------------------");
+  printf("\n\nTentativas de inclusão na Pilha: %d",try1);
+  printf("\nforam incluidos %d registros na Pilha",ok);
+
+  if(pilha->topo == pilha->cap){
+    printf("\n\n\tPilha cheia\n");
+  }
+  
+  for(int i = pilha->topo-1;i>=0;i-- ){
+      printf("\n\t%d",pilha->pilha[i].ID);
+    }
+
+  
+}
+
+void demonstrar_rem_pilha(TPilhaLinear *pilha){
+  scanf("%*c");
+  system("clear||cls");
+  printf("\n--------------------------Remoção Pilha---------------------");
+ 
+  if(pilha->topo == 0){
+    printf("\n\tPilha vazia\n");
+  }else{
+    for(int i = pilha->topo-1;i>=0;i-- ){
+      printf("\n\t%d",pilha->pilha[i].ID);
+    }
+  }
+  
+  
+}
+
+TPilhaLinear* criaPilhaLinear(int cap){
+    TPilhaLinear *fila;
+  
+    fila = (TPilhaLinear*)malloc(sizeof(TPilhaLinear));
+    fila->cap = cap;
+    fila->topo = 0;
+    fila->pilha=IniciaLista(cap);
+  
+    return fila;
+}
+
+int insereNaPilha(Games jogo, TPilhaLinear* pilha){
+    if(pilha->topo == pilha->cap){
+      return 0;
+    }
+
+    int ok = buscaPorId(jogo.ID, pilha->pilha, pilha->topo);
+    if(ok != pilha->topo){
+      return 0;
+    }
+    else{
+      
+      pilha->pilha[pilha->topo] = CopyGames(jogo);
+
+      pilha->topo++;
+      
+      return 1;
+    }
+}
+
+Games* removeDaPilha(TPilhaLinear* pilha){
+  
+  if(pilha->topo == 0){
+    return NULL;
+  }
+  else{
+    Games *jogo_removido;
+    jogo_removido = (Games*)malloc(sizeof(Games));
+    jogo_removido = &(pilha->pilha[pilha->topo-1]);
+    pilha->topo--;
+    return jogo_removido;
+  }
+    
+}
+
+//FUNÇÕES PARA FILA
+
+void demonstrar_add_fila(int try1,int ok,TFilaLinear *fila){
+  scanf("%*c");
+  system("clear||cls");
+  printf("\n--------------------------Inclusão Fila---------------------");
+  printf("\n\nTentativas de inclusão na Fila: %d",try1);
+  printf("\nforam incluidos %d registros na Fila",ok);
+
+  if(fila->fim - fila->ini == fila->cap){
+    printf("\n\n\tFila cheia\n");
+  }
+  
+  for(int i = fila->fim-1;i>=fila->ini;i-- ){
+      printf("\n\t%d",fila->fila[i].ID);
+    }
+}
+
+void demonstrar_rem_fila(TFilaLinear *fila){
+  scanf("%*c");
+  system("clear||cls");
+  printf("\n--------------------------Remoção Fila---------------------");
+ 
+  if(fila->ini == fila->fim){
+    printf("\n\tFila vazia\n");
+  }else{
+    for(int i = fila->fim-1;i>=fila->ini;i-- ){
+      printf("\n\t%d",fila->fila[i].ID);
+    }
+  }
+}
+
+
+TFilaLinear* criaFilaLinear(int cap){
+  TFilaLinear *no;
+
+  no = (TFilaLinear*) malloc(sizeof(TFilaLinear));
+  no->fila = IniciaLista(cap);
+  no->cap = cap;
+  no->ini = 0;
+  no->fim = 0;
+  
+  return no;
+}
+
+int insereNaFila(Games jogo, TFilaLinear* fila){
+
+  if(fila->fim - fila->ini == fila->cap){
+    return 0;
+  }
+  else{
+    
+    fila->fila[fila->fim] = CopyGames(jogo);
+
+    fila->fim++;
+    
+    return 1;
+      
+  }
+}
+
+Games* removeDaFila(TFilaLinear* fila){
+  if(fila->ini == fila->fim){
+    return NULL;
+  }
+  else{
+    Games *jogo_removido;
+    jogo_removido = (Games*)malloc(sizeof(Games));
+    jogo_removido = &(fila->fila[fila->ini]);
+    fila->ini++;
+    return jogo_removido;
+  }
 }
 
 No* AlocaNo(){
@@ -296,7 +461,7 @@ TFilaEnc* iniFilaEnc(){
   return fila;
 }
 
-int insereNaFila(Games jogo,TFilaEnc *fila){
+int insereNaFilaEnc(Games jogo,TFilaEnc *fila){
     No*p;
     p = AlocaNo();
     p->jogo = CopyGames(jogo);
@@ -314,7 +479,7 @@ int insereNaFila(Games jogo,TFilaEnc *fila){
   return 1;
 }
 
-Games* removeDaFila(TFilaEnc *fila){
+Games* removeDaFilaEnc(TFilaEnc *fila){
   if(fila->tam == 0){
     return NULL;
   }
@@ -347,3 +512,5 @@ void imprimFila(TFilaEnc *Fila){
      printf("\nID do jogo: %d",p->jogo.ID);
   }
 }
+
+

@@ -31,7 +31,7 @@ TBook* carregaDados(char *fileName, int *tam)
     ok = fgets(str, 900, fp); // pega a string do arquivo 
     if(!ok) // se ok != NULL (NULL é Falso, diferente de NULL verdadeiro)
     {
-        printf("Erro lendo o cabeçalho do CSV!!!", str);
+        printf("Erro lendo o cabeçalho do CSV!!!");
         return NULL;
     }     
     i = 0;
@@ -132,9 +132,9 @@ void limpaRegistro(TBook book)
         free(book.lang);
         free(book.pubDate);
         free(book.publisher);
-    }
-    free(acervo);
+        
 }
+    
 
 /*
     Primeira versão na forma recursiva
@@ -322,7 +322,7 @@ int incRegistroOrd(TBook book, TBook* lista, int* tam)
 {
     //lista[*tam].isbn = book.isbn;
     int pos = buscaBinPorISBN(book.isbn, lista, *tam);
-    if (strcmp(list[pos].isbn, bokk.isbn) != 0);
+    if (strcmp(lista[pos].isbn, book.isbn) != 0)
     {
         for (int i = *tam; i > pos; i--)
             lista[i-1] = lista[i];
@@ -392,8 +392,7 @@ int remRegistroOrd(char* isbn, TBook* lista, int* tam)
     }
 
 }
-// a valor mínimo
-// b valor máximo
-c = a + rand()%(b - a + 1);
+
+
 
 
