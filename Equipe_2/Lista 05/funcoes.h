@@ -60,10 +60,11 @@ typedef struct Encadeado{
 
 } Encadeado;
 
+// Funções para carregamento dos dados
 Jogos* carregaDados( char *fileName, int *tam ); 
 Jogos* criaAcervo( int capacidade ); 
 
-//Funções - PILHA
+//Funções para Pilha
 Pilha* inicializaPilha();
 int isPilhaVazia(Pilha *pilha);
 int isPilhaCheia( Pilha* pilha );
@@ -72,14 +73,14 @@ void imprimeElementoPilha( Pilha *pilha );
 int empilhar(Jogos* jogo, Pilha *pilha);
 Jogos* desempilha(Pilha *pilha);
 
-//Funções - FILA
+//Funções para Fila.
 Fila* inicializaFila();
 int insereNaFila(Jogos* jogo, Fila* fila);
 Jogos* removeDaFila(Fila* fila);
 int isFilaVazia(Fila* fila);
 void imprimeElementoFila( Fila *fila );
 
-//Funções - LISTA
+//Funções para Lista Encadeada
 int insereEncadeado(Jogos* jogo, Encadeado* listaEncadeada);
 Jogos* removeEncadeado( Encadeado* listaEncadeada );
 Encadeado* inicializaListaEncadeada();

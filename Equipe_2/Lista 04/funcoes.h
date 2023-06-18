@@ -33,12 +33,13 @@ typedef struct {
     int fim;
 } TFilaLinear;
 
+// Funções para carregar os dados
 Jogos* carregaDados( char *fileName, int *tam ); 
 Jogos* criaAcervo( int capacidade ); 
 
 void limpaAcervo( Jogos *acervo, int tamanhoAcervo ); 
 
-//Funções FILA
+//Funções para Fila
 TFilaLinear* criaFilaLinear(int capacidade);
 void inicializaFilaLinear(TFilaLinear *FilaLinear, int capacidade);
 Jogos* removeDaFila(TFilaLinear* fila);
@@ -46,7 +47,7 @@ int insereNaFila(Jogos item, TFilaLinear* filaParametro);
 int isFilaCheia(TFilaLinear* fila);
 int isFilaVazia(TFilaLinear * fila);
 
-//Funções PILHA
+//Funções para Pilha. 
 TPilhaLinear* criaPilhaLinear(int capacidade);
 void inicializaPilhaLinear(TPilhaLinear *PilhaLinear, int capacidade);
 int isPilhaVazia(TPilhaLinear* pilha);

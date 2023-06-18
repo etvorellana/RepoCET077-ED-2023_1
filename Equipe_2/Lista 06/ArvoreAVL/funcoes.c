@@ -3,7 +3,6 @@
 #include <string.h>
 #include "funcoes.h"
 
-
 Jogos *carregaDados(char *fileName, int *tam)
 {
 
@@ -123,7 +122,7 @@ Jogos *criaAcervo(int capacidade)
 
 PNoArvBin newNoArvBin()
 {
-    PNoArvBin arv =  malloc(sizeof(PNoArvBin));
+    PNoArvBin arv = malloc(sizeof(PNoArvBin));
     arv->dir = NULL;
     arv->esq = NULL;
     arv->altura = 0;
@@ -131,14 +130,18 @@ PNoArvBin newNoArvBin()
 }
 
 
-PNoArvBin insereNoArvAVL(PNoArvBin arv, Jogos jogo)
-{
-    if(arv == NULL){
+PNoArvBin insereNoArvAVL(PNoArvBin arv, Jogos jogo){
+    if(arv == NULL)
+    {
         arv = newNoArvBin();
-        arv->jogo->appId = jogo.appId;
-    }else if(jogo.appId < arv->jogo->appId){
+        cpy(jogo, arv->jogo);
+    }
+    else if(jogo.appId < arv->jogo->appId)
+    {
         arv->esq = insereNoArvAVL(arv->esq, jogo);
-    }else if (jogo.appId > arv->jogo->appId){
+    }
+    else if (jogo.appId > arv->jogo->appId)
+    {
         arv->dir = insereNoArvAVL(arv->dir, jogo);
     }
     short a = alturaDoNo(arv->esq); 
@@ -148,75 +151,43 @@ PNoArvBin insereNoArvAVL(PNoArvBin arv, Jogos jogo)
     return arv;
 }
 
-PNoArvBin removeDaArv(PNoArvBin arv, int key) 
-{
-    if(arv == NULL) {
+PNoArvBin removeDaArvAVL(PNoArvBin arv, int key) {
+    if(arv == NULL)
+    {
         return NULL;
-    } else if(arv->jogo->appId == key) {
-        if(arv->esq == NULL && arv->dir == NULL){
+    }else if(arv->jogo->appId == key)
+    {
+        if(arv->esq == NULL && arv->dir == NULL)
+        {
+            limpaRegistro(arv->jogo);
             free(arv);
             return NULL;
-        } else if(arv->esq == NULL) {
+        }else if(arv->esq == NULL)
+        {
             PNoArvBin aux = arv->dir;
+	        limpaRegistro(arv->jogo);
             free(arv);
             arv = aux;
-        } else if(arv->dir == NULL){
+        }else if(arv->dir == NULL)
+        {
             PNoArvBin aux = arv->esq;
+            limpaRegistro(arv->jogo);
             free(arv);
             arv = aux;
-        }else{
+        }else
+        {
             PNoArvBin aux = arv->esq;
             while(aux->dir != NULL){
-                aux = aux->dir;    
+                aux = aux->dir;
             }
             arv->jogo = aux->jogo;
-            arv->esq = removeDaArv(arv->esq, aux->jogo->appId);
+            arv->esq = removeDaArvAVL(arv->esq, aux->jogo->appId);
         }
-    }else if(key < arv->jogo->appId){
-        arv->esq = removeDaArv(arv->esq, key);
+    }else if(key < arv->jogo->appId)
+    {
+        arv->esq = removeDaArvAVL(arv->esq, key);
     }else{
-        arv->dir = removeDaArv(arv->dir, key);
-    }
-    short a = alturaDoNo(arv->esq); 
-    short b = alturaDoNo(arv->dir);
-    arv->altura = ((a > b) ? a : b) + 1;
-    return arv;
-}
-
-PNoArvBin removeDaArvAVL(PNoArvBin arv, Jogos jogo)
- {
-    if (arv == NULL) {
-        return NULL;
-    } else if (jogo.appId < arv->jogo->appId) {
-        arv->esq = removeDaArvAVL(arv->esq, jogo);
-    } else if (jogo.appId > arv->jogo->appId) {
-        arv->dir = removeDaArvAVL(arv->dir, jogo);
-    } else { // Encontrou o nó a ser removido
-        if (arv->esq == NULL && arv->dir == NULL) { // Nó sem filhos
-            limpaRegistro(*(arv->jogo));
-            free(arv);
-            return NULL;
-        } else if (arv->esq != NULL && arv->dir != NULL) { // Nó com dois filhos
-            PNoArvBin sucessor = arv->esq;
-            while (sucessor->dir != NULL) {
-                sucessor = sucessor->dir;
-            }
-            // Troca o jogo do nó a ser removido pelo jogo do sucessor
-            Jogos* temp = arv->jogo;
-            arv->jogo = sucessor->jogo;
-            sucessor->jogo = temp;
-            arv->esq = removeDaArvAVL(arv->esq, jogo);
-        } else { // Nó com um filho
-            PNoArvBin filho;
-            if (arv->esq != NULL) {
-                filho = arv->esq;
-            } else {
-                filho = arv->dir;
-            }
-            limpaRegistro(*(arv->jogo));
-            free(arv);
-            return filho;
-        }
+        arv->dir = removeDaArvAVL(arv->dir, key);
     }
     
     // Atualiza a altura do nó e realiza o balanceamento
@@ -229,34 +200,36 @@ PNoArvBin removeDaArvAVL(PNoArvBin arv, Jogos jogo)
 }
 
 
-void limpaRegistro(Jogos jogo)
-{   //desreferenciando ponteiro
-    //free(jogo.appId);
-    free(jogo.title);
-    free(jogo.dataRelease);
-    free(jogo.win);
-    free(jogo.mac);
-    free(jogo.linux);
-    free(jogo.rating);
-        
+void limpaRegistro(Jogos *jogo) {
+
+    free((*jogo).title);
+    free((*jogo).dataRelease);
+    free((*jogo).win);
+    free((*jogo).mac);
+    free((*jogo).linux);
+    free((*jogo).rating);
 }
 
-PNoArvBin buscaNaArvAVL(PNoArvBin arv, int key) 
-{
-    if (arv == NULL) {
+PNoArvBin buscaNaArvAVL(PNoArvBin arv, int key){
+    if(arv == NULL)
+    {
         return NULL;
-    } else if (arv->jogo->appId == key) {
+    }
+    else if(arv->jogo->appId == key)
+    {
         return arv;
-    } else if (key < arv->jogo->appId) {
+    }
+    else if(key < arv->jogo->appId)
+    {
         return buscaNaArvAVL(arv->esq, key);
-    } else {
+    }
+    else
+    {
         return buscaNaArvAVL(arv->dir, key);
     }
 }
 
-
-short int alturaDoNo(PNoArvBin arv)
-{
+short int alturaDoNo(PNoArvBin arv){
     if(arv == NULL){
         return -1;
     }else{
@@ -336,50 +309,65 @@ PNoArvBin rotacaoEsq(PNoArvBin arv)
     return dir;
 }
 
-int incRegistro(Jogos origem, Jogos* destino, int tam) {
+void cpy(Jogos origem, Jogos* destino) {
+
+    (*destino).appId = origem.appId;
+
+    (*destino).title  = (char*)malloc((strlen(origem.title)));
+    strcpy((*destino).title, origem.title); 
+
+    (*destino).dataRelease  = (char*)malloc(strlen(origem.dataRelease));
+    strcpy((*destino).dataRelease, origem.dataRelease);
     
-        destino[tam].title  = (char*)malloc((strlen(origem.title)));
-        strcpy(destino[tam].title, origem.title); 
-        
-        destino[tam].dataRelease  = (char*)malloc(strlen(origem.dataRelease));
-        strcpy(destino[tam].dataRelease, origem.dataRelease);
-        
-        destino[tam].win  = (char*)malloc(strlen(origem.win));
-        strcpy(destino[tam].win, origem.win);
+    (*destino).win  = (char*)malloc(strlen(origem.win));
+    strcpy((*destino).win, origem.win);
 
-        destino[tam].mac  = (char*)malloc(strlen(origem.mac));
-        strcpy(destino[tam].mac, origem.mac);
+    (*destino).mac  = (char*)malloc(strlen(origem.mac));
+    strcpy((*destino).mac, origem.mac);
 
-        destino[tam].linux  = (char*)malloc(strlen(origem.linux));
-        strcpy(destino[tam].linux, origem.linux);
+    (*destino).linux  = (char*)malloc(strlen(origem.linux));
+    strcpy((*destino).linux, origem.linux);
 
-        destino[tam].rating  = (char*)malloc(strlen(origem.rating));
-        strcpy(destino[tam].rating, origem.rating);
+    (*destino).rating  = (char*)malloc(strlen(origem.rating));
+    strcpy((*destino).rating, origem.rating);
 
-        destino[tam].positiveRatio = origem.positiveRatio;
-        destino[tam].userReviews = origem.userReviews;
-        destino[tam].priceFinal = origem.priceFinal;
-        destino[tam].priceOriginal = origem.priceOriginal;
-        destino[tam].discount = origem.discount;
+    (*destino).positiveRatio = origem.positiveRatio;
+    (*destino).userReviews = origem.userReviews;
+    (*destino).priceFinal = origem.priceFinal;
+    (*destino).priceOriginal = origem.priceOriginal;
+    (*destino).discount = origem.discount;   
+
 }
+
 void printArv(PNoArvBin arv, int tipo) {
     if (arv != NULL) {
         if (tipo == 0) {
             printArv(arv->esq, tipo);
-            printf("(%d, %.2f, %d)  ", arv->jogo->appId, arv->jogo->title, arv->altura);
+            printf("(%d, %s, %d)  ", arv->jogo->appId, arv->jogo->title, arv->altura);
             printArv(arv->dir, tipo);
         } else if (tipo == 1) {
-            printf("(%d, %.2f, %d)  ", arv->jogo->appId, arv->jogo->title, arv->altura);
+            printf("(%d, %s, %d)  ", arv->jogo->appId, arv->jogo->title, arv->altura);
             printArv(arv->esq, tipo);
             printArv(arv->dir, tipo);
         } else if (tipo == 2) {
             printArv(arv->esq, tipo);
             printArv(arv->dir, tipo);
-            printf("(%d, %.2f, %d)  ", arv->jogo->appId, arv->jogo->title, arv->altura);
+            printf("(%d, %s, %d)  ", arv->jogo->appId, arv->jogo->title, arv->altura);
         } else {
             printArv(arv->dir, tipo);
-            printf("(%d, %.2f, %d)  ", arv->jogo->appId, arv->jogo->title, arv->altura);
+            printf("(%d, %s, %d)  ", arv->jogo->appId, arv->jogo->title, arv->altura);
             printArv(arv->esq, tipo);
         }
     }
+}
+
+int percorre(PNoArvBin arv) {
+    int contador = 0;
+    if (arv != NULL) {
+        percorre(arv->dir);
+        printf("(%d, %s, %d)  ", arv->jogo->appId, arv->jogo->title, arv->altura);
+        contador++;
+        percorre(arv->esq);
+    }
+    return contador;
 }

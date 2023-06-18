@@ -29,10 +29,11 @@ typedef struct noArvBin{
 
 typedef NoArv *PNoArvBin;
 
-//manipulando jogos
+// Funções para carregamento de dados
 Jogos* carregaDados( char *fileName, int *tam ); 
 Jogos* criaAcervo( int capacidade ); 
 
+// Funções para árvore binária - Desconsiderar as siglas AVL.
 PNoArvBin newNoArvBin();
 PNoArvBin insereNoArvAVL(PNoArvBin arv, Jogos jogo);
 PNoArvBin insereNoArvBin(PNoArvBin arv, Jogos jogo);

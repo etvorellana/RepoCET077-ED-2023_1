@@ -28,14 +28,15 @@ typedef struct noArvBin{
 
 typedef NoArv *PNoArvBin;
 
-//manipulando jogos
-Jogos* carregaDados( char *fileName, int *tam ); 
-Jogos* criaAcervo( int capacidade ); 
 
+// Funções para carregamento de dados.
+Jogos* carregaDados( char *fileName, int *tam ); 
+Jogos* criaAcervo( int capacidade );
+
+// Funções para árvore AVL
 PNoArvBin newNoArvBin();
 PNoArvBin insereNoArvAVL(PNoArvBin arv, Jogos jogo);
-PNoArvBin removeDaArv(PNoArvBin arv, int key);
-PNoArvBin removeDaArvAVL(PNoArvBin arv, Jogos jogo);
+PNoArvBin removeDaArvAVL(PNoArvBin arv, int jogo);
 PNoArvBin buscaNaArvAVL(PNoArvBin arv, int key);
 short int alturaDoNo(PNoArvBin arv);
 PNoArvBin balanceia(PNoArvBin arv);
@@ -45,7 +46,8 @@ PNoArvBin rotacaoEsqDir(PNoArvBin arv);
 PNoArvBin rotacaoEsq(PNoArvBin arv);
 PNoArvBin rotacaoDir(PNoArvBin arv);
 void printArv(PNoArvBin arv, int tipo);
-int incRegistro( Jogos origem, Jogos* destino, int tam ); 
-void limpaRegistro(Jogos jogo);
+void cpy( Jogos origem, Jogos* destino); 
+void limpaRegistro(Jogos *jogo);
+int percorre(PNoArvBin arv);
 
 #endif

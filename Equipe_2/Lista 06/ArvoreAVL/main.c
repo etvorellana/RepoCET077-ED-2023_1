@@ -5,64 +5,76 @@
 #include "funcoes.h"
 #define N 16
 
-int main() {
-
+int main(void)
+{
     Jogos *acervo;
-    int n = 16;
-    PNoArvBin arv = NULL;
+    int tamanhoAcervo = 16;
+    PNoArvBin arvAVL = NULL;
     
-    acervo = carregaDados("../../Data/dataSetEquipe2.csv", &n );
-    
-    Jogos *lista = malloc(n * sizeof(Jogos));
-    
-    printf("Preenchendo a lista");
-    for( int tam = 0; tam < n; tam++)
-    {
-        incRegistro( acervo[tam], lista, tam ); 
-        printf("%d",lista[tam].appId);
-    }
-    
-    printf("Preenchendo a arvore");
-    for(int i = 0; i < n; i++)
-    {
-        arv = insereNoArvAVL(arv, lista[i]); 
-    }
+    acervo = carregaDados("../../Data/dataSetEquipe2.csv", &tamanhoAcervo );
 
-    
-    printf("Impressão dos elementos da arvore:\n");
-    printArv(arv, 0);
-    printf("\n");
-    printf("------------------\n");
-    printArv(arv, 1);
-    printf("\n");
-    printf("------------------\n");
-    printArv(arv, 2);
-    printf("\n");
-    printf("------------------\n");
-    printArv(arv, 3);
-    printf("\n");
-    printf("------------------\n");
+    printf("\n-------------------------- INSERINDO NA AVL -------------------------------------\n");
 
-    for(int i = 0; i < n; i++)
-    {
-       arv = removeDaArvAVL(arv, lista[i]);
+    /*arvAVL = insereNoArvAVL(arvAVL, acervo[5]);
+    printf("\n %s", arvAVL);*/
+
+    int inseriu = 0;
+    for(int i = 0; i < N; i++){
+        if(buscaNaArvAVL(arvAVL, acervo[i].appId)){
+            printf("\nElemento %d não pode ser inserido\n!", acervo[i].appId);
+        }else{
+            arvAVL = insereNoArvAVL(arvAVL, acervo[i]);
+        }
+        if(percorre(arvAVL) == i + 1){  
+            printf("\nElemento %d foi inserido\n!", acervo[i].appId);
+            inseriu++;
+        }
     }
 
-    printf("Removendo elementos da arvore");
-    printf("Impressão:\n");
-    printArv(arv, 0);
+    if(percorre(arvAVL) == inseriu){
+        printf("Todos os elementos foram inseridos!\n");
+    }else{
+        printf("Nem todos os elementos foram inseridos!\n");
+    }
+
+    printArv(arvAVL, 0);
     printf("\n");
     printf("------------------\n");
-    printArv(arv, 1);
+    printArv(arvAVL, 1);
     printf("\n");
     printf("------------------\n");
-    printArv(arv, 2);
+    printArv(arvAVL, 2);
     printf("\n");
     printf("------------------\n");
-    printArv(arv, 3);
+    printArv(arvAVL, 3);
     printf("\n");
     printf("------------------\n");
 
+    printf("\n----------------------------- REMOVENDO DA AVL --------------------------------\n");
+
+    int removeu = 0;
+    for (int i = 0; i < N; i++){
+
+        if(arvAVL == NULL){
+            printf("\n Não há elementos para remover!\n");
+        }else{
+            arvAVL = removeDaArvAVL(arvAVL, acervo[i].appId);
+            if(!buscaNaArvAVL(arvAVL, acervo[i].appId)){
+            printf("\n Elemento %d foi removido!\n", acervo[i].appId);
+            removeu++;
+            
+            printArv(arvAVL, 0);
+            printf("\n");
+            printf("------------------\n");
+            }
+        }
+    }
+
+    if(percorre(arvAVL) == removeu){
+        printf("Todos os elementos foram removidos!");
+    }else{
+        printf("Nem todos os elementos foram removidos!\n");
+    }
+    
     return 0;
-
 }
