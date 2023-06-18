@@ -1,31 +1,92 @@
-Colocar aqui os nomes dos integrantes da equipe
+Integrantes da Equipe:
 
-    Alice Martins Valero
-    Beatriz Santos de Oliveira
-    Eduardo Takeshi Watanabe
-    Júlia de Araújo Ramos
-    Murilo Patricio Maia
+    .Alice Martins Valero
+    .Beatriz Santos de Oliveira
+    .Eduardo Takeshi Watanabe
+    .Júlia de Araújo Ramos
+    .Murilo Patricio Maia
 
 Os arquivos estão organizados da seguinte forma:
 
     Arvores:
         
         Conteúdo:
-            Códigos de árvores não ordenadas.
+                Demontração das funções de inclusão, remoção e busca em árvores não ordenadas.
         
         Compilação:
-            $> gcc -o funcoes.o -c funcoes.c
-            $> gcc -o main.o -c main.c
-            $> gcc -o exemplo funcoes.o main.o
+                $> gcc -o funcoes.o -c funcoes.c
+                $> gcc -o main.o -c main.c
+                $> gcc -o exemplo funcoes.o main.o
+
         Rodar:
-            $> ./exemplo
+                $> ./exemplo
 
     Arvores_Ordenadas:
         
         Conteúdo: 
-            Códigos de árvores ordenadas
+                Demonstração das funções de inclusão,remoção e busca em arvores binárias e AVL.
 
         Compilação:
+                $> gcc -o funcoes.o -c funcoes.c
+                $> gcc -o main.o -c main.c
+                $> gcc -o exemplo funcoes.o main.o
+
+        Rodar:
+                $> ./exemplo
+    
+    Listas:
+
+        Conteúdo:
+                No main temos uma demonstração das funções de listas ordenadas e desordenadas
+                No main2 temos uma demonstração da funções gerais de inclusão,remoção e busca.
+
+        Compilação:
+
+            main:
+                $> gcc -o funcoes.o -c funcoes.c
+                $> gcc -o main.o -c main.c
+                $> gcc -o exemplo funcoes.o main.o
+
+            main2: 
+                $> gcc -o funcoes.o -c funcoes.c
+                $> gcc -o main2.o -c main2.c
+                $> gcc -o exemplo2 funcoes.o main2.o
+
+        Rodar:
+
+            main:
+                $>./exemplo
+            
+            main2:
+                $>./exemplo2
+
+    Pilhas_Filas:
+
+        Conteúdo:
+                No main temos uma demonstração das funções de pilhas e filas em lista de alocação estática
+                No main2 temos uma demonstração das funções de pilhas, filas e listas de alocação dinámica.
+            Esse main também demonstra a passagem de elementos entre filas, pilhas e listas e como isso
+            afeta a ordem dos elementos.
+        
+        Compilação:
+            
+            main:
+                $> gcc -o funcoes.o -c funcoes.c
+                $> gcc -o main.o -c main.c
+                $> gcc -o exemplo funcoes.o main.o
+
+            main2:
+                $> gcc -o funcoes.o -c funcoes.c
+                $> gcc -o main2.o -c main2.c
+                $> gcc -o exemplo2 funcoes.o main2.o
+
+        Rodar:
+            main:
+                $>./exemplo
+
+            main2:
+                $>./exemplo2
+
 
             
 

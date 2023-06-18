@@ -6,7 +6,7 @@
 int main(void){
   Games *jogos;
   int tam;
-  jogos = carregaDados("../../../Data/Grupo1DataSet.csv" , &tam);
+  jogos = carregaDados("../../Data/Grupo1DataSet.csv" , &tam);
   
   //Pilha linear
   
@@ -62,5 +62,7 @@ int main(void){
 
   return 0;
 }
+
+
 
 

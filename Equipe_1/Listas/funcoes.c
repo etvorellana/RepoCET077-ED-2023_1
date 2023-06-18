@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+
 Games* carregaDados(char *fileName, int *tam)
 {
   Games *jogos;
@@ -103,6 +104,7 @@ int buscaPorId(int ID, Games* lista, int tam){
   return i;
 }
 
+
 Games CopyGames(Games jogo){
    Games cpyJogo;
   
@@ -142,7 +144,7 @@ int incJogo(Games jogos, Games* jogos02, int* tam){
   if(ok == (*tam)){
     
     jogos02[*tam] = CopyGames(jogos);
-
+    
     ++(*tam);
     return 1;
   }
@@ -219,6 +221,7 @@ int remJogoOrdenado(Games jogo, Games* jogos03, int* tam){
         limpaJogos02(jogos03, i);
     
         jogos03[i] = CopyGames(jogos03[i+1]);
+
       }
       --(*tam);
       return 1;
@@ -246,6 +249,9 @@ int incJogoOrdenado(Games jogo, Games* jogos03, int* tam){
     // Insere o novo jogo na posição correta
 
     jogos03[pos] = CopyGames(jogo);
+        
+    jogos03[pos].Name = (char*)malloc((strlen(jogo.Name)+1)*sizeof(char));
+    strcpy(jogos03[pos].Name,jogo.Name);
 
     ++(*tam);
     return 1;

@@ -7,7 +7,7 @@
 int main(void){
   Games *jogos;
   int tam;
-  jogos = carregaDados("../../../Data/Grupo1DataSet.csv" , &tam);
+  jogos = carregaDados("../../Data/Grupo1DataSet.csv" , &tam);
 
   //Criando nossa nova lista com 100 jogos
   Games *jogos02;
@@ -98,6 +98,10 @@ int main(void){
       ok2++;
   }
   
+  printf("Foram realizadas %d tentativas de remoção\n", try2);
+  printf("Foram removidos %d registros na lista\n", ok2);
+
   limpaJogos(jogos, tam);
   return 0;
 }
+
