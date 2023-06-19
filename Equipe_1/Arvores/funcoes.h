@@ -2,11 +2,12 @@ typedef struct
 {
     int key;
     float val;
-}TInfo;
+} TInfo;
 
 typedef TInfo *PInfo;
 
-struct noArvBin{
+struct noArvBin
+{
     TInfo info;
     int nivel;
     struct noArvBin *esq;
