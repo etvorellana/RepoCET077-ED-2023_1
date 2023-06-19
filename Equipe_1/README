@@ -11,7 +11,7 @@ Os arquivos estão organizados da seguinte forma:
     Arvores:
         
         Conteúdo:
-                Demontração das funções de inclusão, remoção e busca em árvores não ordenadas.
+                Demontração das funções de inclusão, remoção e busca em árvores binárias usando números aleatórios.
         
         Compilação:
                 $> gcc -o funcoes.o -c funcoes.c
@@ -24,7 +24,7 @@ Os arquivos estão organizados da seguinte forma:
     Arvores_Ordenadas:
         
         Conteúdo: 
-                Demonstração das funções de inclusão,remoção e busca em arvores binárias e AVL.
+                Demonstração das funções de inclusão,remoção e busca em arvores binárias e AVL usando o dataset da equipe.
 
         Compilação:
                 $> gcc -o funcoes.o -c funcoes.c
