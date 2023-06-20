@@ -5,3 +5,15 @@ Thiago Souza Pereira
 Henio Pedro Silva Santana
 Murillo Barbosa Santos
 Isaque Lino Brandão Silva
+
+Para compilar e rodar Pilhas e Filas
+    gcc -o teste dataFun.c datafun.h main.c
+
+Para compilar e rodar Lista,Pilhas,fila enc
+  gcc -o teste1 datafun.c datafun.h main.c
+
+Para compilar e rodar Arvores
+  gcc -o teste2 dataFunBin.h arvBin.c
+
+Para compilar e rodar Arvores Avl
+  gcc -o teste3  datafunAvl.h arvAvl.c
