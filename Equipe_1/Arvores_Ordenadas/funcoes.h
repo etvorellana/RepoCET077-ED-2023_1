@@ -24,45 +24,31 @@ struct noArvBin
 
 typedef struct noArvBin noArvBin;
 
-// da lista
+// Funções para o Dataset 
+
 Games *carregaDados(char *fileName, int *tam);
-
 Games *IniciaLista(int capacidade);
-
 void cpyGame(Games jogo, Games *jogo_copia);
-
 void limpaJogo(Games *jogo);
-
 void primeiras_letras(char *nome);
 
-// arvore
+// Funções para a Arvore
+
 noArvBin *newNoArvBin();
-
 noArvBin *insereNoArvBin(noArvBin *arv, Games jogo);
-
 short int alturaDoNo(noArvBin *arv);
-
 void printArv(noArvBin *arv, int tipo);
-
 void printArv2(noArvBin *arv, noArvBin *arvAVL, int distancia);
-
 noArvBin *removeDaArv(noArvBin *arv, int ID);
-
 noArvBin *buscaNaArv(noArvBin *arv, int ID);
 
-// arvore AVL
+//Funções para a Arvore AVL
+
 noArvBin *insereNoArvAVL(noArvBin *arv, Games jogo);
-
 noArvBin *removeDaArvAVL(noArvBin *arv, int ID);
-
 noArvBin *rotacaoDir(noArvBin *arv);
-
 noArvBin *rotacaoEsq(noArvBin *arv);
-
 noArvBin *rotacaoDirEsq(noArvBin *arv);
-
 noArvBin *rotacaoEsqDir(noArvBin *arv);
-
 short balanceamento(noArvBin *no);
-
 noArvBin *balanceia(noArvBin *arv);

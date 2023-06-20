@@ -38,52 +38,31 @@ typedef struct
     int fim;
 } TFilaLinear;
 
+//Funções para o Dataset
+
 Games *carregaDados(char *fileName, int *tam);
-
 Games *IniciaLista(int capacidade);
-
 void limpaJogos(Games *jogos, int tam);
-
 void limpaJogos02(Games *jogos, int Pos);
-
 void limpaJogos03(Games *jogo);
 
+//Funções para listas não ordenadas
+
 int buscaPorId(int ID, Games *lista, int tam);
-
 Games CopyGames(Games jogo);
-
 int incJogo(Games jogos, Games *jogos02, int *tam);
-
 int remJogo(Games jogo, Games *jogos02, int *tam);
 
+//Funções para listas ordenadas
+
 int buscaBinPorId(int ID, Games *lista, int tamanho);
-
 int remJogoOrdenado(Games jogo, Games *jogos03, int *tam);
-
 int incJogoOrdenado(Games jogo, Games *jogos03, int *tam);
-
 int buscaBinRecPorId(int ID, Games *lista, int ini, int fim);
-
 Tlista criaListaLinear(int cap, int eOrd);
 
+//Funções gerais de lista
+
 int Busca_Geral(int ID, Tlista l);
-
 int Inc_Geral(Games jogo, Tlista *l);
-
 int Rem_Geral(Games jogo, Tlista *l);
-
-TFilaLinear *criaFilaLinear(int cap);
-
-TPilhaLinear *criaPilhaLinear(int cap);
-
-int insereNaFila(Games jogo, TFilaLinear *fila);
-
-int insereNaPilha(Games jogo, TPilhaLinear *pilha);
-
-Games *removeDaFila(TFilaLinear *fila);
-
-Games *removeDaPilha(TPilhaLinear *pilha);
-
-void demonstrar_add(int try1, int ok, TPilhaLinear *pilha);
-
-void demonstrar_rem(TPilhaLinear *pilha);
