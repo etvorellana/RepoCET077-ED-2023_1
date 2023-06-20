@@ -111,44 +111,7 @@ t_Fipe *criaFipe(int cap)
   fipe = (t_Fipe *)malloc((cap + 1) * sizeof(t_Fipe));
   return fipe;
 }
-///////////////////////////////////////////////////////////////////////
-// incluir registros
-/*
-int incRegistro(t_Fipe fipe, t_Fipe* lista, int* tam)
-{
-    // copia o nCdg procurado na posição tam
-    lista[*tam].nCdg = fipe.nCdg;
-    // procura o nCdg na lista
-    int pos = buscaPorId(lista, *tam, fipe.nCdg);
-    if(pos == *tam) // se não encontrou
-    {
-        // copia o registro para a posição tam
-        lista[pos].nCdg = (char*) malloc(strlen(fipe.nCdg));
-        strcpy(lista[pos].nCdg, fipe.nCdg);
 
-        lista[pos].codigofp = (char*) malloc(strlen(fipe.codigofp));
-        strcpy(lista[pos].codigofp, fipe.codigofp);
-
-        lista[pos].marca = (char*) malloc(strlen(fipe.marca));
-        strcpy(lista[pos].marca, fipe.marca);
-
-        lista[pos].modelo = (char*) malloc(strlen(fipe.modelo));
-        strcpy(lista[pos].modelo, fipe.modelo);
-
-        lista[pos].anoModelo = fipe.anoModelo;
-
-        lista[pos].mesReferencia = fipe.mesReferencia;
-
-        lista[pos].anoReferencia = fipe.anoReferencia;
-
-        lista[pos].valor = fipe.valor;
-
-        *tam += 1;
-        return TRUE;
-    } else {
-        return FALSE;
-    }
-}*/
 ////////////////////////////////////////////////////////////////////
 int incRegistro(t_Fipe book, t_Fipe *lista, int *tam)
 {
